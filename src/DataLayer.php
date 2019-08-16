@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql;
 
 use mysqli_stmt;
-use SetBased\Abc\Helper\Cast;
 use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\BulkHandler;
@@ -106,7 +105,6 @@ class DataLayer
   protected $queryLog = [];
 
   //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * Starts a transaction.
    *
@@ -815,35 +813,6 @@ class DataLayer
   {
     $ret = $this->mysqli->rollback();
     if (!$ret) $this->mySqlError('mysqli::rollback');
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the key of the first row in a row set for which a column has a specific value. Returns null if no row is
-   * found.
-   *
-   * @param string  $columnName The column name (or in PHP terms the key in an row (i.e. array) in the row set).
-   * @param mixed   $value      The value to be found.
-   * @param array[] $rowSet     The row set.
-   *
-   * @return int|string|null
-   *
-   * @deprecated
-   */
-  public function searchInRowSet(string $columnName, $value, array $rowSet)
-  {
-    if (is_array($rowSet))
-    {
-      foreach ($rowSet as $key => $row)
-      {
-        if ((string)$row[$columnName]===(string)$value)
-        {
-          return $key;
-        }
-      }
-    }
-
-    return null;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

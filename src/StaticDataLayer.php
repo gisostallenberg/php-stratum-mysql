@@ -639,37 +639,6 @@ class StaticDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the first row in a row set for which a column has a specific value.
-   *
-   * Throws an exception if now row is found.
-   *
-   * @param string  $columnName The column name (or in PHP terms the key in an row (i.e. array) in the row set).
-   * @param mixed   $value      The value to be found.
-   * @param array[] $rowSet     The row set.
-   *
-   * @return array
-   *
-   * @since 1.0.0
-   * @api
-   */
-  public static function getRowInRowSet(string $columnName, $value, array $rowSet): array
-  {
-    if (is_array($rowSet))
-    {
-      foreach ($rowSet as $row)
-      {
-        if ((string)$row[$columnName]==(string)$value)
-        {
-          return $row;
-        }
-      }
-    }
-
-    throw new RuntimeException("Value '%s' for column '%s' not found in row set.", $value, $columnName);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Returns a hexadecimal literal for a binary value that can be safely used in SQL statements.
    *
    * @param string|null $value The binary value.
@@ -844,35 +813,6 @@ class StaticDataLayer
   {
     $ret = self::$mysqli->rollback();
     if (!$ret) self::mySqlError('mysqli::rollback');
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the key of the first row in a row set for which a column has a specific value. Returns null if no row is
-   * found.
-   *
-   * @param string  $columnName The column name (or in PHP terms the key in an row (i.e. array) in the row set).
-   * @param mixed   $value      The value to be found.
-   * @param array[] $rowSet     The row set.
-   *
-   * @return int|string|null
-   *
-   * @deprecated
-   */
-  public static function searchInRowSet(string $columnName, $value, array $rowSet)
-  {
-    if (is_array($rowSet))
-    {
-      foreach ($rowSet as $key => $row)
-      {
-        if ((string)$row[$columnName]===(string)$value)
-        {
-          return $key;
-        }
-      }
-    }
-
-    return null;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
