@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SetBased\Stratum\Test\Helper;
+namespace SetBased\Stratum\MySql\Test\Helper;
 
 use PHPUnit\Framework\TestCase;
 use SetBased\Stratum\Helper\RowSetHelper;

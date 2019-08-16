@@ -1,21 +1,18 @@
 {
-  "name": "setbased/php-stratum",
-  "description": "A stored procedure and function loader, wrapper generator for MySQL in PHP.",
+  "name": "setbased/php-stratum-mysql",
+  "description": "PhpStratum MySQL: A stored procedure and function loader, wrapper generator for MySQL and MariaDB",
   "keywords": [
+    "PhpStratum",
+    "MariaDB",
     "MySQL",
     "Stored Routines",
     "Stored Procedures",
     "Stored Functions",
     "Wrapper",
-    "Loader",
-    "PHP"
+    "Loader"
   ],
   "type": "tool",
   "license": "MIT",
-  "require-dev": {
-    "phpunit/phpunit": "^6.0.0",
-    "setbased/phing-extensions": "^2.0.1"
-  },
   "require": {
     "php": ">=7.1.0",
     "ext-json": "*",
@@ -23,24 +20,26 @@
     "setbased/exception": "^1.0.0",
     "setbased/helper-code-store-mysql": "^2.0.0",
     "setbased/helper-code-store-php": "^2.0.0",
-    "setbased/php-affirm": "^0.2.0",
-    "symfony/console": "^3.0.0 || ^4.0.0",
+    "setbased/php-stratum": "dev-master",
+    "setbased/php-stratum-backend": "dev-master",
+    "setbased/php-stratum-common": "dev-master",
     "zendframework/zend-code": "^3.0.0"
   },
-  "bin": [
-    "bin/stratum"
-  ],
+  "require-dev": {
+    "phpunit/phpunit": "^6.0.0",
+    "phing/phing": "^2.0.0"
+  },
   "autoload": {
     "psr-4": {
-      "SetBased\\Stratum\\": "src/"
+      "SetBased\\Stratum\\MySql\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "SetBased\\Stratum\\Test\\": "test/"
+      "SetBased\\Stratum\\MySql\\Test\\": "test/"
     },
     "classmap": [
-      "test/MySql/C.php"
+      "test/C.php"
     ]
   },
   "config": {

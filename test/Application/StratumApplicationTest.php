@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SetBased\Stratum\Test\Application;
+namespace SetBased\Stratum\MySql\Test\Application;
 
 use PHPUnit\Framework\TestCase;
 use SetBased\Stratum\Application\Stratum;
@@ -20,7 +20,7 @@ class StratumApplicationTest extends TestCase
 
     $tester = new ApplicationTester($application);
     $tester->run(['command'     => 'stratum',
-                  'config file' => 'test/MySql/etc/stratum.cfg']);
+                  'config file' => 'test/etc/stratum.ini']);
 
     self::assertSame(0, $tester->getStatusCode(), $tester->getDisplay());
   }
