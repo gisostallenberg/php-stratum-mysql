@@ -1,2 +1,2 @@
-test/MySql/psql/**/*.psql
+test/psql/**/*.psql
 
