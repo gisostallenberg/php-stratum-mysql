@@ -432,9 +432,9 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
 
       $helper = new RoutineLoaderHelper($this->io,
                                         $filename['path_name'],
-                                        $this->phpStratumMetadata[$routineName] ?? null,
+                                        $this->phpStratumMetadata[$routineName] ?? [],
                                         $this->replacePairs,
-                                        $this->rdbmsOldMetadata[$routineName] ?? null,
+                                        $this->rdbmsOldMetadata[$routineName] ?? [],
                                         $this->sqlMode,
                                         $this->characterSet,
                                         $this->collate);

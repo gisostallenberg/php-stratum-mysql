@@ -34,6 +34,7 @@ class DataLayerException extends RuntimeException
   protected $query;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * Object constructor.
    *
@@ -48,6 +49,46 @@ class DataLayerException extends RuntimeException
     $this->errno = $errno;
     $this->error = $error;
     $this->query = $message;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Composes the exception message.
+   *
+   * @param int    $errno The error code value of the error ($mysqli->errno).
+   * @param string $error Description of the error ($mysqli->error).
+   * @param string $query The SQL query or method name.
+   *
+   * @return string
+   */
+  private static function message(int $errno, string $error, string $query): string
+  {
+    $message = 'MySQL Error no: '.$errno."\n";
+    $message .= $error;
+    $message .= "\n";
+
+    $query = trim($query);
+    if (strpos($query, "\n")!==false)
+    {
+      // Query is a multi line query.
+      $message .= "\n";
+
+      // Prepend each line with line number.
+      $lines  = explode("\n", $query);
+      $digits = ceil(log(sizeof($lines), 10));
+      $format = sprintf("%%%dd %%s\n", $digits);
+      foreach ($lines as $i => $line)
+      {
+        $message .= sprintf($format, $i + 1, $line);
+      }
+    }
+    else
+    {
+      // Query is a single line query or method name.
+      $message .= $query;
+    }
+
+    return $message;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -159,46 +200,6 @@ class DataLayerException extends RuntimeException
   public function isQueryError(): bool
   {
     return ($this->errno==1064);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Composes the exception message.
-   *
-   * @param int    $errno The error code value of the error ($mysqli->errno).
-   * @param string $error Description of the error ($mysqli->error).
-   * @param string $query The SQL query or method name.
-   *
-   * @return string
-   */
-  private function message(int $errno, string $error, string $query): string
-  {
-    $message = 'MySQL Error no: '.$errno."\n";
-    $message .= $error;
-    $message .= "\n";
-
-    $query = trim($query);
-    if (strpos($query, "\n")!==false)
-    {
-      // Query is a multi line query.
-      $message .= "\n";
-
-      // Prepend each line with line number.
-      $lines  = explode("\n", $query);
-      $digits = ceil(log(sizeof($lines), 10));
-      $format = sprintf("%%%dd %%s\n", $digits);
-      foreach ($lines as $i => $line)
-      {
-        $message .= sprintf($format, $i + 1, $line);
-      }
-    }
-    else
-    {
-      // Query is a single line query or method name.
-      $message .= $query;
-    }
-
-    return $message;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

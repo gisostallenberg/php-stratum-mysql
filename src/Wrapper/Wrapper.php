@@ -170,7 +170,7 @@ abstract class Wrapper
   {
     $hasBlob = false;
 
-    if ($parameters)
+    if (!empty($parameters))
     {
       foreach ($parameters as $parameter_info)
       {

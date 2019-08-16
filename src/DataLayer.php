@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql;
 
 use mysqli_stmt;
+use SetBased\Abc\Helper\Cast;
 use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\BulkHandler;
@@ -105,6 +106,7 @@ class DataLayer
   protected $queryLog = [];
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * Starts a transaction.
    *
@@ -635,37 +637,6 @@ class DataLayer
   public function getQueryLog(): array
   {
     return $this->queryLog;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the first row in a row set for which a column has a specific value.
-   *
-   * Throws an exception if now row is found.
-   *
-   * @param string  $columnName The column name (or in PHP terms the key in an row (i.e. array) in the row set).
-   * @param mixed   $value      The value to be found.
-   * @param array[] $rowSet     The row set.
-   *
-   * @return array
-   *
-   * @since 1.0.0
-   * @api
-   */
-  public function getRowInRowSet(string $columnName, $value, array $rowSet): array
-  {
-    if (is_array($rowSet))
-    {
-      foreach ($rowSet as $row)
-      {
-        if ((string)$row[$columnName]==(string)$value)
-        {
-          return $row;
-        }
-      }
-    }
-
-    throw new RuntimeException("Value '%s' for column '%s' not found in row set.", $value, $columnName);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

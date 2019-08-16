@@ -211,14 +211,14 @@ class DataTypeHelper
       case 'text':
       case 'mediumtext':
       case 'longtext':
-        $ret = ($lobAsString) ? $ret = "'.self::quoteString(".$expression.").'" : '?';
+        $ret = ($lobAsString) ? "'.self::quoteString(".$expression.").'" : '?';
         break;
 
       case 'tinyblob':
       case 'blob':
       case 'mediumblob':
       case 'longblob':
-        $ret = ($lobAsString) ? $ret = "'.self::quoteBinary(".$expression.").'" : '?';
+        $ret = ($lobAsString) ? "'.self::quoteBinary(".$expression.").'" : '?';
         break;
 
       case 'list_of_int':
