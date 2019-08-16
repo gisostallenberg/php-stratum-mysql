@@ -5,8 +5,8 @@ namespace SetBased\Stratum\MySql\Helper\Crud;
 
 use SetBased\Exception\FallenException;
 use SetBased\Helper\CodeStore\MySqlCompoundSyntaxCodeStore;
+use SetBased\Stratum\Helper\RowSetHelper;
 use SetBased\Stratum\MySql\MetadataDataLayer;
-use SetBased\Stratum\MySql\StaticDataLayer;
 use SetBased\Stratum\StratumStyle;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Console\Helper\SymfonyQuestionHelper;
@@ -227,7 +227,7 @@ abstract class BaseRoutine
     {
       foreach ($columns as $column)
       {
-        $check = StaticDataLayer::searchInRowSet('Column_name', $column['column_name'], $primaryKeys);
+        $check = RowSetHelper::searchInRowSet($primaryKeys, 'Column_name', $column['column_name']);
         if (isset($check))
         {
           $resultColumns[] = $column;

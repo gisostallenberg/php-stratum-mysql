@@ -28,7 +28,7 @@ class InsertRoutine extends BaseRoutine
       }
       else
       {
-        $format = sprintf('%%-%ds %%s', $offset, $padding);
+        $format = sprintf('%%-%ds %%s', $offset);
         $this->codeStore->append(sprintf($format, ',', $column['column_name']));
         if ($column===end($columns))
         {

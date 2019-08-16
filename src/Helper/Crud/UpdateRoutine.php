@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Helper\Crud;
 
+use SetBased\Stratum\Helper\RowSetHelper;
 use SetBased\Stratum\MySql\MetadataDataLayer;
-use SetBased\Stratum\MySql\StaticDataLayer;
 
 /**
  * Generates the code for a stored routine that updates a row.
@@ -22,7 +22,7 @@ class UpdateRoutine extends BaseRoutine
 
     foreach ($columns as $column)
     {
-      $check = StaticDataLayer::searchInRowSet('Column_name', $column['column_name'], $primaryKeys);
+      $check = RowSetHelper::searchInRowSet($primaryKeys, 'Column_name', $column['column_name']);
       if (!isset($check))
       {
         $set[] = $column;
