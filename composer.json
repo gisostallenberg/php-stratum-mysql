@@ -1,6 +1,6 @@
 {
   "name": "setbased/php-stratum-mysql",
-  "description": "PhpStratum MySQL: A stored procedure and function loader, wrapper generator for MySQL and MariaDB",
+  "description": "PhpStratum MySQL: A stored procedure loader and wrapper generator for MySQL and MariaDB",
   "keywords": [
     "PhpStratum",
     "MariaDB",
