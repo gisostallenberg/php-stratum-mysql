@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql;
 
-use mysqli_stmt;
 use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\BulkHandler;
@@ -964,11 +963,11 @@ class DataLayer
    *
    * Wrapper around [mysqli_stmt::send_long_data](http://php.net/manual/mysqli-stmt.send-long-data.php).
    *
-   * @param mysqli_stmt $statement The prepared statement.
-   * @param int         $paramNr   The 0-indexed parameter number.
-   * @param string|null $data      The data.
+   * @param \mysqli_stmt $statement The prepared statement.
+   * @param int          $paramNr   The 0-indexed parameter number.
+   * @param string|null  $data      The data.
    */
-  protected function sendLongData(mysqli_stmt $statement, int $paramNr, ?string $data): void
+  protected function sendLongData(\mysqli_stmt $statement, int $paramNr, ?string $data): void
   {
     if ($data!==null)
     {

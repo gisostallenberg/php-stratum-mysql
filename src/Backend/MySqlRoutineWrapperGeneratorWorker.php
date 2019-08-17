@@ -6,7 +6,6 @@ namespace SetBased\Stratum\MySql\Backend;
 use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
 use SetBased\Helper\CodeStore\PhpCodeStore;
-use SetBased\Stratum\ConstantWorker;
 use SetBased\Stratum\Helper\NonStatic;
 use SetBased\Stratum\MySql\Wrapper\Wrapper;
 use SetBased\Stratum\NameMangler\NameMangler;
@@ -89,7 +88,6 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
   private $wrapperFilename;
 
   //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * @inheritdoc
    */
