@@ -112,11 +112,9 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   /**
    * @inheritdoc
    */
-  public function execute(): int
+  public function execute(?array $sources=null): int
   {
     $this->io->title('Loader');
-
-    $filenames = null; // xxxx$input->getArgument('sources');
 
     $this->phpStratumMetadataFilename = $this->settings->manString('loader.metadata');
     $this->sourcePattern              = $this->settings->manString('loader.sources');
@@ -128,13 +126,13 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
 
     $this->connect();
 
-    if (empty($filenames))
+    if (empty($sources))
     {
       $this->loadAll();
     }
     else
     {
-      $this->loadList($filenames);
+      $this->loadList($sources);
     }
 
     $this->logOverviewErrors();
@@ -233,21 +231,21 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   /**
    * Finds all source files that actually exists from a list of file names.
    *
-   * @param string[] $filenames The list of file names.
+   * @param string[] $sources The list of file names.
    */
-  private function findSourceFilesFromList(array $filenames): void
+  private function findSourceFilesFromList(array $sources): void
   {
-    foreach ($filenames as $filename)
+    foreach ($sources as $path)
     {
-      if (!file_exists($filename))
+      if (!file_exists($path))
       {
-        $this->io->error(sprintf("File not exists: '%s'", $filename));
-        $this->errorFilenames[] = $filename;
+        $this->io->error(sprintf("File not exists: '%s'", $path));
+        $this->errorFilenames[] = $path;
       }
       else
       {
-        $routineName     = pathinfo($filename, PATHINFO_FILENAME);
-        $this->sources[] = ['path_name'    => $filename,
+        $routineName     = pathinfo($path, PATHINFO_FILENAME);
+        $this->sources[] = ['path_name'    => $path,
                             'routine_name' => $routineName,
                             'method_name'  => $this->methodName($routineName)];
       }
@@ -393,11 +391,11 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   /**
    * Loads all stored routines in a list into MySQL.
    *
-   * @param string[] $fileNames The list of files to be loaded.
+   * @param string[] $sources The list of files to be loaded.
    */
-  private function loadList(array $fileNames): void
+  private function loadList(array $sources): void
   {
-    $this->findSourceFilesFromList($fileNames);
+    $this->findSourceFilesFromList($sources);
     $this->detectNameConflicts();
     $this->getColumnTypes();
     $this->readStoredRoutineMetadata();
