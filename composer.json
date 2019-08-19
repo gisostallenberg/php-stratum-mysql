@@ -20,14 +20,14 @@
     "setbased/exception": "^1.0.0",
     "setbased/helper-code-store-mysql": "^2.0.0",
     "setbased/helper-code-store-php": "^2.0.0",
-    "setbased/php-stratum": "dev-master",
-    "setbased/php-stratum-backend": "dev-master",
+    "setbased/php-stratum-backend": "4.0.0",
     "setbased/php-stratum-common": "dev-master",
     "zendframework/zend-code": "^3.0.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.0.0",
-    "phing/phing": "^2.0.0"
+    "phing/phing": "^2.0.0",
+    "setbased/php-stratum": "4.0.0"
   },
   "autoload": {
     "psr-4": {
