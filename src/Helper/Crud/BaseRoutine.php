@@ -3,17 +3,9 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Helper\Crud;
 
-use SetBased\Exception\FallenException;
 use SetBased\Helper\CodeStore\MySqlCompoundSyntaxCodeStore;
 use SetBased\Stratum\Helper\RowSetHelper;
 use SetBased\Stratum\MySql\MetadataDataLayer;
-use SetBased\Stratum\StratumStyle;
-use Symfony\Component\Console\Helper\Helper;
-use Symfony\Component\Console\Helper\SymfonyQuestionHelper;
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 
 /**
  * Abstract parent class for classes for generating CRUD stored routines.
@@ -29,32 +21,11 @@ abstract class BaseRoutine
   protected $codeStore;
 
   /**
-   * The data schema.
+   * The operation for which a stored routines must be generated.
    *
    * @var string
    */
-  protected $dataSchema;
-
-  /**
-   * InputInterface.
-   *
-   * @var InputInterface
-   */
-  protected $input;
-
-  /**
-   * The output decorator
-   *
-   * @var StratumStyle
-   */
-  protected $io;
-
-  /**
-   * OutputInterface.
-   *
-   * @var OutputInterface
-   */
-  protected $output;
+  protected $operation;
 
   /**
    * Metadata about the stored routine parameters.
@@ -64,18 +35,25 @@ abstract class BaseRoutine
   protected $parameters;
 
   /**
-   * The stored procedure name
+   * The primary key of the table.
    *
-   * @var string
+   * @var array|array[]
    */
-  protected $spName;
+  protected $primaryKey;
 
   /**
-   * The stored procedure type
+   * The name of the generated stored procedure.
    *
    * @var string
    */
-  protected $spType;
+  protected $routineName;
+
+  /**
+   * The data schema.
+   *
+   * @var string
+   */
+  protected $schemaName;
 
   /**
    * Metadata about the columns of the table.
@@ -85,82 +63,43 @@ abstract class BaseRoutine
   protected $tableColumns;
 
   /**
-   * The table name.
+   * The name of the table for which a stored routine must be generated.
    *
    * @var string
    */
   protected $tableName;
 
   /**
-   * Helper for questions.
+   * The unique index on the table.
    *
-   * @var SymfonyQuestionHelper
+   * @var array[]
    */
-  private $helper;
+  protected $uniqueIndexes;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Object constructor.
    *
-   * @param InputInterface  $input
-   * @param OutputInterface $output
-   * @param                 $helper     Helper for questions.
-   * @param string          $spType     Stored procedure type {insert|update|delete|select}.
-   * @param string          $spName     Stored procedure name.
-   * @param string          $tableName  The table name.
-   * @param string          $dataSchema Data schema.
+   * @param string $tableName   The name of the table for which a stored routine must be generated.
+   * @param string $operation   The operation for which a stored routines must be generated.
+   * @param string $routineName The name of the generated stored procedure.
+   * @param string $schemaName  Data schema.
    */
-  public function __construct(InputInterface $input,
-                              OutputInterface $output,
-                              $helper,
-                              string $spType,
-                              string $spName,
-                              string $tableName,
-                              string $dataSchema)
+  public function __construct(string $tableName,
+                              string $operation,
+                              string $routineName,
+                              string $schemaName)
   {
-    $this->io = new StratumStyle($input, $output);
+    $this->tableName   = $tableName;
+    $this->operation   = $operation;
+    $this->routineName = $routineName;
+    $this->schemaName  = $schemaName;
 
-    $this->input      = $input;
-    $this->output     = $output;
-    $this->helper     = $helper;
-    $this->dataSchema = $dataSchema;
-    $this->spName     = $spName;
-    $this->spType     = $spType;
-    $this->tableName  = $tableName;
+    $this->tableColumns  = MetadataDataLayer::tableColumns($this->schemaName, $this->tableName);
+    $this->primaryKey    = MetadataDataLayer::tablePrimaryKey($this->schemaName, $this->tableName);
+    $this->uniqueIndexes = MetadataDataLayer::tableUniqueIndexes($this->schemaName, $this->tableName);
 
     $this->codeStore = new MySqlCompoundSyntaxCodeStore();
-
-    $tableColumns = MetadataDataLayer::getTableColumns($this->dataSchema, $this->tableName);
-    $params       = [];
-    if ($spType!=='INSERT')
-    {
-      $params = $this->checkUniqueKeys($tableColumns, $this->spType);
-    }
-
-    if (!isset($params))
-    {
-      $params = $tableColumns;
-    }
-
-    switch ($spType)
-    {
-      case 'INSERT':
-      case 'UPDATE':
-        $this->generateDocBlock($tableColumns);
-        $this->generateMainPart($tableColumns);
-        break;
-
-      default:
-        $this->generateDocBlock($params);
-        $this->generateMainPart($params);
-    }
-
-    $this->modifiesPart($this->checkAutoIncrement($tableColumns));
-    $this->codeStore->append('begin');
-
-    $this->generateBody($params, $tableColumns);
-
-    $this->codeStore->append('end');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -171,12 +110,14 @@ abstract class BaseRoutine
    */
   public function getCode(): string
   {
+    $this->generateRoutine();
+
     return $this->codeStore->getCode();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Checks if the table has a auto_increment column.
+   * Returns tre if and only if the table has an auto_increment column.
    *
    * @param array[] $columns Columns from table.
    *
@@ -197,135 +138,52 @@ abstract class BaseRoutine
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generate main part with name and params.
-   *
-   * @param array[]     $columns Columns from table.
-   * @param string|null $spType  Stored procedure type {insert|update|delete|select}.
-   *
-   * @return array|null
-   */
-  protected function checkUniqueKeys(array $columns, ?string $spType = null): ?array
-  {
-    $primaryKeys = MetadataDataLayer::getTablePrimaryKeys($this->dataSchema, $this->tableName);
-    $uniqueKeys  = MetadataDataLayer::getTableUniqueKeys($this->dataSchema, $this->tableName);
-
-    $resultColumns = [];
-
-    if (!isset($spType))
-    {
-      if (empty($uniqueKeys) && empty($primaryKeys))
-      {
-        return null;
-      }
-      else
-      {
-        return $columns;
-      }
-    }
-
-    if (!empty($primaryKeys))
-    {
-      foreach ($columns as $column)
-      {
-        $check = RowSetHelper::searchInRowSet($primaryKeys, 'Column_name', $column['column_name']);
-        if (isset($check))
-        {
-          $resultColumns[] = $column;
-        }
-      }
-
-      return $resultColumns;
-    }
-    else
-    {
-      if (!empty($uniqueKeys))
-      {
-        reset($uniqueKeys);
-        $first = key($uniqueKeys);
-        if (count($uniqueKeys)>1)
-        {
-          $this->io->writeln(sprintf('Table <dbo>%s</dbo> has more than one unique key.', $this->tableName));
-
-          $array = [];
-          foreach ($uniqueKeys as $column)
-          {
-            if (isset($array[$column['Key_name']]))
-            {
-              $array[$column['Key_name']] .= ',';
-              $array[$column['Key_name']] .= $column['Column_name'];
-            }
-            else
-            {
-              $array[$column['Key_name']] = $column['Column_name'];
-            }
-          }
-
-          $tableArray = [];
-          foreach ($array as $key => $column)
-          {
-            $tableArray[] = [$key, $column];
-          }
-
-          $table = new Table($this->output);
-          $table->setHeaders(['Name', 'Keys']);
-          $table->setRows($tableArray);
-          $table->render();
-
-          $question   = new Question(sprintf('What unique keys use in statement?(%s): ',
-                                             $uniqueKeys[$first]['Key_name']),
-                                     $uniqueKeys[$first]['Key_name']);
-          $uniqueKeys = $this->helper->ask($this->input, $this->output, $question);
-          $uniqueKeys = explode(',', $array[$uniqueKeys]);
-          foreach ($uniqueKeys as $column)
-          {
-            $resultColumns[] = ['column_name' => $column];
-          }
-
-          return $resultColumns;
-        }
-        else
-        {
-          foreach ($uniqueKeys as $column)
-          {
-            $resultColumns[] = ['column_name' => $column['Column_name']];
-          }
-
-          return $resultColumns;
-        }
-      }
-      else
-      {
-        return null;
-      }
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Generates the body of the stored routine.
-   *
-   * @param array[] $columns Columns from table.
-   * @param array[] $params  Params for where block.
-   *
-   * @return void
    */
-  abstract protected function generateBody(array $params, array $columns): void;
+  abstract protected function generateBody(): void;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Generates the doc block for the stored routine.
-   *
-   * @param array[] $columns Columns from table.
    */
-  protected function generateDocBlock(array $columns): void
+  abstract protected function generateDocBlock(): void;
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates the doc block for a stored routine that uses all columns and (preferably) a key (i.e. update).
+   */
+  protected function generateDocBlockAllColumnsWithKeyList(): void
   {
     $this->codeStore->append('/**');
     $this->codeStore->append(' * @todo describe routine', false);
     $this->codeStore->append(' * ', false);
 
-    $padding = $this->getMaxColumnLength($columns);
+    $padding = $this->maxColumnNameLength($this->tableColumns);
     $format  = sprintf(' * @param p_%%-%ds @todo describe parameter', $padding);
-    foreach ($columns as $column)
+    foreach ($this->tableColumns as $column)
+    {
+      $this->codeStore->append(sprintf($format, $column['column_name']), false);
+    }
+
+    $this->generateKeyListInDocBlock();
+
+    $this->codeStore->append(' */', false);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates the doc block for a stored routine that uses all columns except auto increment column (i.e. insert).
+   */
+  protected function generateDocBlockAllColumnsWithoutAutoIncrement(): void
+  {
+    $this->codeStore->append('/**');
+    $this->codeStore->append(' * @todo describe routine', false);
+    $this->codeStore->append(' * ', false);
+
+    $columns = $this->tableColumnsWithoutAutoIncrement();
+    $width   = $this->maxColumnNameLength($columns);
+    $format  = sprintf(' * @param p_%%-%ds @todo describe parameter', $width);
+    foreach ($this->tableColumns as $column)
     {
       $this->codeStore->append(sprintf($format, $column['column_name']), false);
     }
@@ -335,15 +193,70 @@ abstract class BaseRoutine
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generates the function name and parameters of the stored routine.
-   *
-   * @param array[] $columns Columns from table.
+   * Generates the doc block for a stored routine that (preferably) uses a key (i.e. select and delete).
    */
-  protected function generateMainPart(array $columns): void
+  protected function generateDocBlockWithKey(): void
   {
-    $this->codeStore->append(sprintf('create procedure %s(', $this->spName));
+    $this->codeStore->append('/**');
+    $this->codeStore->append(' * @todo describe routine', false);
+    $this->codeStore->append(' * ', false);
 
-    $padding = $this->getMaxColumnLength($columns);
+    $columns = $this->keyColumns();
+    $padding = $this->maxColumnNameLength($columns);
+    $format  = sprintf(' * @param p_%%-%ds @todo describe parameter', $padding);
+    foreach ($columns as $column)
+    {
+      $this->codeStore->append(sprintf($format, $column['column_name']), false);
+    }
+
+    $this->generateKeyListInDocBlock();
+
+    $this->codeStore->append(' */', false);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates an overview of all keys on a table in a doc block.
+   */
+  protected function generateKeyListInDocBlock(): void
+  {
+    $keys = $this->keyList();
+    if (!empty($keys))
+    {
+      if (sizeof($keys)>1 || !isset($keys['PRIMARY']))
+      {
+        $this->codeStore->append(' * ', false);
+        $this->codeStore->append(' * Possible keys:', false);
+        foreach ($keys as $keyName => $columns)
+        {
+          $this->codeStore->append(sprintf(' *   %s: %s', $keyName, $columns), false);
+        }
+      }
+    }
+    else
+    {
+      $this->codeStore->append(' * ', false);
+      $this->codeStore->append(' * NOTE: Table does not have a key.', false);
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates the function name and parameters of the stored routine.
+   */
+  abstract protected function generateRoutineDeclaration(): void;
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates the function name and parameters of a stored routine that uses all columns except auto increment column
+   * (i.e. insert).
+   */
+  protected function generateRoutineDeclarationAllColumnsWithoutAutoIncrement(): void
+  {
+    $this->codeStore->append(sprintf('create procedure %s(', $this->routineName));
+
+    $columns = $this->tableColumnsWithoutAutoIncrement();
+    $padding = $this->maxColumnNameLength($columns);
     $offset  = mb_strlen($this->codeStore->getLastLine());
 
     $first = true;
@@ -351,7 +264,7 @@ abstract class BaseRoutine
     {
       if ($first)
       {
-        $format = sprintf(' in p_%%-%ds @%%s.%%s%%s@', $padding);
+        $format = sprintf('in p_%%-%ds @%%s.%%s%%s@', $padding);
         $this->codeStore->appendToLastLine(strtolower(sprintf($format,
                                                               $column['column_name'],
                                                               $this->tableName,
@@ -360,22 +273,23 @@ abstract class BaseRoutine
       }
       else
       {
-        $format = sprintf('%%%ds p_%%-%ds @%%s.%%s%%s@', $offset + 3, $padding);
+        $format = sprintf('%%%ds p_%%-%ds @%%s.%%s%%s@', $offset + 2, $padding);
         $this->codeStore->append(strtolower(sprintf($format,
                                                     'in',
                                                     $column['column_name'],
                                                     $this->tableName,
                                                     $column['column_name'],
-                                                    '%type')), false);
+                                                    '%type')),
+                                 false);
       }
 
-      if ($column!=end($columns))
+      if ($column!=end($this->tableColumns))
       {
         $this->codeStore->appendToLastLine(',');
       }
       else
       {
-        $this->codeStore->appendToLastLine(' )');
+        $this->codeStore->appendToLastLine(')');
       }
 
       $first = false;
@@ -384,13 +298,116 @@ abstract class BaseRoutine
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the length the longest column name of a table.
+   * Generates the function name and parameters of a stored routine that (preferably) uses a key (i.e. select, update,
+   * and delete).
+   */
+  protected function generateRoutineDeclarationWithKey(): void
+  {
+    $this->codeStore->append(sprintf('create procedure %s(', $this->routineName));
+
+    $offset  = mb_strlen($this->codeStore->getLastLine());
+    $columns = $this->keyColumns();
+    $width   = $this->maxColumnNameLength($columns);
+
+    $first = true;
+    foreach ($columns as $column)
+    {
+      if ($first)
+      {
+        $format = sprintf('in p_%%-%ds @%%s.%%s%%s@', $width);
+        $this->codeStore->appendToLastLine(strtolower(sprintf($format,
+                                                              $column['column_name'],
+                                                              $this->tableName,
+                                                              $column['column_name'],
+                                                              '%type')));
+      }
+      else
+      {
+        $format = sprintf('%%%ds p_%%-%ds @%%s.%%s%%s@', $offset + 2, $width);
+        $this->codeStore->append(strtolower(sprintf($format,
+                                                    'in',
+                                                    $column['column_name'],
+                                                    $this->tableName,
+                                                    $column['column_name'],
+                                                    '%type')),
+                                 false);
+      }
+
+      if ($column!=end($columns))
+      {
+        $this->codeStore->appendToLastLine(',');
+      }
+      else
+      {
+        $this->codeStore->appendToLastLine(')');
+      }
+
+      $first = false;
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates the modifies/reads sql data and designation type comment of the stored routine.
+   */
+  abstract protected function generateSqlDataAndDesignationType(): void;
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns all columns that are in one or more keys. If the table does not have any keys all columns are returned.
    *
-   * @param array[] $columns The metadata of the columns of the table.
+   * @return array[]
+   */
+  protected function keyColumns(): ?array
+  {
+    $columns = [];
+
+    if (!empty($this->uniqueIndexes))
+    {
+      foreach ($this->tableColumns as $column)
+      {
+        if (RowSetHelper::searchInRowSet($this->uniqueIndexes, 'Column_name', $column['column_name'])!==null)
+        {
+          $columns[] = $column;
+        }
+      }
+    }
+    else
+    {
+      foreach ($this->tableColumns as $column)
+      {
+        $columns[] = $column;
+      }
+    }
+
+    return $columns;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @return array
+   */
+  protected function keyList(): array
+  {
+    $nested = $this->nestedKeys();
+    $keys   = [];
+    foreach ($nested as $keyName => $columnNames)
+    {
+      $keys[$keyName] = implode(', ', $columnNames);
+    }
+
+    return $keys;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns the length the longest column name in a list of columns.
+   *
+   * @param array[] $columns The list of columns.
    *
    * @return int
    */
-  protected function getMaxColumnLength(array $columns): int
+  protected function maxColumnNameLength(array $columns): int
   {
     $length = 0;
     foreach ($columns as $column)
@@ -403,49 +420,60 @@ abstract class BaseRoutine
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generates the modifies/reads sql data and designation type comment of the stored routine.
+   * Returns all keys (primary and unique indexes) on the table as nested array.
    *
-   * @param bool $flag Set or no type.
+   * @return array[]
    */
-  protected function modifiesPart(bool $flag): void
+  protected function nestedKeys(): array
   {
-    if ($this->spType!=='SELECT')
+    $keys = [];
+    $last = '';
+    foreach ($this->uniqueIndexes as $row)
     {
-      $this->codeStore->append('modifies sql data');
+      if ($last!==$row['Key_name']) $keys[$row['Key_name']] = [];
+
+      $keys[$row['Key_name']][] = $row['Column_name'];
+
+      $last = $row['Key_name'];
     }
-    else
-    {
-      $this->codeStore->append('reads sql data');
-    }
 
-    switch ($this->spType)
-    {
-      case 'UPDATE':
-      case 'DELETE':
-        $this->codeStore->append('-- type: none');
-        break;
-
-      case 'SELECT':
-        $this->codeStore->append('-- type: row1');
-        break;
-
-      case 'INSERT':
-        if ($flag)
-        {
-          $this->codeStore->append('-- type: singleton1');
-        }
-        else
-        {
-          $this->codeStore->append('-- type: none');
-        }
-        break;
-
-      default:
-        throw new FallenException("Unknown stored routine type '%s'", $this->spType);
-    }
+    return $keys;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns all columns of the table except any auto increment column.
+   *
+   * @return array[]
+   */
+  protected function tableColumnsWithoutAutoIncrement(): array
+  {
+    $columns = [];
+
+    foreach ($this->tableColumns as $column)
+    {
+      if ($column['extra']!='auto_increment')
+      {
+        $columns[] = $column;
+      }
+    }
+
+    return $columns;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates the code of the stored routine.
+   */
+  private function generateRoutine(): void
+  {
+    $this->generateDocBlock();
+    $this->generateRoutineDeclaration();
+    $this->generateSqlDataAndDesignationType();
+    $this->codeStore->append('begin');
+    $this->generateBody();
+    $this->codeStore->append('end');
+  }
 }
 
 //----------------------------------------------------------------------------------------------------------------------

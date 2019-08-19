@@ -193,7 +193,6 @@ class RoutineLoaderHelper
   private $sqlMode;
 
   //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * Object constructor.
    *
@@ -657,7 +656,7 @@ class RoutineLoaderHelper
    */
   private function extractRoutineParametersInfo(): void
   {
-    $routine_parameters = MetaDataLayer::getRoutineParameters($this->routineName);
+    $routine_parameters = MetaDataLayer::routineParameters($this->routineName);
     foreach ($routine_parameters as $key => $routine_parameter)
     {
       if ($routine_parameter['parameter_name'])

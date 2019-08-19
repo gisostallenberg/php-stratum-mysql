@@ -10,50 +10,86 @@ class SelectRoutine extends BaseRoutine
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * @inheritDoc
+   */
+  protected function generateSqlDataAndDesignationType(): void
+  {
+    $this->codeStore->append('reads sql data');
+    $this->codeStore->append('-- type: row1');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * @inheritdoc
    */
-  protected function generateBody(array $params, array $columns): void
+  protected function generateBody(): void
   {
     $this->codeStore->append('select');
     $offset = mb_strlen($this->codeStore->getLastLine());
 
     $first = true;
-    foreach ($columns as $key => $column)
+    foreach ($this->tableColumns as $key => $column)
     {
       if ($first)
       {
         $this->codeStore->appendToLastLine(sprintf(' %s', $column['column_name']));
+
+        $first = false;
       }
       else
       {
         $format = sprintf("%%-%ds %%s", $offset);
         $this->codeStore->append(sprintf($format, ',', $column['column_name']));
       }
-
-      $first = false;
     }
 
-    $this->codeStore->append(sprintf('from %s', $this->tableName));
+    $this->codeStore->append(sprintf('from   %s', $this->tableName));
     $this->codeStore->append('where');
 
+    $columns = $this->keyColumns();
+    $width   = $this->maxColumnNameLength($columns);
+
     $first = true;
-    foreach ($params as $key => $column)
+    foreach ($columns as $column)
     {
       if ($first)
       {
-        $format = sprintf("%%%ds %%s = p_%%s", 1);
+        $format = sprintf("%%%ds %%-%ds = p_%%s", 1, $width);
         $this->codeStore->appendToLastLine(sprintf($format, '', $column['column_name'], $column['column_name']));
+
+        $first = false;
       }
       else
       {
-        $format = sprintf("and%%%ds %%s = p_%%s", 3);
+        $format = sprintf("and%%%ds %%-%ds = p_%%s", 3, $width);
         $this->codeStore->append(sprintf($format, '', $column['column_name'], $column['column_name']));
       }
+    }
 
-      $first = false;
+    if (empty($this->uniqueIndexes))
+    {
+      $this->codeStore->append('limit 0,1');
     }
 
     $this->codeStore->append(';');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @inheritDoc
+   */
+  protected function generateDocBlock(): void
+  {
+    $this->generateDocBlockWithKey();
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates the function name and parameters of the stored routine.
+   */
+  protected function generateRoutineDeclaration(): void
+  {
+    $this->generateRoutineDeclarationWithKey();
   }
 
   //--------------------------------------------------------------------------------------------------------------------

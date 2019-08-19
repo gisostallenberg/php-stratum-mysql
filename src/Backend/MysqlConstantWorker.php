@@ -297,7 +297,7 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
    */
   private function loadColumns(): void
   {
-    $rows = DataLayer::getAllTableColumns();
+    $rows = DataLayer::allTableColumns();
     foreach ($rows as $row)
     {
       $row['length']                                          = DataTypeHelper::deriveFieldLength($row);
@@ -311,10 +311,10 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
    */
   private function loadLabels(): void
   {
-    $tables = DataLayer::getLabelTables();
+    $tables = DataLayer::allLabelTables();
     foreach ($tables as $table)
     {
-      $rows = DataLayer::getLabelsFromTable($table['table_name'], $table['id'], $table['label']);
+      $rows = DataLayer::labelsFromTable($table['table_name'], $table['id'], $table['label']);
       foreach ($rows as $row)
       {
         $this->labels[$row['label']] = $row['id'];

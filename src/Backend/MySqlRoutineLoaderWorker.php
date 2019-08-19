@@ -258,7 +258,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    */
   private function getColumnTypes(): void
   {
-    $rows = DataLayer::getAllTableColumns();
+    $rows = DataLayer::allTableColumns();
     foreach ($rows as $row)
     {
       $key = '@'.$row['table_name'].'.'.$row['column_name'].'%type@';
@@ -303,7 +303,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    */
   private function getCorrectSqlMode(): void
   {
-    $this->sqlMode = DataLayer::getCorrectSqlMode($this->sqlMode);
+    $this->sqlMode = DataLayer::correctSqlMode($this->sqlMode);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -352,7 +352,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   {
     $this->rdbmsOldMetadata = [];
 
-    $routines = DataLayer::getRoutines();
+    $routines = DataLayer::allRoutines();
     foreach ($routines as $routine)
     {
       $this->rdbmsOldMetadata[$routine['routine_name']] = $routine;

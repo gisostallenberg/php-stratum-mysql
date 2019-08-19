@@ -26,7 +26,116 @@ class MetadataDataLayer
   private static $io;
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects metadata of tables with a label column.
+   *
+   * @return array[]
+   */
+  public static function allLabelTables(): array
+  {
+    $query = "
+select t1.table_name  table_name
+,      t1.column_name id
+,      t2.column_name label
+from       information_schema.columns t1
+inner join information_schema.columns t2 on t1.table_name = t2.table_name
+where t1.table_schema = database()
+and   t1.extra        = 'auto_increment'
+and   t2.table_schema = database()
+and   t2.column_name like '%%\\_label'";
 
+    return self::executeRows($query);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects all routines in the current schema.
+   *
+   * @return array[]
+   */
+  public static function allRoutines(): array
+  {
+    $query = '
+select routine_name
+,      routine_type
+,      sql_mode
+,      character_set_client
+,      collation_connection
+from  information_schema.ROUTINES
+where ROUTINE_SCHEMA = database()
+order by routine_name';
+
+    return self::executeRows($query);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects metadata of all columns of all tables.
+   *
+   * @return array[]
+   */
+  public static function allTableColumns(): array
+  {
+    $query = "
+(
+  select table_name
+  ,      column_name
+  ,      column_type
+  ,      data_type
+  ,      character_maximum_length
+  ,      numeric_precision
+  ,      numeric_scale
+  from   information_schema.COLUMNS
+  where  table_schema = database()
+  and    table_name  rlike '^[a-zA-Z0-9_]*$'
+  and    column_name rlike '^[a-zA-Z0-9_]*$'
+  order by table_name
+  ,        ordinal_position
+)
+
+union all
+
+(
+  select concat(table_schema,'.',table_name) table_name
+  ,      column_name
+  ,      column_type
+  ,      data_type
+  ,      character_maximum_length
+  ,      numeric_precision
+  ,      numeric_scale
+  from   information_schema.COLUMNS
+  where  table_name  rlike '^[a-zA-Z0-9_]*$'
+  and    column_name rlike '^[a-zA-Z0-9_]*$'
+  order by table_schema
+  ,        table_name
+  ,        ordinal_position
+)
+";
+
+    return self::executeRows($query);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects all table names in a schema.
+   *
+   * @param string $schemaName The name of the schema.
+   *
+   * @return array[]
+   */
+  public static function allTablesNames(string $schemaName): array
+  {
+    $sql = sprintf("
+select TABLE_NAME as table_name
+from   information_schema.TABLES
+where  TABLE_SCHEMA = %s
+and    TABLE_TYPE   = 'BASE TABLE'
+order by TABLE_NAME", self::$dl->quoteString($schemaName));
+
+    return self::$dl->executeRows($sql);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Class a stored procedure without arguments.
    *
@@ -76,6 +185,24 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
     self::$dl = new StaticDataLayer();
 
     self::$dl->connect($host, $user, $passWord, $database, $port);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects the SQL mode in the order as preferred by MySQL.
+   *
+   * @param string $sqlMode The SQL mode.
+   *
+   * @return string
+   */
+  public static function correctSqlMode(string $sqlMode): string
+  {
+    $query = sprintf('set sql_mode = %s', self::$dl->quoteString($sqlMode));
+    self::executeNone($query);
+
+    $query = 'select @@sql_mode';
+
+    return (string)self::executeSingleton1($query);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -192,7 +319,6 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
 
     return self::$dl->executeRows($query);
   }
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Executes a query that returns 0 or 1 row.
@@ -227,92 +353,6 @@ and   table_name   = %s', self::$dl->quoteString($tableName));
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Selects metadata of all columns of all tables.
-   *
-   * @return array[]
-   */
-  public static function getAllTableColumns(): array
-  {
-    $query = "
-(
-  select table_name
-  ,      column_name
-  ,      column_type
-  ,      data_type
-  ,      character_maximum_length
-  ,      numeric_precision
-  ,      numeric_scale
-  from   information_schema.COLUMNS
-  where  table_schema = database()
-  and    table_name  rlike '^[a-zA-Z0-9_]*$'
-  and    column_name rlike '^[a-zA-Z0-9_]*$'
-  order by table_name
-  ,        ordinal_position
-)
-
-union all
-
-(
-  select concat(table_schema,'.',table_name) table_name
-  ,      column_name
-  ,      column_type
-  ,      data_type
-  ,      character_maximum_length
-  ,      numeric_precision
-  ,      numeric_scale
-  from   information_schema.COLUMNS
-  where  table_name  rlike '^[a-zA-Z0-9_]*$'
-  and    column_name rlike '^[a-zA-Z0-9_]*$'
-  order by table_schema
-  ,        table_name
-  ,        ordinal_position
-)
-";
-
-    return self::executeRows($query);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Selects the SQL mode in the order as preferred by MySQL.
-   *
-   * @param string $sqlMode The SQL mode.
-   *
-   * @return string
-   */
-  public static function getCorrectSqlMode(string $sqlMode): string
-  {
-    $query = sprintf('set sql_mode = %s', self::$dl->quoteString($sqlMode));
-    self::executeNone($query);
-
-    $query = 'select @@sql_mode';
-
-    return (string)self::executeSingleton1($query);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Selects metadata of tables with a label column.
-   *
-   * @return array[]
-   */
-  public static function getLabelTables(): array
-  {
-    $query = "
-select t1.table_name  table_name
-,      t1.column_name id
-,      t2.column_name label
-from       information_schema.columns t1
-inner join information_schema.columns t2 on t1.table_name = t2.table_name
-where t1.table_schema = database()
-and   t1.extra        = 'auto_increment'
-and   t2.table_schema = database()
-and   t2.column_name like '%%\\_label'";
-
-    return self::executeRows($query);
-  }
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Selects all labels from a table with labels.
    *
    * @param string $tableName       The table name.
@@ -321,7 +361,7 @@ and   t2.column_name like '%%\\_label'";
    *
    * @return array[]
    */
-  public static function getLabelsFromTable(string $tableName, string $idColumnName, string $labelColumnName): array
+  public static function labelsFromTable(string $tableName, string $idColumnName, string $labelColumnName): array
   {
     $query = "
 select `%s`  id
@@ -332,143 +372,6 @@ where   nullif(`%s`,'') is not null";
     $query = sprintf($query, $idColumnName, $labelColumnName, $tableName, $labelColumnName);
 
     return self::executeRows($query);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Selects the parameters of a stored routine.
-   *
-   * @param string $routineName The name of the routine.
-   *
-   * @return array[]
-   */
-  public static function getRoutineParameters(string $routineName): array
-  {
-    $query = sprintf("
-select t2.parameter_name
-,      t2.data_type
-,      t2.numeric_precision
-,      t2.numeric_scale
-,      t2.character_set_name
-,      t2.collation_name
-,      t2.dtd_identifier
-from            information_schema.ROUTINES   t1
-left outer join information_schema.PARAMETERS t2  on  t2.specific_schema = t1.routine_schema and
-                                                      t2.specific_name   = t1.routine_name and
-                                                      t2.parameter_mode   is not null
-where t1.routine_schema = database()
-and   t1.routine_name   = '%s'", $routineName);
-
-    return self::executeRows($query);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Selects all routines in the current schema.
-   *
-   * @return array[]
-   */
-  public static function getRoutines(): array
-  {
-    $query = '
-select routine_name
-,      routine_type
-,      sql_mode
-,      character_set_client
-,      collation_connection
-from  information_schema.ROUTINES
-where ROUTINE_SCHEMA = database()
-order by routine_name';
-
-    return self::executeRows($query);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Selects metadata of all columns of table.
-   *
-   * @param string $schemaName The name of the table schema.
-   * @param string $tableName  The name of the table.
-   *
-   * @return array[]
-   */
-  public static function getTableColumns(string $schemaName, string $tableName): array
-  {
-    $sql = sprintf('
-select COLUMN_NAME        as column_name
-,      COLUMN_TYPE        as column_type
-,      IS_NULLABLE        as is_nullable
-,      CHARACTER_SET_NAME as character_set_name
-,      COLLATION_NAME     as collation_name
-,      EXTRA              as extra
-from   information_schema.COLUMNS
-where  TABLE_SCHEMA = %s
-and    TABLE_NAME   = %s
-order by ORDINAL_POSITION',
-                   self::$dl->quoteString($schemaName),
-                   self::$dl->quoteString($tableName));
-
-    return self::$dl->executeRows($sql);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Selects all primary keys from table.
-   *
-   * @param string $schemaName The name of the table schema.
-   * @param string $tableName  The name of the table.
-   *
-   * @return array[]
-   */
-  public static function getTablePrimaryKeys(string $schemaName, string $tableName): array
-  {
-    $sql = sprintf('
-show index from %s.%s
-where Key_name = \'PRIMARY\'',
-                   $schemaName,
-                   $tableName);
-
-    return self::$dl->executeRows($sql);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Selects all unique keys from table.
-   *
-   * @param string $schemaName The name of the table schema.
-   * @param string $tableName  The name of the table.
-   *
-   * @return array[]
-   */
-  public static function getTableUniqueKeys(string $schemaName, string $tableName): array
-  {
-    $sql = sprintf('
-SHOW INDEX FROM %s.%s
-WHERE Non_unique = 0',
-                   $schemaName,
-                   $tableName);
-
-    return self::$dl->executeRows($sql);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Selects all table names in a schema.
-   *
-   * @param string $schemaName The name of the schema.
-   *
-   * @return array[]
-   */
-  public static function getTablesNames(string $schemaName): array
-  {
-    $sql = sprintf("
-select TABLE_NAME as table_name
-from   information_schema.TABLES
-where  TABLE_SCHEMA = %s
-and    TABLE_TYPE   = 'BASE TABLE'
-order by TABLE_NAME", self::$dl->quoteString($schemaName));
-
-    return self::$dl->executeRows($sql);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -495,6 +398,34 @@ order by TABLE_NAME", self::$dl->quoteString($schemaName));
   public static function realEscapeString(string $string): string
   {
     return self::$dl->realEscapeString($string);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects the parameters of a stored routine.
+   *
+   * @param string $routineName The name of the routine.
+   *
+   * @return array[]
+   */
+  public static function routineParameters(string $routineName): array
+  {
+    $query = sprintf("
+select t2.parameter_name
+,      t2.data_type
+,      t2.numeric_precision
+,      t2.numeric_scale
+,      t2.character_set_name
+,      t2.collation_name
+,      t2.dtd_identifier
+from            information_schema.ROUTINES   t1
+left outer join information_schema.PARAMETERS t2  on  t2.specific_schema = t1.routine_schema and
+                                                      t2.specific_name   = t1.routine_name and
+                                                      t2.parameter_mode   is not null
+where t1.routine_schema = database()
+and   t1.routine_name   = '%s'", $routineName);
+
+    return self::executeRows($query);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -533,6 +464,74 @@ order by TABLE_NAME", self::$dl->quoteString($schemaName));
     $sql = sprintf('set sql_mode = %s', self::$dl->quoteString($sqlMode));
 
     self::executeNone($sql);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects metadata of all columns of table.
+   *
+   * @param string $schemaName The name of the table schema.
+   * @param string $tableName  The name of the table.
+   *
+   * @return array[]
+   */
+  public static function tableColumns(string $schemaName, string $tableName): array
+  {
+    $sql = sprintf('
+select COLUMN_NAME        as column_name
+,      COLUMN_TYPE        as column_type
+,      IS_NULLABLE        as is_nullable
+,      CHARACTER_SET_NAME as character_set_name
+,      COLLATION_NAME     as collation_name
+,      EXTRA              as extra
+from   information_schema.COLUMNS
+where  TABLE_SCHEMA = %s
+and    TABLE_NAME   = %s
+order by ORDINAL_POSITION',
+                   self::$dl->quoteString($schemaName),
+                   self::$dl->quoteString($tableName));
+
+    return self::$dl->executeRows($sql);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects the primary key from a table (if any).
+   *
+   * @param string $schemaName The name of the table schema.
+   * @param string $tableName  The name of the table.
+   *
+   * @return array[]
+   */
+  public static function tablePrimaryKey(string $schemaName, string $tableName): array
+  {
+    $sql = sprintf('
+show index from `%s`.`%s`
+where Key_name = \'PRIMARY\'',
+                   $schemaName,
+                   $tableName);
+
+    return self::$dl->executeRows($sql);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects all unique keys from table.
+   *
+   * @param string $schemaName The name of the table schema.
+   * @param string $tableName  The name of the table.
+   *
+   * @return array[]
+   */
+  public static function tableUniqueIndexes(string $schemaName, string $tableName): array
+  {
+    $sql = sprintf('
+show index from `%s`.`%s`
+where Non_unique = 0',
+                   $schemaName,
+                   $tableName);
+
+    return self::$dl->executeRows($sql);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

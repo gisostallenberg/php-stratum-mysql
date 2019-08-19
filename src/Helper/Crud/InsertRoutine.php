@@ -12,12 +12,13 @@ class InsertRoutine extends BaseRoutine
   /**
    * @inheritdoc
    */
-  protected function generateBody(array $params, array $columns): void
+  protected function generateBody(): void
   {
-    $padding = $this->getMaxColumnLength($columns);
-
     $this->codeStore->append(sprintf('insert into %s(', $this->tableName));
-    $offset = mb_strlen($this->codeStore->getLastLine());
+
+    $offset  = mb_strlen($this->codeStore->getLastLine());
+    $columns = $this->tableColumnsWithoutAutoIncrement();
+    $padding = $this->maxColumnNameLength($columns);
 
     $first = true;
     foreach ($columns as $column)
@@ -25,18 +26,19 @@ class InsertRoutine extends BaseRoutine
       if ($first)
       {
         $this->codeStore->appendToLastLine(sprintf(' %s', $column['column_name']));
+
+        $first = false;
       }
       else
       {
         $format = sprintf('%%-%ds %%s', $offset);
         $this->codeStore->append(sprintf($format, ',', $column['column_name']));
-        if ($column===end($columns))
+
+        if ($column===end($this->tableColumns))
         {
           $this->codeStore->appendToLastLine(' )');
         }
       }
-
-      $first = false;
     }
 
     $this->codeStore->append('values(');
@@ -48,25 +50,63 @@ class InsertRoutine extends BaseRoutine
       if ($first)
       {
         $this->codeStore->appendToLastLine(sprintf(' p_%s', $column['column_name']));
+
+        $first = false;
       }
       else
       {
         $format = sprintf('%%-%ds p_%%-%ds', $offset, $padding);
         $this->codeStore->append(sprintf($format, ',', $column['column_name']));
-        if ($column===end($columns))
+
+        if ($column===end($this->tableColumns))
         {
           $this->codeStore->appendToLastLine(' )');
         }
       }
-
-      $first = false;
     }
     $this->codeStore->append(';');
 
-    if ($this->checkAutoIncrement($columns))
+    if ($this->checkAutoIncrement($this->tableColumns))
     {
       $this->codeStore->append('');
       $this->codeStore->append('select last_insert_id();');
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @inheritDoc
+   */
+  protected function generateDocBlock(): void
+  {
+    $this->generateDocBlockAllColumnsWithoutAutoIncrement();
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates the function name and parameters of the stored routine.
+   */
+  protected function generateRoutineDeclaration(): void
+  {
+    $this->generateRoutineDeclarationAllColumnsWithoutAutoIncrement();
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @inheritDoc
+   */
+  protected function generateSqlDataAndDesignationType(): void
+  {
+    $this->codeStore->append('modifies sql data');
+
+    if ($this->checkAutoIncrement($this->tableColumns))
+    {
+      $this->codeStore->append('-- type:   singleton1');
+      $this->codeStore->append('-- return: int');
+    }
+    else
+    {
+      $this->codeStore->append('-- type: none');
     }
   }
 

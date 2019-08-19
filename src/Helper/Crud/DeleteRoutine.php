@@ -10,37 +10,34 @@ class DeleteRoutine extends BaseRoutine
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generate body part.
-   *
-   * @param array[] $columns Columns from table.
-   * @param array[] $params  Params for where block.
+   * @inheritDoc
    */
-  protected function generateBody(array $params, array $columns): void
+  protected function generateBody(): void
   {
-    $uniqueColumns = $this->checkUniqueKeys($columns);
-    $limit         = ($uniqueColumns==null);
-
     $this->codeStore->append(sprintf('delete from %s', $this->tableName));
     $this->codeStore->append('where');
 
+    $columns = $this->keyColumns();
+    $width   = $this->maxColumnNameLength($columns);
+
     $first = true;
-    foreach ($params as $column)
+    foreach ($columns as $column)
     {
       if ($first)
       {
-        $format = sprintf("%%%ds %%s = p_%%s", 1);
+        $format = sprintf("%%%ds %%-%ds = p_%%s", 1, $width);
         $this->codeStore->appendToLastLine(sprintf($format, '', $column['column_name'], $column['column_name']));
+
+        $first = false;
       }
       else
       {
-        $format = sprintf("and%%%ds %%s = p_%%s", 3);
+        $format = sprintf("and%%%ds %%-%ds = p_%%s", 3, $width);
         $this->codeStore->append(sprintf($format, '', $column['column_name'], $column['column_name']));
       }
-
-      $first = false;
     }
 
-    if ($limit)
+    if (empty($this->uniqueIndexes))
     {
       $this->codeStore->append('limit 0,1');
     }
@@ -49,6 +46,31 @@ class DeleteRoutine extends BaseRoutine
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @inheritDoc
+   */
+  protected function generateDocBlock(): void
+  {
+    $this->generateDocBlockWithKey();
+  }
 
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates the function name and parameters of the stored routine.
+   */
+  protected function generateRoutineDeclaration(): void
+  {
+    $this->generateRoutineDeclarationWithKey();
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @inheritDoc
+   */
+  protected function generateSqlDataAndDesignationType(): void
+  {
+    $this->codeStore->append('modifies sql data');
+    $this->codeStore->append('-- type: none');
+  }
 }
 //----------------------------------------------------------------------------------------------------------------------
