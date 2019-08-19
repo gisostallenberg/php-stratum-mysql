@@ -30,6 +30,18 @@ class DataLayerTestCase extends TestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns true if the server is a MariaDB 10.3 or 10.4 instance.
+   *
+   * @return bool
+   */
+  protected function isMariaDB103plus(): bool
+  {
+    $row = $this->dataLayer->executeRow1("show variables like 'version'");
+
+    return (preg_match('/^10\.[34].*MariaDB$/', $row['Value'])==1);
+  }
+  //--------------------------------------------------------------------------------------------------------------------
 }
 
 //----------------------------------------------------------------------------------------------------------------------

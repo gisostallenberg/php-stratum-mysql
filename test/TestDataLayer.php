@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql\Test;
 
 use SetBased\Stratum\Exception\ResultException;
-use SetBased\Stratum\MySql\StaticDataLayer;
+use SetBased\Stratum\MySql\DataLayer;
 
 /**
  * The data layer.
  */
-class TestDataLayer extends StaticDataLayer
+class TestDataLayer extends DataLayer
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -17,9 +17,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return string
    */
-  public static function tstMagicConstant01(): string
+  public function tstMagicConstant01(): string
   {
-    return self::executeSingleton1('call tst_magic_constant01()');
+    return $this->executeSingleton1('call tst_magic_constant01()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -28,9 +28,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return int
    */
-  public static function tstMagicConstant02(): int
+  public function tstMagicConstant02(): int
   {
-    return self::executeSingleton1('call tst_magic_constant02()');
+    return $this->executeSingleton1('call tst_magic_constant02()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -39,9 +39,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return string
    */
-  public static function tstMagicConstant03(): string
+  public function tstMagicConstant03(): string
   {
-    return self::executeSingleton1('call tst_magic_constant03()');
+    return $this->executeSingleton1('call tst_magic_constant03()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -50,9 +50,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return string
    */
-  public static function tstMagicConstant04(): string
+  public function tstMagicConstant04(): string
   {
-    return self::executeSingleton1('call tst_magic_constant04()');
+    return $this->executeSingleton1('call tst_magic_constant04()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -61,9 +61,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return string
    */
-  public static function tstMagicConstant05(): string
+  public function tstMagicConstant05(): string
   {
-    return self::executeSingleton1('call tst_magic_constant05()');
+    return $this->executeSingleton1('call tst_magic_constant05()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -125,9 +125,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return int
    */
-  public static function tstTest01(?int $pTstInt, ?int $pTstSmallint, ?int $pTstTinyint, ?int $pTstMediumint, ?int $pTstBigint, ?int $pTstIntUnsigned, ?int $pTstSmallintUnsigned, ?int $pTstTinyintUnsigned, ?int $pTstMediumintUnsigned, ?int $pTstBigintUnsigned, $pTstDecimal, $pTstDecimal0, ?float $pTstFloat, ?float $pTstDouble, ?string $pTstBit, ?string $pTstDate, ?string $pTstDatetime, ?string $pTstTimestamp, ?string $pTstTime, ?int $pTstYear, ?string $pTstChar, ?string $pTstVarchar, ?string $pTstBinary, ?string $pTstVarbinary, ?string $pTstEnum, ?string $pTstSet): int
+  public function tstTest01(?int $pTstInt, ?int $pTstSmallint, ?int $pTstTinyint, ?int $pTstMediumint, ?int $pTstBigint, ?int $pTstIntUnsigned, ?int $pTstSmallintUnsigned, ?int $pTstTinyintUnsigned, ?int $pTstMediumintUnsigned, ?int $pTstBigintUnsigned, $pTstDecimal, $pTstDecimal0, ?float $pTstFloat, ?float $pTstDouble, ?string $pTstBit, ?string $pTstDate, ?string $pTstDatetime, ?string $pTstTimestamp, ?string $pTstTime, ?int $pTstYear, ?string $pTstChar, ?string $pTstVarchar, ?string $pTstBinary, ?string $pTstVarbinary, ?string $pTstEnum, ?string $pTstSet): int
   {
-    return self::executeNone('call tst_test01('.self::quoteInt($pTstInt).','.self::quoteInt($pTstSmallint).','.self::quoteInt($pTstTinyint).','.self::quoteInt($pTstMediumint).','.self::quoteInt($pTstBigint).','.self::quoteInt($pTstIntUnsigned).','.self::quoteInt($pTstSmallintUnsigned).','.self::quoteInt($pTstTinyintUnsigned).','.self::quoteInt($pTstMediumintUnsigned).','.self::quoteInt($pTstBigintUnsigned).','.self::quoteDecimal($pTstDecimal).','.self::quoteDecimal($pTstDecimal0).','.self::quoteFloat($pTstFloat).','.self::quoteFloat($pTstDouble).','.self::quoteBit($pTstBit).','.self::quoteString($pTstDate).','.self::quoteString($pTstDatetime).','.self::quoteString($pTstTimestamp).','.self::quoteString($pTstTime).','.self::quoteInt($pTstYear).','.self::quoteString($pTstChar).','.self::quoteString($pTstVarchar).','.self::quoteBinary($pTstBinary).','.self::quoteBinary($pTstVarbinary).','.self::quoteString($pTstEnum).','.self::quoteString($pTstSet).')');
+    return $this->executeNone('call tst_test01('.$this->quoteInt($pTstInt).','.$this->quoteInt($pTstSmallint).','.$this->quoteInt($pTstTinyint).','.$this->quoteInt($pTstMediumint).','.$this->quoteInt($pTstBigint).','.$this->quoteInt($pTstIntUnsigned).','.$this->quoteInt($pTstSmallintUnsigned).','.$this->quoteInt($pTstTinyintUnsigned).','.$this->quoteInt($pTstMediumintUnsigned).','.$this->quoteInt($pTstBigintUnsigned).','.$this->quoteDecimal($pTstDecimal).','.$this->quoteDecimal($pTstDecimal0).','.$this->quoteFloat($pTstFloat).','.$this->quoteFloat($pTstDouble).','.$this->quoteBit($pTstBit).','.$this->quoteString($pTstDate).','.$this->quoteString($pTstDatetime).','.$this->quoteString($pTstTimestamp).','.$this->quoteString($pTstTime).','.$this->quoteInt($pTstYear).','.$this->quoteString($pTstChar).','.$this->quoteString($pTstVarchar).','.$this->quoteBinary($pTstBinary).','.$this->quoteBinary($pTstVarbinary).','.$this->quoteString($pTstEnum).','.$this->quoteString($pTstSet).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -195,47 +195,47 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return int
    */
-  public static function tstTest02(?int $pTstInt, ?int $pTstSmallint, ?int $pTstTinyint, ?int $pTstMediumint, ?int $pTstBigint, $pTstDecimal, $pTstDecimal0, ?float $pTstFloat, ?float $pTstDouble, ?string $pTstBit, ?string $pTstDate, ?string $pTstDatetime, ?string $pTstTimestamp, ?string $pTstTime, ?int $pTstYear, ?string $pTstChar, ?string $pTstVarchar, ?string $pTstBinary, ?string $pTstVarbinary, ?string $pTstTinyblob, ?string $pTstBlob, ?string $pTstMediumblob, ?string $pTstLongblob, ?string $pTstTinytext, ?string $pTstText, ?string $pTstMediumtext, ?string $pTstLongtext, ?string $pTstEnum, ?string $pTstSet)
+  public function tstTest02(?int $pTstInt, ?int $pTstSmallint, ?int $pTstTinyint, ?int $pTstMediumint, ?int $pTstBigint, $pTstDecimal, $pTstDecimal0, ?float $pTstFloat, ?float $pTstDouble, ?string $pTstBit, ?string $pTstDate, ?string $pTstDatetime, ?string $pTstTimestamp, ?string $pTstTime, ?int $pTstYear, ?string $pTstChar, ?string $pTstVarchar, ?string $pTstBinary, ?string $pTstVarbinary, ?string $pTstTinyblob, ?string $pTstBlob, ?string $pTstMediumblob, ?string $pTstLongblob, ?string $pTstTinytext, ?string $pTstText, ?string $pTstMediumtext, ?string $pTstLongtext, ?string $pTstEnum, ?string $pTstSet)
   {
-    $query = 'call tst_test02('.self::quoteInt($pTstInt).','.self::quoteInt($pTstSmallint).','.self::quoteInt($pTstTinyint).','.self::quoteInt($pTstMediumint).','.self::quoteInt($pTstBigint).','.self::quoteDecimal($pTstDecimal).','.self::quoteDecimal($pTstDecimal0).','.self::quoteFloat($pTstFloat).','.self::quoteFloat($pTstDouble).','.self::quoteBit($pTstBit).','.self::quoteString($pTstDate).','.self::quoteString($pTstDatetime).','.self::quoteString($pTstTimestamp).','.self::quoteString($pTstTime).','.self::quoteInt($pTstYear).','.self::quoteString($pTstChar).','.self::quoteString($pTstVarchar).','.self::quoteBinary($pTstBinary).','.self::quoteBinary($pTstVarbinary).',?,?,?,?,?,?,?,?,'.self::quoteString($pTstEnum).','.self::quoteString($pTstSet).')';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'call tst_test02('.$this->quoteInt($pTstInt).','.$this->quoteInt($pTstSmallint).','.$this->quoteInt($pTstTinyint).','.$this->quoteInt($pTstMediumint).','.$this->quoteInt($pTstBigint).','.$this->quoteDecimal($pTstDecimal).','.$this->quoteDecimal($pTstDecimal0).','.$this->quoteFloat($pTstFloat).','.$this->quoteFloat($pTstDouble).','.$this->quoteBit($pTstBit).','.$this->quoteString($pTstDate).','.$this->quoteString($pTstDatetime).','.$this->quoteString($pTstTimestamp).','.$this->quoteString($pTstTime).','.$this->quoteInt($pTstYear).','.$this->quoteString($pTstChar).','.$this->quoteString($pTstVarchar).','.$this->quoteBinary($pTstBinary).','.$this->quoteBinary($pTstVarbinary).',?,?,?,?,?,?,?,?,'.$this->quoteString($pTstEnum).','.$this->quoteString($pTstSet).')';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('bbbbbbbb', $null, $null, $null, $null, $null, $null, $null, $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
-    self::sendLongData($stmt, 0, $pTstTinyblob);
-    self::sendLongData($stmt, 1, $pTstBlob);
-    self::sendLongData($stmt, 2, $pTstMediumblob);
-    self::sendLongData($stmt, 3, $pTstLongblob);
-    self::sendLongData($stmt, 4, $pTstTinytext);
-    self::sendLongData($stmt, 5, $pTstText);
-    self::sendLongData($stmt, 6, $pTstMediumtext);
-    self::sendLongData($stmt, 7, $pTstLongtext);
+    $this->sendLongData($stmt, 0, $pTstTinyblob);
+    $this->sendLongData($stmt, 1, $pTstBlob);
+    $this->sendLongData($stmt, 2, $pTstMediumblob);
+    $this->sendLongData($stmt, 3, $pTstLongblob);
+    $this->sendLongData($stmt, 4, $pTstTinytext);
+    $this->sendLongData($stmt, 5, $pTstText);
+    $this->sendLongData($stmt, 6, $pTstMediumtext);
+    $this->sendLongData($stmt, 7, $pTstLongtext);
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
-    $ret = self::$mysqli->affected_rows;
+    $ret = $this->mysqli->affected_rows;
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     return $ret;
   }
@@ -248,20 +248,20 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return void
    */
-  public static function tstTestBulkInsert01(?array $rows): void
+  public function tstTestBulkInsert01(?array $rows): void
   {
-    self::realQuery('call tst_test_bulk_insert01()');
+    $this->realQuery('call tst_test_bulk_insert01()');
     if (is_array($rows) && !empty($rows))
     {
       $sql = "INSERT INTO `TST_TEMPO`(`tst_int`,`tst_smallint`,`tst_mediumint`,`tst_tinyint`,`tst_bigint`,`tst_int_unsigned`,`tst_smallint_unsigned`,`tst_mediumint_unsigned`,`tst_tinyint_unsigned`,`tst_bigint_unsigned`,`tst_year`,`tst_decimal`,`tst_decimal0`,`tst_float`,`tst_double`,`tst_binary`,`tst_varbinary`,`tst_char`,`tst_varchar`,`tst_time`,`tst_timestamp`,`tst_date`,`tst_datetime`,`tst_enum`,`tst_set`,`tst_bit`)";
       $first = true;
       foreach($rows as $row)
       {
-        if ($first) $sql .=' values('.self::quoteInt($row['field_int']).','.self::quoteInt($row['field_smallint']).','.self::quoteInt($row['field_mediumint']).','.self::quoteInt($row['field_tinyint']).','.self::quoteInt($row['field_bigint']).','.self::quoteInt($row['field_int_unsigned']).','.self::quoteInt($row['field_smallint_unsigned']).','.self::quoteInt($row['field_mediumint_unsigned']).','.self::quoteInt($row['field_tinyint_unsigned']).','.self::quoteInt($row['field_bigint_unsigned']).','.self::quoteInt($row['field_year']).','.self::quoteDecimal($row['field_decimal']).','.self::quoteDecimal($row['field_decimal0']).','.self::quoteFloat($row['field_float']).','.self::quoteFloat($row['field_double']).','.self::quoteBinary($row['field_binary']).','.self::quoteBinary($row['field_varbinary']).','.self::quoteString($row['field_char']).','.self::quoteString($row['field_varchar']).','.self::quoteString($row['field_time']).','.self::quoteString($row['field_timestamp']).','.self::quoteString($row['field_date']).','.self::quoteString($row['field_datetime']).','.self::quoteString($row['field_enum']).','.self::quoteString($row['field_set']).','.self::quoteBit($row['field_bit']).')';
-        else        $sql .=',      ('.self::quoteInt($row['field_int']).','.self::quoteInt($row['field_smallint']).','.self::quoteInt($row['field_mediumint']).','.self::quoteInt($row['field_tinyint']).','.self::quoteInt($row['field_bigint']).','.self::quoteInt($row['field_int_unsigned']).','.self::quoteInt($row['field_smallint_unsigned']).','.self::quoteInt($row['field_mediumint_unsigned']).','.self::quoteInt($row['field_tinyint_unsigned']).','.self::quoteInt($row['field_bigint_unsigned']).','.self::quoteInt($row['field_year']).','.self::quoteDecimal($row['field_decimal']).','.self::quoteDecimal($row['field_decimal0']).','.self::quoteFloat($row['field_float']).','.self::quoteFloat($row['field_double']).','.self::quoteBinary($row['field_binary']).','.self::quoteBinary($row['field_varbinary']).','.self::quoteString($row['field_char']).','.self::quoteString($row['field_varchar']).','.self::quoteString($row['field_time']).','.self::quoteString($row['field_timestamp']).','.self::quoteString($row['field_date']).','.self::quoteString($row['field_datetime']).','.self::quoteString($row['field_enum']).','.self::quoteString($row['field_set']).','.self::quoteBit($row['field_bit']).')';
+        if ($first) $sql .=' values('.$this->quoteInt($row['field_int']).','.$this->quoteInt($row['field_smallint']).','.$this->quoteInt($row['field_mediumint']).','.$this->quoteInt($row['field_tinyint']).','.$this->quoteInt($row['field_bigint']).','.$this->quoteInt($row['field_int_unsigned']).','.$this->quoteInt($row['field_smallint_unsigned']).','.$this->quoteInt($row['field_mediumint_unsigned']).','.$this->quoteInt($row['field_tinyint_unsigned']).','.$this->quoteInt($row['field_bigint_unsigned']).','.$this->quoteInt($row['field_year']).','.$this->quoteDecimal($row['field_decimal']).','.$this->quoteDecimal($row['field_decimal0']).','.$this->quoteFloat($row['field_float']).','.$this->quoteFloat($row['field_double']).','.$this->quoteBinary($row['field_binary']).','.$this->quoteBinary($row['field_varbinary']).','.$this->quoteString($row['field_char']).','.$this->quoteString($row['field_varchar']).','.$this->quoteString($row['field_time']).','.$this->quoteString($row['field_timestamp']).','.$this->quoteString($row['field_date']).','.$this->quoteString($row['field_datetime']).','.$this->quoteString($row['field_enum']).','.$this->quoteString($row['field_set']).','.$this->quoteBit($row['field_bit']).')';
+        else        $sql .=',      ('.$this->quoteInt($row['field_int']).','.$this->quoteInt($row['field_smallint']).','.$this->quoteInt($row['field_mediumint']).','.$this->quoteInt($row['field_tinyint']).','.$this->quoteInt($row['field_bigint']).','.$this->quoteInt($row['field_int_unsigned']).','.$this->quoteInt($row['field_smallint_unsigned']).','.$this->quoteInt($row['field_mediumint_unsigned']).','.$this->quoteInt($row['field_tinyint_unsigned']).','.$this->quoteInt($row['field_bigint_unsigned']).','.$this->quoteInt($row['field_year']).','.$this->quoteDecimal($row['field_decimal']).','.$this->quoteDecimal($row['field_decimal0']).','.$this->quoteFloat($row['field_float']).','.$this->quoteFloat($row['field_double']).','.$this->quoteBinary($row['field_binary']).','.$this->quoteBinary($row['field_varbinary']).','.$this->quoteString($row['field_char']).','.$this->quoteString($row['field_varchar']).','.$this->quoteString($row['field_time']).','.$this->quoteString($row['field_timestamp']).','.$this->quoteString($row['field_date']).','.$this->quoteString($row['field_datetime']).','.$this->quoteString($row['field_enum']).','.$this->quoteString($row['field_set']).','.$this->quoteBit($row['field_bit']).')';
         $first = false;
       }
-      self::realQuery($sql);
+      $this->realQuery($sql);
     }
   }
 
@@ -273,20 +273,20 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return void
    */
-  public static function tstTestBulkInsert02(?array $rows): void
+  public function tstTestBulkInsert02(?array $rows): void
   {
-    self::realQuery('call tst_test_bulk_insert02()');
+    $this->realQuery('call tst_test_bulk_insert02()');
     if (is_array($rows) && !empty($rows))
     {
       $sql = "INSERT INTO `TST_TEMPO`(`tst_col1`,`tst_col4`,`tst_col5`)";
       $first = true;
       foreach($rows as $row)
       {
-        if ($first) $sql .=' values('.self::quoteInt($row['field1']).','.self::quoteInt($row['field4']).','.self::quoteInt($row['field5']).')';
-        else        $sql .=',      ('.self::quoteInt($row['field1']).','.self::quoteInt($row['field4']).','.self::quoteInt($row['field5']).')';
+        if ($first) $sql .=' values('.$this->quoteInt($row['field1']).','.$this->quoteInt($row['field4']).','.$this->quoteInt($row['field5']).')';
+        else        $sql .=',      ('.$this->quoteInt($row['field1']).','.$this->quoteInt($row['field4']).','.$this->quoteInt($row['field5']).')';
         $first = false;
       }
-      self::realQuery($sql);
+      $this->realQuery($sql);
     }
   }
 
@@ -301,9 +301,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return int|null
    */
-  public static function tstTestFunction(?int $pA, ?int $pB): ?int
+  public function tstTestFunction(?int $pA, ?int $pB): ?int
   {
-    return self::executeSingleton0('select tst_test_function('.self::quoteInt($pA).','.self::quoteInt($pB).')');
+    return $this->executeSingleton0('select tst_test_function('.$this->quoteInt($pA).','.$this->quoteInt($pB).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -315,9 +315,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return bool
    */
-  public static function tstTestFunctionBool1(?int $pRet): bool
+  public function tstTestFunctionBool1(?int $pRet): bool
   {
-    return !empty(self::executeSingleton0('select tst_test_function_bool1('.self::quoteInt($pRet).')'));
+    return !empty($this->executeSingleton0('select tst_test_function_bool1('.$this->quoteInt($pRet).')'));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -329,9 +329,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return bool
    */
-  public static function tstTestFunctionBool2(?string $pRet): bool
+  public function tstTestFunctionBool2(?string $pRet): bool
   {
-    return !empty(self::executeSingleton0('select tst_test_function_bool2('.self::quoteString($pRet).')'));
+    return !empty($this->executeSingleton0('select tst_test_function_bool2('.$this->quoteString($pRet).')'));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -340,9 +340,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return array[]
    */
-  public static function tstTestIllegalQuery(): array
+  public function tstTestIllegalQuery(): array
   {
-    return self::executeRows('call tst_test_illegal_query()');
+    return $this->executeRows('call tst_test_illegal_query()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -353,13 +353,13 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return array[]
    */
-  public static function tstTestListOfInt($pIds): array
+  public function tstTestListOfInt($pIds): array
   {
-    $result = self::query('call tst_test_list_of_int('.self::quoteListOfInt($pIds, ',', '\"', '\\').')');
+    $result = $this->query('call tst_test_list_of_int('.$this->quoteListOfInt($pIds, ',', '\"', '\\').')');
     $ret = [];
     while (($row = $result->fetch_array(MYSQLI_ASSOC))) $ret[$row['tst_id']] = $row;
     $result->free();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     return $ret;
   }
@@ -370,9 +370,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return int
    */
-  public static function tstTestLog(): int
+  public function tstTestLog(): int
   {
-    return self::executeLog('call tst_test_log()');
+    return $this->executeLog('call tst_test_log()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -384,13 +384,13 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return array
    */
-  public static function tstTestMap1(?int $pCount): array
+  public function tstTestMap1(?int $pCount): array
   {
-    $result = self::query('call tst_test_map1('.self::quoteInt($pCount).')');
+    $result = $this->query('call tst_test_map1('.$this->quoteInt($pCount).')');
     $ret = [];
     while (($row = $result->fetch_array(MYSQLI_NUM))) $ret[$row[0]] = $row[1];
     $result->free();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     return $ret;
   }
@@ -406,34 +406,34 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return array
    */
-  public static function tstTestMap1WithLob(?int $pCount, ?string $pBlob)
+  public function tstTestMap1WithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_map1_with_lob('.self::quoteInt($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'call tst_test_map1_with_lob('.$this->quoteInt($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
-    self::sendLongData($stmt, 0, $pBlob);
+    $this->sendLongData($stmt, 0, $pBlob);
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $result = $stmt->get_result();
@@ -442,7 +442,7 @@ class TestDataLayer extends StaticDataLayer
     $result->free();
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     return $ret;
   }
@@ -456,38 +456,38 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return int
    */
-  public static function tstTestMaxAllowedPacket(?string $pTmpBlob)
+  public function tstTestMaxAllowedPacket(?string $pTmpBlob)
   {
     $query = 'call tst_test_max_allowed_packet(?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
-    self::sendLongData($stmt, 0, $pTmpBlob);
+    $this->sendLongData($stmt, 0, $pTmpBlob);
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $tmp = [];
     while (($b = $stmt->fetch()))
@@ -501,9 +501,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
     if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
 
     return $tmp[0][0];
@@ -514,9 +514,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return array
    */
-  public static function tstTestNoDocBlock(): array
+  public function tstTestNoDocBlock(): array
   {
-    return self::executeRow1('call tst_test_no_doc_block()');
+    return $this->executeRow1('call tst_test_no_doc_block()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -528,9 +528,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return int
    */
-  public static function tstTestNone(?int $pCount): int
+  public function tstTestNone(?int $pCount): int
   {
-    return self::executeNone('call tst_test_none('.self::quoteInt($pCount).')');
+    return $this->executeNone('call tst_test_none('.$this->quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -544,40 +544,40 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return int
    */
-  public static function tstTestNoneWithLob(?int $pCount, ?string $pBlob)
+  public function tstTestNoneWithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_none_with_lob('.self::quoteInt($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'call tst_test_none_with_lob('.$this->quoteInt($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
-    self::sendLongData($stmt, 0, $pBlob);
+    $this->sendLongData($stmt, 0, $pBlob);
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
-    $ret = self::$mysqli->affected_rows;
+    $ret = $this->mysqli->affected_rows;
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     return $ret;
   }
@@ -593,9 +593,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return int
    */
-  public static function tstTestParameterType($pPhpType1, $pPhpType2): int
+  public function tstTestParameterType($pPhpType1, $pPhpType2): int
   {
-    return self::executeNone('call tst_test_parameter_type('.self::quoteDecimal($pPhpType1).','.self::quoteDecimal($pPhpType2).')');
+    return $this->executeNone('call tst_test_parameter_type('.$this->quoteDecimal($pPhpType1).','.$this->quoteDecimal($pPhpType2).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -607,9 +607,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return array|null
    */
-  public static function tstTestRow0a(?int $pCount): ?array
+  public function tstTestRow0a(?int $pCount): ?array
   {
-    return self::executeRow0('call tst_test_row0a('.self::quoteInt($pCount).')');
+    return $this->executeRow0('call tst_test_row0a('.$this->quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -623,38 +623,38 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return array|null
    */
-  public static function tstTestRow0aWithLob(?int $pCount, ?string $pBlob)
+  public function tstTestRow0aWithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_row0a_with_lob('.self::quoteInt($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'call tst_test_row0a_with_lob('.$this->quoteInt($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
-    self::sendLongData($stmt, 0, $pBlob);
+    $this->sendLongData($stmt, 0, $pBlob);
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $tmp = [];
     while (($b = $stmt->fetch()))
@@ -668,9 +668,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
     if (count($tmp)>1) throw new ResultException('0 or 1', count($tmp), $query);
 
     return ($tmp) ? $tmp[0] : null;
@@ -685,9 +685,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return array
    */
-  public static function tstTestRow1a(?int $pCount): array
+  public function tstTestRow1a(?int $pCount): array
   {
-    return self::executeRow1('call tst_test_row1a('.self::quoteInt($pCount).')');
+    return $this->executeRow1('call tst_test_row1a('.$this->quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -701,38 +701,38 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return array
    */
-  public static function tstTestRow1aWithLob(?int $pCount, ?string $pBlob)
+  public function tstTestRow1aWithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_row1a_with_lob('.self::quoteInt($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'call tst_test_row1a_with_lob('.$this->quoteInt($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
-    self::sendLongData($stmt, 0, $pBlob);
+    $this->sendLongData($stmt, 0, $pBlob);
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $tmp = [];
     while (($b = $stmt->fetch()))
@@ -746,9 +746,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
     if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
 
     return $row;
@@ -763,9 +763,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return array[]
    */
-  public static function tstTestRows1(?int $pCount): array
+  public function tstTestRows1(?int $pCount): array
   {
-    return self::executeRows('call tst_test_rows1('.self::quoteInt($pCount).')');
+    return $this->executeRows('call tst_test_rows1('.$this->quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -779,38 +779,38 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return array[]
    */
-  public static function tstTestRows1WithLob(?int $pCount, ?string $pBlob)
+  public function tstTestRows1WithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_rows1_with_lob('.self::quoteInt($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'call tst_test_rows1_with_lob('.$this->quoteInt($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
-    self::sendLongData($stmt, 0, $pBlob);
+    $this->sendLongData($stmt, 0, $pBlob);
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $tmp = [];
     while (($b = $stmt->fetch()))
@@ -824,9 +824,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
 
     return $tmp;
   }
@@ -840,13 +840,13 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return array[]
    */
-  public static function tstTestRowsWithIndex1(?int $pCount): array
+  public function tstTestRowsWithIndex1(?int $pCount): array
   {
-    $result = self::query('call tst_test_rows_with_index1('.self::quoteInt($pCount).')');
+    $result = $this->query('call tst_test_rows_with_index1('.$this->quoteInt($pCount).')');
     $ret = [];
     while (($row = $result->fetch_array(MYSQLI_ASSOC))) $ret[$row['tst_c01']][$row['tst_c02']][] = $row;
     $result->free();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     return $ret;
   }
@@ -862,38 +862,38 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return array[]
    */
-  public static function tstTestRowsWithIndex1WithLob(?int $pCount, ?string $pBlob)
+  public function tstTestRowsWithIndex1WithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_rows_with_index1_with_lob('.self::quoteInt($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'call tst_test_rows_with_index1_with_lob('.$this->quoteInt($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
-    self::sendLongData($stmt, 0, $pBlob);
+    $this->sendLongData($stmt, 0, $pBlob);
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $ret = [];
     while (($b = $stmt->fetch()))
@@ -907,9 +907,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
 
     return $ret;
   }
@@ -923,13 +923,13 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return array[]
    */
-  public static function tstTestRowsWithKey1(?int $pCount): array
+  public function tstTestRowsWithKey1(?int $pCount): array
   {
-    $result = self::query('call tst_test_rows_with_key1('.self::quoteInt($pCount).')');
+    $result = $this->query('call tst_test_rows_with_key1('.$this->quoteInt($pCount).')');
     $ret = [];
     while (($row = $result->fetch_array(MYSQLI_ASSOC))) $ret[$row['tst_c01']][$row['tst_c02']][$row['tst_c03']] = $row;
     $result->free();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     return $ret;
   }
@@ -945,38 +945,38 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return array[]
    */
-  public static function tstTestRowsWithKey1WithLob(?int $pCount, ?string $pBlob)
+  public function tstTestRowsWithKey1WithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_rows_with_key1_with_lob('.self::quoteInt($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'call tst_test_rows_with_key1_with_lob('.$this->quoteInt($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
-    self::sendLongData($stmt, 0, $pBlob);
+    $this->sendLongData($stmt, 0, $pBlob);
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $ret = [];
     while (($b = $stmt->fetch()))
@@ -990,9 +990,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
 
     return $ret;
   }
@@ -1006,9 +1006,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return int|null
    */
-  public static function tstTestSingleton0a(?int $pCount): ?int
+  public function tstTestSingleton0a(?int $pCount): ?int
   {
-    return self::executeSingleton0('call tst_test_singleton0a('.self::quoteInt($pCount).')');
+    return $this->executeSingleton0('call tst_test_singleton0a('.$this->quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1022,38 +1022,38 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return int|null
    */
-  public static function tstTestSingleton0aWithLob(?int $pCount, ?string $pBlob)
+  public function tstTestSingleton0aWithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_singleton0a_with_lob('.self::quoteInt($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'call tst_test_singleton0a_with_lob('.$this->quoteInt($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
-    self::sendLongData($stmt, 0, $pBlob);
+    $this->sendLongData($stmt, 0, $pBlob);
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $tmp = [];
     while (($b = $stmt->fetch()))
@@ -1067,9 +1067,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
     if (count($tmp)>1) throw new ResultException('0 or 1', count($tmp), $query);
 
     return $tmp[0][0] ?? null;
@@ -1086,9 +1086,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return bool
    */
-  public static function tstTestSingleton0b(?int $pCount, ?int $pValue): bool
+  public function tstTestSingleton0b(?int $pCount, ?int $pValue): bool
   {
-    return !empty(self::executeSingleton0('call tst_test_singleton0b('.self::quoteInt($pCount).','.self::quoteInt($pValue).')'));
+    return !empty($this->executeSingleton0('call tst_test_singleton0b('.$this->quoteInt($pCount).','.$this->quoteInt($pValue).')'));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1104,38 +1104,38 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return bool
    */
-  public static function tstTestSingleton0bWithLob(?int $pCount, ?int $pValue, ?string $pBlob)
+  public function tstTestSingleton0bWithLob(?int $pCount, ?int $pValue, ?string $pBlob)
   {
-    $query = 'call tst_test_singleton0b_with_lob('.self::quoteInt($pCount).','.self::quoteInt($pValue).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'call tst_test_singleton0b_with_lob('.$this->quoteInt($pCount).','.$this->quoteInt($pValue).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
-    self::sendLongData($stmt, 0, $pBlob);
+    $this->sendLongData($stmt, 0, $pBlob);
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $tmp = [];
     while (($b = $stmt->fetch()))
@@ -1149,9 +1149,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
     if (count($tmp)>1) throw new ResultException('0 or 1', count($tmp), $query);
 
     return !empty($tmp[0][0]);
@@ -1166,9 +1166,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return int
    */
-  public static function tstTestSingleton1a(?int $pCount): int
+  public function tstTestSingleton1a(?int $pCount): int
   {
-    return self::executeSingleton1('call tst_test_singleton1a('.self::quoteInt($pCount).')');
+    return $this->executeSingleton1('call tst_test_singleton1a('.$this->quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1182,38 +1182,38 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return int
    */
-  public static function tstTestSingleton1aWithLob(?int $pCount, ?string $pBlob)
+  public function tstTestSingleton1aWithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_singleton1a_with_lob('.self::quoteInt($pCount).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'call tst_test_singleton1a_with_lob('.$this->quoteInt($pCount).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
-    self::sendLongData($stmt, 0, $pBlob);
+    $this->sendLongData($stmt, 0, $pBlob);
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $tmp = [];
     while (($b = $stmt->fetch()))
@@ -1227,9 +1227,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
     if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
 
     return $tmp[0][0];
@@ -1246,9 +1246,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return bool
    */
-  public static function tstTestSingleton1b(?int $pCount, ?int $pValue): bool
+  public function tstTestSingleton1b(?int $pCount, ?int $pValue): bool
   {
-    return !empty(self::executeSingleton1('call tst_test_singleton1b('.self::quoteInt($pCount).','.self::quoteInt($pValue).')'));
+    return !empty($this->executeSingleton1('call tst_test_singleton1b('.$this->quoteInt($pCount).','.$this->quoteInt($pValue).')'));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1264,38 +1264,38 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return bool
    */
-  public static function tstTestSingleton1bWithLob(?int $pCount, ?int $pValue, ?string $pBlob)
+  public function tstTestSingleton1bWithLob(?int $pCount, ?int $pValue, ?string $pBlob)
   {
-    $query = 'call tst_test_singleton1b_with_lob('.self::quoteInt($pCount).','.self::quoteInt($pValue).',?)';
-    $stmt  = self::$mysqli->prepare($query);
-    if (!$stmt) self::mySqlError('mysqli::prepare');
+    $query = 'call tst_test_singleton1b_with_lob('.$this->quoteInt($pCount).','.$this->quoteInt($pValue).',?)';
+    $stmt  = $this->mysqli->prepare($query);
+    if (!$stmt) $this->mySqlError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) self::mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
 
-    self::getMaxAllowedPacket();
+    $this->getMaxAllowedPacket();
 
-    self::sendLongData($stmt, 0, $pBlob);
+    $this->sendLongData($stmt, 0, $pBlob);
 
-    if (self::$logQueries)
+    if ($this->logQueries)
     {
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
 
-      self::$queryLog[] = ['query' => $query,
+      $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
     }
     else
     {
       $b = $stmt->execute();
-      if (!$b) self::mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->mySqlError('mysqli_stmt::execute');
     }
 
     $row = [];
-    self::bindAssoc($stmt, $row);
+    $this->bindAssoc($stmt, $row);
 
     $tmp = [];
     while (($b = $stmt->fetch()))
@@ -1309,9 +1309,9 @@ class TestDataLayer extends StaticDataLayer
     }
 
     $stmt->close();
-    if (self::$mysqli->more_results()) self::$mysqli->next_result();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) self::mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
     if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
 
     return !empty($tmp[0][0]);
@@ -1323,9 +1323,9 @@ class TestDataLayer extends StaticDataLayer
    *
    * @return int
    */
-  public static function tstTestTable(): int
+  public function tstTestTable(): int
   {
-    return self::executeTable('call tst_test_table()');
+    return $this->executeTable('call tst_test_table()');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

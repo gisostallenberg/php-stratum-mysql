@@ -24,8 +24,12 @@ class NoneWithLobTest extends DataLayerTestCase
    */
   public function test2()
   {
+    // MariaDB 10.3 and above returns the total number of rows affected in the stored routine (not the affected rows
+    // of the last statement).
+    $expected = ($this->isMariaDB103plus()) ? 2 : 1;
+
     $ret = $this->dataLayer->tstTestNoneWithLob(1, 'blob');
-    self::assertEquals(1, $ret);
+    self::assertEquals($expected, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -34,8 +38,12 @@ class NoneWithLobTest extends DataLayerTestCase
    */
   public function test3()
   {
+    // MariaDB 10.3 and above returns the total number of rows affected in the stored routine (not the affected rows
+    // of the last statement).
+    $expected = ($this->isMariaDB103plus()) ? 40 : 20;
+
     $ret = $this->dataLayer->tstTestNoneWithLob(20, 'blob');
-    self::assertEquals(20, $ret);
+    self::assertEquals($expected, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
