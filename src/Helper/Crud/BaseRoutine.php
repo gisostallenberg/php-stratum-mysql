@@ -358,7 +358,7 @@ abstract class BaseRoutine
    *
    * @return array[]
    */
-  protected function keyColumns(): ?array
+  protected function keyColumns(): array
   {
     $columns = [];
 

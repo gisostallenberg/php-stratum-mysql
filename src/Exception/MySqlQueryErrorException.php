@@ -83,7 +83,7 @@ class MySqlQueryErrorException extends MySqlDataLayerException implements QueryE
     }
     else
     {
-      $message[] = explode(PHP_EOL, $query);
+      $message = explode(PHP_EOL, $query);
     }
 
     return $message;
