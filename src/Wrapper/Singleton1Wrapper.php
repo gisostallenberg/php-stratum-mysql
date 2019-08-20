@@ -80,8 +80,8 @@ class Singleton1Wrapper extends Wrapper
   {
     $this->imports[] = 'SetBased\Stratum\Exception\ResultException';
 
-    $this->codeStore->append('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
-    $this->codeStore->append('if (count($tmp)!=1) throw new ResultException(\'1\', count($tmp), $query);');
+    $this->codeStore->append('if ($b===false) self::dataLayerError(\'mysqli_stmt::fetch\');');
+    $this->codeStore->append('if (count($tmp)!=1) throw new ResultException([1], count($tmp), $query);');
     $this->codeStore->append('');
 
     if ($this->routine['return']=='bool')

@@ -226,11 +226,11 @@ abstract class Wrapper
     $this->codeStore->append('{');
     $this->codeStore->append('$query = \'call '.$this->routine['routine_name'].'('.$routine_args.')\';');
     $this->codeStore->append('$stmt  = self::$mysqli->prepare($query);');
-    $this->codeStore->append('if (!$stmt) self::mySqlError(\'mysqli::prepare\');');
+    $this->codeStore->append('if (!$stmt) self::dataLayerError(\'mysqli::prepare\');');
     $this->codeStore->append('');
     $this->codeStore->append('$null = null;');
     $this->codeStore->append('$b = $stmt->bind_param(\''.$bindings.'\', '.$nulls.');');
-    $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::bind_param\');');
+    $this->codeStore->append('if (!$b) self::dataLayerError(\'mysqli_stmt::bind_param\');');
     $this->codeStore->append('');
     $this->codeStore->append('self::getMaxAllowedPacket();');
     $this->codeStore->append('');
@@ -258,7 +258,7 @@ abstract class Wrapper
     $this->codeStore->append('$time0 = microtime(true);');
     $this->codeStore->append('');
     $this->codeStore->append('$b = $stmt->execute();');
-    $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::execute\');');
+    $this->codeStore->append('if (!$b) self::queryError(\'mysqli_stmt::execute\', $query);');
     $this->codeStore->append('');
     $this->codeStore->append('self::$queryLog[] = [\'query\' => $query,');
     $this->codeStore->append('                     \'time\'  => microtime(true) - $time0];', false);
@@ -266,7 +266,7 @@ abstract class Wrapper
     $this->codeStore->append('else');
     $this->codeStore->append('{');
     $this->codeStore->append('$b = $stmt->execute();');
-    $this->codeStore->append('if (!$b) self::mySqlError(\'mysqli_stmt::execute\');');
+    $this->codeStore->append('if (!$b) self::queryError(\'mysqli_stmt::execute\', $query);');
     $this->codeStore->append('}');
     $this->codeStore->append('');
     $this->writeRoutineFunctionLobFetchData();

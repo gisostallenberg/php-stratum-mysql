@@ -84,7 +84,7 @@ class RowsWithIndexWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData(): void
   {
-    $this->codeStore->append('if ($b===false) self::mySqlError(\'mysqli_stmt::fetch\');');
+    $this->codeStore->append('if ($b===false) self::dataLayerError(\'mysqli_stmt::fetch\');');
     $this->codeStore->append('');
     $this->codeStore->append('return $ret;');
   }

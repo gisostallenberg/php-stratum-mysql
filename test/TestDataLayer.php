@@ -199,11 +199,11 @@ class TestDataLayer extends DataLayer
   {
     $query = 'call tst_test02('.$this->quoteInt($pTstInt).','.$this->quoteInt($pTstSmallint).','.$this->quoteInt($pTstTinyint).','.$this->quoteInt($pTstMediumint).','.$this->quoteInt($pTstBigint).','.$this->quoteDecimal($pTstDecimal).','.$this->quoteDecimal($pTstDecimal0).','.$this->quoteFloat($pTstFloat).','.$this->quoteFloat($pTstDouble).','.$this->quoteBit($pTstBit).','.$this->quoteString($pTstDate).','.$this->quoteString($pTstDatetime).','.$this->quoteString($pTstTimestamp).','.$this->quoteString($pTstTime).','.$this->quoteInt($pTstYear).','.$this->quoteString($pTstChar).','.$this->quoteString($pTstVarchar).','.$this->quoteBinary($pTstBinary).','.$this->quoteBinary($pTstVarbinary).',?,?,?,?,?,?,?,?,'.$this->quoteString($pTstEnum).','.$this->quoteString($pTstSet).')';
     $stmt  = $this->mysqli->prepare($query);
-    if (!$stmt) $this->mySqlError('mysqli::prepare');
+    if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('bbbbbbbb', $null, $null, $null, $null, $null, $null, $null, $null);
-    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->dataLayerError('mysqli_stmt::bind_param');
 
     $this->getMaxAllowedPacket();
 
@@ -221,7 +221,7 @@ class TestDataLayer extends DataLayer
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
 
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
@@ -229,7 +229,7 @@ class TestDataLayer extends DataLayer
     else
     {
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $ret = $this->mysqli->affected_rows;
@@ -410,11 +410,11 @@ class TestDataLayer extends DataLayer
   {
     $query = 'call tst_test_map1_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
-    if (!$stmt) $this->mySqlError('mysqli::prepare');
+    if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->dataLayerError('mysqli_stmt::bind_param');
 
     $this->getMaxAllowedPacket();
 
@@ -425,7 +425,7 @@ class TestDataLayer extends DataLayer
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
 
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
@@ -433,7 +433,7 @@ class TestDataLayer extends DataLayer
     else
     {
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $result = $stmt->get_result();
@@ -460,11 +460,11 @@ class TestDataLayer extends DataLayer
   {
     $query = 'call tst_test_max_allowed_packet(?)';
     $stmt  = $this->mysqli->prepare($query);
-    if (!$stmt) $this->mySqlError('mysqli::prepare');
+    if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->dataLayerError('mysqli_stmt::bind_param');
 
     $this->getMaxAllowedPacket();
 
@@ -475,7 +475,7 @@ class TestDataLayer extends DataLayer
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
 
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
@@ -483,7 +483,7 @@ class TestDataLayer extends DataLayer
     else
     {
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -503,8 +503,8 @@ class TestDataLayer extends DataLayer
     $stmt->close();
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
-    if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
+    if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
+    if (count($tmp)!=1) throw new ResultException([1], count($tmp), $query);
 
     return $tmp[0][0];
   }
@@ -548,11 +548,11 @@ class TestDataLayer extends DataLayer
   {
     $query = 'call tst_test_none_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
-    if (!$stmt) $this->mySqlError('mysqli::prepare');
+    if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->dataLayerError('mysqli_stmt::bind_param');
 
     $this->getMaxAllowedPacket();
 
@@ -563,7 +563,7 @@ class TestDataLayer extends DataLayer
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
 
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
@@ -571,7 +571,7 @@ class TestDataLayer extends DataLayer
     else
     {
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $ret = $this->mysqli->affected_rows;
@@ -627,11 +627,11 @@ class TestDataLayer extends DataLayer
   {
     $query = 'call tst_test_row0a_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
-    if (!$stmt) $this->mySqlError('mysqli::prepare');
+    if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->dataLayerError('mysqli_stmt::bind_param');
 
     $this->getMaxAllowedPacket();
 
@@ -642,7 +642,7 @@ class TestDataLayer extends DataLayer
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
 
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
@@ -650,7 +650,7 @@ class TestDataLayer extends DataLayer
     else
     {
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -670,8 +670,8 @@ class TestDataLayer extends DataLayer
     $stmt->close();
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
-    if (count($tmp)>1) throw new ResultException('0 or 1', count($tmp), $query);
+    if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
+    if (count($tmp)>1) throw new ResultException([0, 1], count($tmp), $query);
 
     return ($tmp) ? $tmp[0] : null;
   }
@@ -705,11 +705,11 @@ class TestDataLayer extends DataLayer
   {
     $query = 'call tst_test_row1a_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
-    if (!$stmt) $this->mySqlError('mysqli::prepare');
+    if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->dataLayerError('mysqli_stmt::bind_param');
 
     $this->getMaxAllowedPacket();
 
@@ -720,7 +720,7 @@ class TestDataLayer extends DataLayer
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
 
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
@@ -728,7 +728,7 @@ class TestDataLayer extends DataLayer
     else
     {
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -748,8 +748,8 @@ class TestDataLayer extends DataLayer
     $stmt->close();
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
-    if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
+    if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
+    if (count($tmp)!=1) throw new ResultException([1], count($tmp), $query);
 
     return $row;
   }
@@ -783,11 +783,11 @@ class TestDataLayer extends DataLayer
   {
     $query = 'call tst_test_rows1_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
-    if (!$stmt) $this->mySqlError('mysqli::prepare');
+    if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->dataLayerError('mysqli_stmt::bind_param');
 
     $this->getMaxAllowedPacket();
 
@@ -798,7 +798,7 @@ class TestDataLayer extends DataLayer
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
 
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
@@ -806,7 +806,7 @@ class TestDataLayer extends DataLayer
     else
     {
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -826,7 +826,7 @@ class TestDataLayer extends DataLayer
     $stmt->close();
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
 
     return $tmp;
   }
@@ -866,11 +866,11 @@ class TestDataLayer extends DataLayer
   {
     $query = 'call tst_test_rows_with_index1_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
-    if (!$stmt) $this->mySqlError('mysqli::prepare');
+    if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->dataLayerError('mysqli_stmt::bind_param');
 
     $this->getMaxAllowedPacket();
 
@@ -881,7 +881,7 @@ class TestDataLayer extends DataLayer
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
 
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
@@ -889,7 +889,7 @@ class TestDataLayer extends DataLayer
     else
     {
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -909,7 +909,7 @@ class TestDataLayer extends DataLayer
     $stmt->close();
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
 
     return $ret;
   }
@@ -949,11 +949,11 @@ class TestDataLayer extends DataLayer
   {
     $query = 'call tst_test_rows_with_key1_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
-    if (!$stmt) $this->mySqlError('mysqli::prepare');
+    if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->dataLayerError('mysqli_stmt::bind_param');
 
     $this->getMaxAllowedPacket();
 
@@ -964,7 +964,7 @@ class TestDataLayer extends DataLayer
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
 
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
@@ -972,7 +972,7 @@ class TestDataLayer extends DataLayer
     else
     {
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -992,7 +992,7 @@ class TestDataLayer extends DataLayer
     $stmt->close();
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
+    if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
 
     return $ret;
   }
@@ -1026,11 +1026,11 @@ class TestDataLayer extends DataLayer
   {
     $query = 'call tst_test_singleton0a_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
-    if (!$stmt) $this->mySqlError('mysqli::prepare');
+    if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->dataLayerError('mysqli_stmt::bind_param');
 
     $this->getMaxAllowedPacket();
 
@@ -1041,7 +1041,7 @@ class TestDataLayer extends DataLayer
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
 
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
@@ -1049,7 +1049,7 @@ class TestDataLayer extends DataLayer
     else
     {
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -1069,8 +1069,8 @@ class TestDataLayer extends DataLayer
     $stmt->close();
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
-    if (count($tmp)>1) throw new ResultException('0 or 1', count($tmp), $query);
+    if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
+    if (count($tmp)>1) throw new ResultException([0, 1], count($tmp), $query);
 
     return $tmp[0][0] ?? null;
   }
@@ -1108,11 +1108,11 @@ class TestDataLayer extends DataLayer
   {
     $query = 'call tst_test_singleton0b_with_lob('.$this->quoteInt($pCount).','.$this->quoteInt($pValue).',?)';
     $stmt  = $this->mysqli->prepare($query);
-    if (!$stmt) $this->mySqlError('mysqli::prepare');
+    if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->dataLayerError('mysqli_stmt::bind_param');
 
     $this->getMaxAllowedPacket();
 
@@ -1123,7 +1123,7 @@ class TestDataLayer extends DataLayer
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
 
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
@@ -1131,7 +1131,7 @@ class TestDataLayer extends DataLayer
     else
     {
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -1151,8 +1151,8 @@ class TestDataLayer extends DataLayer
     $stmt->close();
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
-    if (count($tmp)>1) throw new ResultException('0 or 1', count($tmp), $query);
+    if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
+    if (count($tmp)>1) throw new ResultException([0, 1], count($tmp), $query);
 
     return !empty($tmp[0][0]);
   }
@@ -1186,11 +1186,11 @@ class TestDataLayer extends DataLayer
   {
     $query = 'call tst_test_singleton1a_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
-    if (!$stmt) $this->mySqlError('mysqli::prepare');
+    if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->dataLayerError('mysqli_stmt::bind_param');
 
     $this->getMaxAllowedPacket();
 
@@ -1201,7 +1201,7 @@ class TestDataLayer extends DataLayer
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
 
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
@@ -1209,7 +1209,7 @@ class TestDataLayer extends DataLayer
     else
     {
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -1229,8 +1229,8 @@ class TestDataLayer extends DataLayer
     $stmt->close();
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
-    if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
+    if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
+    if (count($tmp)!=1) throw new ResultException([1], count($tmp), $query);
 
     return $tmp[0][0];
   }
@@ -1268,11 +1268,11 @@ class TestDataLayer extends DataLayer
   {
     $query = 'call tst_test_singleton1b_with_lob('.$this->quoteInt($pCount).','.$this->quoteInt($pValue).',?)';
     $stmt  = $this->mysqli->prepare($query);
-    if (!$stmt) $this->mySqlError('mysqli::prepare');
+    if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
     $null = null;
     $b = $stmt->bind_param('b', $null);
-    if (!$b) $this->mySqlError('mysqli_stmt::bind_param');
+    if (!$b) $this->dataLayerError('mysqli_stmt::bind_param');
 
     $this->getMaxAllowedPacket();
 
@@ -1283,7 +1283,7 @@ class TestDataLayer extends DataLayer
       $time0 = microtime(true);
 
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
 
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
@@ -1291,7 +1291,7 @@ class TestDataLayer extends DataLayer
     else
     {
       $b = $stmt->execute();
-      if (!$b) $this->mySqlError('mysqli_stmt::execute');
+      if (!$b) $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -1311,8 +1311,8 @@ class TestDataLayer extends DataLayer
     $stmt->close();
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if ($b===false) $this->mySqlError('mysqli_stmt::fetch');
-    if (count($tmp)!=1) throw new ResultException('1', count($tmp), $query);
+    if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
+    if (count($tmp)!=1) throw new ResultException([1], count($tmp), $query);
 
     return !empty($tmp[0][0]);
   }

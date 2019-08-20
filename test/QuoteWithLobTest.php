@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Test;
 
-use SetBased\Exception\RuntimeException;
-
 /**
  * Test cases for quoting variables with LOBs.
  */
@@ -50,7 +48,7 @@ class QuoteWithLobTest extends DataLayerTestCase
     {
       $this->assertTrue(true);
     }
-    catch (RuntimeException $e)
+    catch (\RuntimeException $e)
     {
       $this->assertTrue(true);
     }

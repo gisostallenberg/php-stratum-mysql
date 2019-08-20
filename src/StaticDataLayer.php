@@ -7,7 +7,8 @@ use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\BulkHandler;
 use SetBased\Stratum\Exception\ResultException;
-use SetBased\Stratum\MySql\Exception\DataLayerException;
+use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 
 /**
  * Supper class for routine wrapper classes.
@@ -116,7 +117,7 @@ class StaticDataLayer
   public static function begin(): void
   {
     $ret = self::$mysqli->autocommit(false);
-    if (!$ret) self::mySqlError('mysqli::autocommit');
+    if (!$ret) self::dataLayerError('mysqli::autocommit');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -127,7 +128,7 @@ class StaticDataLayer
   public static function bindAssoc(\mysqli_stmt $stmt, array &$out): void
   {
     $data = $stmt->result_metadata();
-    if (!$data) self::mySqlError('mysqli_stmt::result_metadata');
+    if (!$data) self::dataLayerError('mysqli_stmt::result_metadata');
 
     $fields = [];
     $out    = [];
@@ -138,7 +139,7 @@ class StaticDataLayer
     }
 
     $b = call_user_func_array([$stmt, 'bind_result'], $fields);
-    if ($b===false) self::mySqlError('mysqli_stmt::bind_result');
+    if ($b===false) self::dataLayerError('mysqli_stmt::bind_result');
 
     $data->free();
   }
@@ -156,7 +157,7 @@ class StaticDataLayer
   public static function commit(): void
   {
     $ret = self::$mysqli->commit();
-    if (!$ret) self::mySqlError('mysqli::commit');
+    if (!$ret) self::dataLayerError('mysqli::commit');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -195,7 +196,7 @@ class StaticDataLayer
 
     // Set the default character set.
     $ret = self::$mysqli->set_charset(self::$charSet);
-    if (!$ret) self::mySqlError('mysqli::set_charset');
+    if (!$ret) self::dataLayerError('mysqli::set_charset');
 
     // Set the SQL mode.
     self::executeNone("set sql_mode = '".self::$sqlMode."'");
@@ -271,7 +272,7 @@ class StaticDataLayer
     do
     {
       $result = self::$mysqli->store_result();
-      if (self::$mysqli->errno) self::mySqlError('mysqli::store_result');
+      if (self::$mysqli->errno) self::dataLayerError('mysqli::store_result');
       if ($result)
       {
         $fields = $result->fetch_fields();
@@ -293,7 +294,7 @@ class StaticDataLayer
       if ($continue)
       {
         $tmp = self::$mysqli->next_result();
-        if ($tmp===false) self::mySqlError('mysqli::next_result');
+        if ($tmp===false) self::dataLayerError('mysqli::next_result');
       }
     } while ($continue);
 
@@ -321,7 +322,7 @@ class StaticDataLayer
     do
     {
       $result = self::$mysqli->store_result();
-      if (self::$mysqli->errno) self::mySqlError('mysqli::store_result');
+      if (self::$mysqli->errno) self::dataLayerError('mysqli::store_result');
       if ($result)
       {
         if (self::$haveFetchAll)
@@ -349,7 +350,7 @@ class StaticDataLayer
       if ($continue)
       {
         $tmp = self::$mysqli->next_result();
-        if ($tmp===false) self::mySqlError('mysqli::next_result');
+        if ($tmp===false) self::dataLayerError('mysqli::next_result');
       }
     } while ($continue);
 
@@ -401,7 +402,7 @@ class StaticDataLayer
 
     if (!($n==0 || $n==1))
     {
-      throw new ResultException('0 or 1', $n, $query);
+      throw new ResultException([0, 1], $n, $query);
     }
 
     return $row;
@@ -430,7 +431,7 @@ class StaticDataLayer
 
     if ($n!=1)
     {
-      throw new ResultException('1', $n, $query);
+      throw new ResultException([1], $n, $query);
     }
 
     return $row;
@@ -492,7 +493,7 @@ class StaticDataLayer
 
     if (!($n==0 || $n==1))
     {
-      throw new ResultException('0 or 1', $n, $query);
+      throw new ResultException([0, 1], $n, $query);
     }
 
     return $row[0];
@@ -521,7 +522,7 @@ class StaticDataLayer
 
     if ($n!=1)
     {
-      throw new ResultException('1', $n, $query);
+      throw new ResultException([1], $n, $query);
     }
 
     return $row[0];
@@ -547,7 +548,7 @@ class StaticDataLayer
     do
     {
       $result = self::$mysqli->store_result();
-      if (self::$mysqli->errno) self::mySqlError('mysqli::store_result');
+      if (self::$mysqli->errno) self::dataLayerError('mysqli::store_result');
       if ($result)
       {
         $columns = [];
@@ -588,7 +589,7 @@ class StaticDataLayer
       if ($continue)
       {
         $tmp = self::$mysqli->next_result();
-        if ($tmp===false) self::mySqlError('mysqli::next_result');
+        if ($tmp===false) self::dataLayerError('mysqli::next_result');
       }
     } while ($continue);
 
@@ -811,7 +812,7 @@ class StaticDataLayer
   public static function rollback(): void
   {
     $ret = self::$mysqli->rollback();
-    if (!$ret) self::mySqlError('mysqli::rollback');
+    if (!$ret) self::dataLayerError('mysqli::rollback');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -826,6 +827,17 @@ class StaticDataLayer
   public static function showWarnings(): void
   {
     self::executeLog('show warnings');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Throws an exception with error information provided by MySQL/[mysqli](http://php.net/manual/en/class.mysqli.php).
+   *
+   * @param string $method The name of the method that has failed.
+   */
+  protected static function dataLayerError(string $method): void
+  {
+    throw new MySqlDataLayerException(self::$mysqli->errno, self::$mysqli->error, $method);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -846,41 +858,15 @@ class StaticDataLayer
       $time0 = microtime(true);
 
       $tmp = self::$mysqli->multi_query($queries);
-      if ($tmp===false)
-      {
-        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $queries);
-      }
+      if ($tmp===false) self::queryError('mysqli::multi_query', $queries);
 
       self::$queryLog[] = ['query' => $queries, 'time' => microtime(true) - $time0];
     }
     else
     {
       $tmp = self::$mysqli->multi_query($queries);
-      if ($tmp===false)
-      {
-        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $queries);
-      }
+      if ($tmp===false) self::queryError('mysqli::multi_query', $queries);
     }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Throws an exception with error information provided by MySQL/[mysqli](http://php.net/manual/en/class.mysqli.php).
-   *
-   * This method must called after a method of [mysqli](http://php.net/manual/en/class.mysqli.php) returns an
-   * error only.
-   *
-   * @param string $method The name of the method that has failed.
-   */
-  protected static function mySqlError(string $method): void
-  {
-    $message = 'MySQL Error no: '.self::$mysqli->errno."\n";
-    $message .= self::$mysqli->error;
-    $message .= "\n";
-    $message .= $method;
-    $message .= "\n";
-
-    throw new RuntimeException('%s', $message);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -902,23 +888,29 @@ class StaticDataLayer
       $time0 = microtime(true);
 
       $ret = self::$mysqli->query($query);
-      if ($ret===false)
-      {
-        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $query);
-      }
+      if ($ret===false) self::queryError('mysqli::query', $query);
 
       self::$queryLog[] = ['query' => $query, 'time' => microtime(true) - $time0];
     }
     else
     {
       $ret = self::$mysqli->query($query);
-      if ($ret===false)
-      {
-        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $query);
-      }
+      if ($ret===false) self::queryError('mysqli::query', $query);
     }
 
     return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Throws an exception with error information provided by MySQL/[mysqli](http://php.net/manual/en/class.mysqli.php).
+   *
+   * @param string $method The name of the method that has failed.
+   * @param string $query  The failed query.
+   */
+  protected static function queryError(string $method, $query): void
+  {
+    throw new MySqlQueryErrorException(self::$mysqli->errno, self::$mysqli->error, $method, $query);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -939,10 +931,7 @@ class StaticDataLayer
       $time0 = microtime(true);
 
       $tmp = self::$mysqli->real_query($query);
-      if ($tmp===false)
-      {
-        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $query);
-      }
+      if ($tmp===false) self::queryError('mysqli::real_query', $query);
 
       self::$queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
@@ -950,10 +939,7 @@ class StaticDataLayer
     else
     {
       $tmp = self::$mysqli->real_query($query);
-      if ($tmp===false)
-      {
-        throw new DataLayerException(self::$mysqli->errno, self::$mysqli->error, $query);
-      }
+      if ($tmp===false) self::queryError('mysqli::real_query', $query);
     }
   }
 
@@ -976,7 +962,7 @@ class StaticDataLayer
       while ($p<$n)
       {
         $b = $statement->send_long_data($paramNr, substr($data, $p, self::$chunkSize));
-        if (!$b) self::mySqlError('mysqli_stmt::send_long_data');
+        if (!$b) self::dataLayerError('mysqli_stmt::send_long_data');
         $p += self::$chunkSize;
       }
     }

@@ -22,6 +22,7 @@
     "setbased/helper-code-store-php": "^2.0.0",
     "setbased/php-stratum-backend": "4.0.0",
     "setbased/php-stratum-common": "dev-master",
+    "setbased/php-stratum-middle": "dev-master",
     "zendframework/zend-code": "^3.0.0"
   },
   "require-dev": {

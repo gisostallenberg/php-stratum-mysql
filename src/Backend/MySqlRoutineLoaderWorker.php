@@ -6,7 +6,8 @@ namespace SetBased\Stratum\MySql\Backend;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Exception\RoutineLoaderException;
 use SetBased\Stratum\Helper\SourceFinderHelper;
-use SetBased\Stratum\MySql\Exception\DataLayerException;
+use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 use SetBased\Stratum\MySql\Helper\RoutineLoaderHelper;
 use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
 use SetBased\Stratum\NameMangler\NameMangler;
@@ -109,10 +110,11 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   private $sqlMode;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * @inheritdoc
    */
-  public function execute(?array $sources=null): int
+  public function execute(?array $sources = null): int
   {
     $this->io->title('Loader');
 
@@ -450,18 +452,15 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
         $this->errorFilenames[] = $filename['path_name'];
         unset($this->phpStratumMetadata[$routineName]);
       }
-      catch (DataLayerException $e)
+      catch (MySqlQueryErrorException $e)
       {
-        if ($e->isQueryError())
-        {
-          // Exception is caused by a SQL error. Log the message and the SQL statement with highlighting the error.
-          $this->io->error($e->getShortMessage());
-          $this->io->text($e->getMarkedQuery());
-        }
-        else
-        {
-          $this->io->error($e->getMessage());
-        }
+        // Exception is caused by a SQL error. Log the message and the SQL statement with highlighting the error.
+        $this->io->error($e->getMessage());
+        $this->io->text($e->styledQuery());
+      }
+      catch (MySqlDataLayerException $e)
+      {
+        $this->io->error($e->getMessage());
       }
     }
   }
