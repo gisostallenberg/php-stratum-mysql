@@ -386,7 +386,7 @@ class DataTypeHelper
       default:
         $parts = explode('|', $phpTypeHint);
         $key   = array_search('null', $parts);
-        if (count($parts)==2 && $key!==false)
+        if (sizeof($parts)==2 && $key!==false)
         {
           unset($parts[$key]);
 

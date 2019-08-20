@@ -399,8 +399,8 @@ class RoutineLoaderHelper
     }
 
     // Check number of columns in the table match the number of fields given in the designation type.
-    $n1 = count($this->bulkInsertKeys);
-    $n2 = count($description);
+    $n1 = sizeof($this->bulkInsertKeys);
+    $n2 = sizeof($description);
     if ($n1!=$n2)
     {
       throw new RoutineLoaderException("Number of fields %d and number of columns %d don't match.", $n1, $n2);
@@ -546,7 +546,7 @@ class RoutineLoaderHelper
 
         if ($k==1)
         {
-          $count = count($matches);
+          $count = sizeof($matches);
           if ($count==3 || $count==6)
           {
             $parameter_name = $matches[1];

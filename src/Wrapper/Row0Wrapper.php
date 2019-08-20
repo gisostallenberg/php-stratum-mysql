@@ -67,7 +67,7 @@ class Row0Wrapper extends Wrapper
     $this->imports[] = 'SetBased\Stratum\Exception\ResultException';
 
     $this->codeStore->append('if ($b===false) self::dataLayerError(\'mysqli_stmt::fetch\');');
-    $this->codeStore->append('if (count($tmp)>1) throw new ResultException([0, 1], count($tmp), $query);');
+    $this->codeStore->append('if (sizeof($tmp)>1) throw new ResultException([0, 1], sizeof($tmp), $query);');
     $this->codeStore->append('');
     $this->codeStore->append('return ($tmp) ? $tmp[0] : null;');
   }

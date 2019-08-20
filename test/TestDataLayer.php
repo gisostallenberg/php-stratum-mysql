@@ -504,7 +504,7 @@ class TestDataLayer extends DataLayer
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
-    if (count($tmp)!=1) throw new ResultException([1], count($tmp), $query);
+    if (sizeof($tmp)!=1) throw new ResultException([1], sizeof($tmp), $query);
 
     return $tmp[0][0];
   }
@@ -671,7 +671,7 @@ class TestDataLayer extends DataLayer
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
-    if (count($tmp)>1) throw new ResultException([0, 1], count($tmp), $query);
+    if (sizeof($tmp)>1) throw new ResultException([0, 1], sizeof($tmp), $query);
 
     return ($tmp) ? $tmp[0] : null;
   }
@@ -749,7 +749,7 @@ class TestDataLayer extends DataLayer
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
-    if (count($tmp)!=1) throw new ResultException([1], count($tmp), $query);
+    if (sizeof($tmp)!=1) throw new ResultException([1], sizeof($tmp), $query);
 
     return $row;
   }
@@ -1070,7 +1070,7 @@ class TestDataLayer extends DataLayer
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
-    if (count($tmp)>1) throw new ResultException([0, 1], count($tmp), $query);
+    if (sizeof($tmp)>1) throw new ResultException([0, 1], sizeof($tmp), $query);
 
     return $tmp[0][0] ?? null;
   }
@@ -1152,7 +1152,7 @@ class TestDataLayer extends DataLayer
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
-    if (count($tmp)>1) throw new ResultException([0, 1], count($tmp), $query);
+    if (sizeof($tmp)>1) throw new ResultException([0, 1], sizeof($tmp), $query);
 
     return !empty($tmp[0][0]);
   }
@@ -1230,7 +1230,7 @@ class TestDataLayer extends DataLayer
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
-    if (count($tmp)!=1) throw new ResultException([1], count($tmp), $query);
+    if (sizeof($tmp)!=1) throw new ResultException([1], sizeof($tmp), $query);
 
     return $tmp[0][0];
   }
@@ -1312,7 +1312,7 @@ class TestDataLayer extends DataLayer
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
     if ($b===false) $this->dataLayerError('mysqli_stmt::fetch');
-    if (count($tmp)!=1) throw new ResultException([1], count($tmp), $query);
+    if (sizeof($tmp)!=1) throw new ResultException([1], sizeof($tmp), $query);
 
     return !empty($tmp[0][0]);
   }
