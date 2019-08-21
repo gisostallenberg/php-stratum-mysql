@@ -7,7 +7,7 @@ use SetBased\Stratum\Exception\QueryErrorException;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
 /**
- * Exception thrwon when the execution of MySQL query fails.
+ * Exception thrown when the execution of MySQL query fails.
  */
 class MySqlQueryErrorException extends MySqlDataLayerException implements QueryErrorException
 {
