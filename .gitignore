@@ -2,9 +2,7 @@
 /bin/phing
 /bin/phpunit
 /bin/stratum
-/build/
 /composer.lock
-/doc/
 /test/coverage.xml
 /test/etc/routines.json
 /test/etc/stratum.ini
