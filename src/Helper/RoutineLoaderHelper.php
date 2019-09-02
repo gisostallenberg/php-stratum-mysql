@@ -229,7 +229,7 @@ class RoutineLoaderHelper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Extract column metadata from the rows returend by the SQL statement 'describe table'.
+   * Extract column metadata from the rows returned by the SQL statement 'describe table'.
    *
    * @param array $description The description of the table.
    *
@@ -974,7 +974,7 @@ class RoutineLoaderHelper
     // Return mixed is OK.
     if (in_array($this->returnType, ['bool', 'mixed'])) return;
 
-    // In all other cases return type mus contain null.
+    // In all other cases return type must contain null.
     $parts = explode('|', $this->returnType);
     $key   = array_search('null', $parts);
     if ($key===false)
