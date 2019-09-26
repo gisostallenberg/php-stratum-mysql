@@ -521,14 +521,13 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    */
   private function removeObsoleteMetadata(): void
   {
-    // 1 pass through $mySources make new array with routine_name is key.
     $clean = [];
     foreach ($this->sources as $source)
     {
-      $routine_name = $source['routine_name'];
-      if (isset($this->phpStratumMetadata[$routine_name]))
+      $routineName = $source['routine_name'];
+      if (isset($this->phpStratumMetadata[$routineName]))
       {
-        $clean[$routine_name] = $this->phpStratumMetadata[$routine_name];
+        $clean[$routineName] = $this->phpStratumMetadata[$routineName];
       }
     }
 
