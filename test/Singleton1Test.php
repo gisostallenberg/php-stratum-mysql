@@ -54,7 +54,7 @@ class Singleton1Test extends DataLayerTestCase
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Stored routine with designation type singleton0 and return type bool must return false when selecting 1 row
+   * Stored routine with designation type singleton1 and return type bool must return false when selecting 1 row
    * with null value.
    */
   public function test12()
@@ -65,7 +65,7 @@ class Singleton1Test extends DataLayerTestCase
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Stored routine with designation type singleton0 and return type bool must return false when selecting 1 row
+   * Stored routine with designation type singleton1 and return type bool must return false when selecting 1 row
    * with empty value.
    */
   public function test13()
@@ -76,7 +76,7 @@ class Singleton1Test extends DataLayerTestCase
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Stored routine with designation type singleton0 and return type bool must return true when selecting 1 row
+   * Stored routine with designation type singleton1 and return type bool must return true when selecting 1 row
    * with non-empty value.
    */
   public function test14()
@@ -87,7 +87,7 @@ class Singleton1Test extends DataLayerTestCase
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * An exception must be thrown when a stored routine with designation type singleton0  and return type bool returns
+   * An exception must be thrown when a stored routine with designation type singleton1  and return type bool returns
    * more than 1 rows.
    *
    * @expectedException \SetBased\Stratum\Exception\ResultException
