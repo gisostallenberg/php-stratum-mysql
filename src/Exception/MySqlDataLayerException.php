@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Exception;
 
-use SetBased\Stratum\Exception\DataLayerException;
+use SetBased\Stratum\Middle\Exception\DataLayerException;
 
 /**
  * Exception for situations where the execution of s SQL query has failed.

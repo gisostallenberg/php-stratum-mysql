@@ -10,16 +10,6 @@ class SelectRoutine extends BaseRoutine
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * @inheritDoc
-   */
-  protected function generateSqlDataAndDesignationType(): void
-  {
-    $this->codeStore->append('reads sql data');
-    $this->codeStore->append('-- type: row1');
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * @inheritdoc
    */
   protected function generateBody(): void
@@ -90,6 +80,16 @@ class SelectRoutine extends BaseRoutine
   protected function generateRoutineDeclaration(): void
   {
     $this->generateRoutineDeclarationWithKey();
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * @inheritDoc
+   */
+  protected function generateSqlDataAndDesignationType(): void
+  {
+    $this->codeStore->append('reads sql data');
+    $this->codeStore->append('-- type: row1');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

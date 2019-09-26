@@ -25,7 +25,7 @@ class FunctionTest extends DataLayerTestCase
   public function test02()
   {
     $value = $this->dataLayer->tstTestFunction(3, 4);
-    $this->assertNotEquals(5, $value);
+    self::assertNotEquals(5, $value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ class FunctionTest extends DataLayerTestCase
   public function test11()
   {
     $value = $this->dataLayer->tstTestFunctionBool1(null);
-    $this->assertFalse($value);
+    self::assertFalse($value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ class FunctionTest extends DataLayerTestCase
   public function test12()
   {
     $value = $this->dataLayer->tstTestFunctionBool1(0);
-    $this->assertFalse($value);
+    self::assertFalse($value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ class FunctionTest extends DataLayerTestCase
   public function test13()
   {
     $value = $this->dataLayer->tstTestFunctionBool1(123);
-    $this->assertTrue($value);
+    self::assertTrue($value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ class FunctionTest extends DataLayerTestCase
   public function test21()
   {
     $value = $this->dataLayer->tstTestFunctionBool2(null);
-    $this->assertFalse($value);
+    self::assertFalse($value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ class FunctionTest extends DataLayerTestCase
   public function test22()
   {
     $value = $this->dataLayer->tstTestFunctionBool2('');
-    $this->assertFalse($value);
+    self::assertFalse($value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -85,7 +85,7 @@ class FunctionTest extends DataLayerTestCase
   public function test23()
   {
     $value = $this->dataLayer->tstTestFunctionBool2('0');
-    $this->assertFalse($value);
+    self::assertFalse($value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -95,7 +95,7 @@ class FunctionTest extends DataLayerTestCase
   public function test24()
   {
     $value = $this->dataLayer->tstTestFunctionBool2('hello');
-    $this->assertTrue($value);
+    self::assertTrue($value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql;
 
-use SetBased\Stratum\StratumStyle;
+use SetBased\Stratum\Backend\StratumStyle;
 
 /**
  * Data layer for retrieving metadata and loading stored routines.
  */
-class MetadataDataLayer
+class MetaDataLayer
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**

@@ -4,51 +4,18 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql\Backend;
 
 use SetBased\Exception\FallenException;
-use SetBased\Stratum\CrudWorker;
+use SetBased\Stratum\Backend\CrudWorker;
 use SetBased\Stratum\MySql\Helper\Crud\DeleteRoutine;
 use SetBased\Stratum\MySql\Helper\Crud\InsertRoutine;
 use SetBased\Stratum\MySql\Helper\Crud\SelectRoutine;
 use SetBased\Stratum\MySql\Helper\Crud\UpdateRoutine;
-use SetBased\Stratum\MySql\MetadataDataLayer;
+use SetBased\Stratum\MySql\MetaDataLayer;
 
 /**
  *
  */
 class MySqlCrudWorker extends MySqlWorker implements CrudWorker
 {
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns a list of all supported operations by the worker.
-   *
-   * @return string[]
-   */
-  public function operations(): array
-  {
-    return ['insert', 'update', 'delete', 'select'];
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns a list of all tables in de database of the backend.
-   *
-   * @return array
-   */
-  public function tables(): array
-  {
-    $this->connect();
-    $schema = $this->settings->manString('database.database');
-    $rows   = MetadataDataLayer::allTablesNames($schema);
-    $this->disconnect();
-
-    $tables = [];
-    foreach ($rows as $row)
-    {
-      $tables[] = $row['table_name'];
-    }
-
-    return $tables;
-  }
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Generates the code for a stored routine.
@@ -88,6 +55,39 @@ class MySqlCrudWorker extends MySqlWorker implements CrudWorker
     $this->disconnect();
 
     return $routine->getCode();
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns a list of all supported operations by the worker.
+   *
+   * @return string[]
+   */
+  public function operations(): array
+  {
+    return ['insert', 'update', 'delete', 'select'];
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns a list of all tables in de database of the backend.
+   *
+   * @return array
+   */
+  public function tables(): array
+  {
+    $this->connect();
+    $schema = $this->settings->manString('database.database');
+    $rows   = MetaDataLayer::allTablesNames($schema);
+    $this->disconnect();
+
+    $tables = [];
+    foreach ($rows as $row)
+    {
+      $tables[] = $row['table_name'];
+    }
+
+    return $tables;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

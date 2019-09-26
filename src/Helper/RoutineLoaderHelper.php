@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql\Helper;
 
 use SetBased\Exception\FallenException;
-use SetBased\Stratum\Exception\RoutineLoaderException;
-use SetBased\Stratum\MySql\MetadataDataLayer as MetaDataLayer;
-use SetBased\Stratum\StratumStyle;
+use SetBased\Stratum\Backend\StratumStyle;
+use SetBased\Stratum\Common\Exception\RoutineLoaderException;
+use SetBased\Stratum\MySql\MetaDataLayer;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Zend\Code\Reflection\DocBlock\Tag\ParamTag;
 use Zend\Code\Reflection\DocBlockReflection;

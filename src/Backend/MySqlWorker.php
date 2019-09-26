@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Backend;
 
-use SetBased\Stratum\Config;
-use SetBased\Stratum\MySql\MetadataDataLayer;
-use SetBased\Stratum\StratumStyle;
+use SetBased\Stratum\Backend\Config;
+use SetBased\Stratum\Backend\StratumStyle;
+use SetBased\Stratum\MySql\MetaDataLayer;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
 /**
@@ -47,7 +47,7 @@ class MySqlWorker
    */
   public function disconnect()
   {
-    MetadataDataLayer::disconnect();
+    MetaDataLayer::disconnect();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -62,8 +62,8 @@ class MySqlWorker
     $database = $this->settings->manString('database.database');
     $port     = $this->settings->manInt('database.port', 3306);
 
-    MetadataDataLayer::setIo($this->io);
-    MetadataDataLayer::connect($host, $user, $password, $database, $port);
+    MetaDataLayer::setIo($this->io);
+    MetaDataLayer::connect($host, $user, $password, $database, $port);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

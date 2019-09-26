@@ -15,12 +15,12 @@ class RowsWithIndexTest extends DataLayerTestCase
   public function test1()
   {
     $rows = $this->dataLayer->tstTestRowsWithIndex1(100);
-    $this->assertInternalType('array', $rows);
+    self::assertIsArray($rows);
 
-    $this->assertArrayHasKey('a', $rows);
-    $this->assertArrayHasKey('b', $rows['a']);
+    self::assertArrayHasKey('a', $rows);
+    self::assertArrayHasKey('b', $rows['a']);
 
-    $this->assertNotCount(0, $rows['a']['b']);
+    self::assertNotCount(0, $rows['a']['b']);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -30,8 +30,8 @@ class RowsWithIndexTest extends DataLayerTestCase
   public function test2()
   {
     $rows = $this->dataLayer->tstTestRowsWithIndex1(0);
-    $this->assertInternalType('array', $rows);
-    $this->assertCount(0, $rows);
+    self::assertIsArray($rows);
+    self::assertCount(0, $rows);
 
   }
 

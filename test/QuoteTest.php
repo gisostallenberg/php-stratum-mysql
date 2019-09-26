@@ -39,15 +39,15 @@ class QuoteTest extends DataLayerTestCase
                                   ($column=='varbinary') ? $value : null,
                                   ($column=='enum') ? $value : null,
                                   ($column=='set') ? $value : null);
-      $this->assertTrue(false, "column: $column, value: $value");
+      self::assertTrue(false, "column: $column, value: $value");
     }
     catch (\TypeError $e)
     {
-      $this->assertTrue(true);
+      self::assertTrue(true);
     }
     catch (\RuntimeException $e)
     {
-      $this->assertTrue(true);
+      self::assertTrue(true);
     }
   }
 
@@ -183,6 +183,6 @@ class QuoteTest extends DataLayerTestCase
   }
 
   //--------------------------------------------------------------------------------------------------------------------
-
 }
+
 //----------------------------------------------------------------------------------------------------------------------

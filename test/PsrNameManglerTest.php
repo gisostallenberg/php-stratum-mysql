@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql\Test;
 
 use PHPUnit\Framework\TestCase;
-use SetBased\Stratum\NameMangler\PsrNameMangler;
+use SetBased\Stratum\Middle\NameMangler\PsrNameMangler;
 
 /**
  * Test cases for class PsrNameMangler.

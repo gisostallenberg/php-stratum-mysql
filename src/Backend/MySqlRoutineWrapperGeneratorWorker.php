@@ -6,10 +6,10 @@ namespace SetBased\Stratum\MySql\Backend;
 use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
 use SetBased\Helper\CodeStore\PhpCodeStore;
-use SetBased\Stratum\Helper\NonStatic;
+use SetBased\Stratum\Backend\RoutineWrapperGeneratorWorker;
+use SetBased\Stratum\Frontend\Helper\NonStatic;
+use SetBased\Stratum\Middle\NameMangler\NameMangler;
 use SetBased\Stratum\MySql\Wrapper\Wrapper;
-use SetBased\Stratum\NameMangler\NameMangler;
-use SetBased\Stratum\RoutineWrapperGeneratorWorker;
 
 /**
  * Command for generating a class with wrapper methods for calling stored routines in a MySQL database.

@@ -16,25 +16,25 @@ class MultiTest extends DataLayerTestCase
   {
     $results = $this->dataLayer->executeMulti(file_get_contents(__DIR__.'/sql/multi_test01.sql'));
 
-    self::assertInternalType('array', $results);
+    self::assertIsArray($results);
     self::assertEquals(6, count($results));
 
-    self::assertInternalType('int', $results[0]);
+    self::assertIsInt($results[0]);
     self::assertEquals(0, $results[0]);
 
-    self::assertInternalType('int', $results[1]);
+    self::assertIsInt($results[1]);
     self::assertEquals(2, $results[1]);
 
-    self::assertInternalType('array', $results[2]);
+    self::assertIsArray($results[2]);
     self::assertEquals(2, count($results[2]));
 
-    self::assertInternalType('int', $results[3]);
+    self::assertIsInt($results[3]);
     self::assertEquals(1, $results[3]);
 
-    self::assertInternalType('array', $results[4]);
+    self::assertIsArray($results[4]);
     self::assertEquals(1, count($results[4]));
 
-    self::assertInternalType('array', $results[5]);
+    self::assertIsArray($results[5]);
     self::assertEquals(3, count($results[5]));
   }
 

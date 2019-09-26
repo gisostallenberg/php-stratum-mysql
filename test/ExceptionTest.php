@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Test;
 
-use SetBased\Exception\RuntimeException;
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 
 /**
  * Test with illegal queries.
@@ -12,10 +12,10 @@ class ExceptionTest extends DataLayerTestCase
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * @expectedException RuntimeException
    */
   public function test1()
   {
+    $this->expectException(MySqlQueryErrorException::class);
     $this->dataLayer->tstTestIllegalQuery();
   }
 

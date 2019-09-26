@@ -15,17 +15,17 @@ class RowsWithKeyTest extends DataLayerTestCase
   public function test1()
   {
     $rows = $this->dataLayer->tstTestRowsWithKey1(100);
-    $this->assertInternalType('array', $rows);
-    $this->assertCount(1, $rows);
+    self::assertIsArray($rows);
+    self::assertCount(1, $rows);
 
-    $this->assertArrayHasKey('a', $rows);
-    $this->assertArrayHasKey('b', $rows['a']);
+    self::assertArrayHasKey('a', $rows);
+    self::assertArrayHasKey('b', $rows['a']);
 
-    $this->assertNotCount(0, $rows['a']['b']);
+    self::assertNotCount(0, $rows['a']['b']);
 
-    $this->assertArrayHasKey('c1', $rows['a']['b']);
+    self::assertArrayHasKey('c1', $rows['a']['b']);
 
-    $this->assertNotCount(0, $rows['a']['b']['c1']);
+    self::assertNotCount(0, $rows['a']['b']['c1']);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -35,8 +35,8 @@ class RowsWithKeyTest extends DataLayerTestCase
   public function test2()
   {
     $rows = $this->dataLayer->tstTestRowsWithKey1(0);
-    $this->assertInternalType('array', $rows);
-    $this->assertCount(0, $rows);
+    self::assertIsArray($rows);
+    self::assertCount(0, $rows);
 
   }
 

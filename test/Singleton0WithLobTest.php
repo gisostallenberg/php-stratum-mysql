@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Test;
 
+use SetBased\Stratum\Middle\Exception\ResultException;
+
 /**
  * Test cases for stored routines with designation type singleton0 with LOBs.
  */
@@ -15,7 +17,7 @@ class Singleton0WithLobTest extends DataLayerTestCase
   public function test01()
   {
     $value = $this->dataLayer->tstTestSingleton0aWithLob(0, 'blob');
-    $this->assertInternalType('null', $value);
+    self::assertNull($value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -31,11 +33,10 @@ class Singleton0WithLobTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * An exception must be thrown when a stored routine with designation type singleton0 returns more than 1 row.
-   *
-   * @expectedException \SetBased\Stratum\Exception\ResultException
    */
   public function test03()
   {
+    $this->expectException(ResultException::class);
     $this->dataLayer->tstTestSingleton0aWithLob(2, 'blob');
   }
 
@@ -46,7 +47,7 @@ class Singleton0WithLobTest extends DataLayerTestCase
   public function test11()
   {
     $value = $this->dataLayer->tstTestSingleton0bWithLob(0, 1, 'blob');
-    $this->assertFalse($value);
+    self::assertFalse($value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -57,7 +58,7 @@ class Singleton0WithLobTest extends DataLayerTestCase
   public function test12()
   {
     $value = $this->dataLayer->tstTestSingleton0bWithLob(1, null, 'blob');
-    $this->assertFalse($value);
+    self::assertFalse($value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -68,7 +69,7 @@ class Singleton0WithLobTest extends DataLayerTestCase
   public function test13()
   {
     $value = $this->dataLayer->tstTestSingleton0bWithLob(1, 0, 'blob');
-    $this->assertFalse($value);
+    self::assertFalse($value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -79,18 +80,17 @@ class Singleton0WithLobTest extends DataLayerTestCase
   public function test14()
   {
     $value = $this->dataLayer->tstTestSingleton0bWithLob(1, 123, 'blob');
-    $this->assertTrue($value);
+    self::assertTrue($value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * An exception must be thrown when a stored routine with designation type singleton0 and return type bool
    * returns more than 1 row.
-   *
-   * @expectedException \SetBased\Stratum\Exception\ResultException
    */
   public function test15()
   {
+    $this->expectException(ResultException::class);
     $this->dataLayer->tstTestSingleton0bWithLob(2, 1, 'blob');
   }
 

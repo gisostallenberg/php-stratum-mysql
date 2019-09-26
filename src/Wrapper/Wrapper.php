@@ -5,8 +5,8 @@ namespace SetBased\Stratum\MySql\Wrapper;
 
 use SetBased\Exception\FallenException;
 use SetBased\Helper\CodeStore\PhpCodeStore;
+use SetBased\Stratum\Middle\NameMangler\NameMangler;
 use SetBased\Stratum\MySql\Helper\DataTypeHelper;
-use SetBased\Stratum\NameMangler\NameMangler;
 
 /**
  * Abstract parent class for all wrapper generators.

@@ -22,7 +22,7 @@ class DataLayerTestCase extends TestCase
   /**
    * Connects to the MySQL server.
    */
-  protected function setUp()
+  protected function setUp(): void
   {
     $this->dataLayer = new TestDataLayer();
 

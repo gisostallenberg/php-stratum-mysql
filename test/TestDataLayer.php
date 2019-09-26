@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Test;
 
-use SetBased\Stratum\Exception\ResultException;
+use SetBased\Stratum\Middle\Exception\ResultException;
 use SetBased\Stratum\MySql\DataLayer;
 
 /**

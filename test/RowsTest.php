@@ -15,8 +15,8 @@ class RowsTest extends DataLayerTestCase
   public function test1()
   {
     $ret = $this->dataLayer->tstTestRows1(0);
-    $this->assertInternalType('array', $ret);
-    $this->assertCount(0, $ret);
+    self::assertIsArray($ret);
+    self::assertCount(0, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -26,8 +26,8 @@ class RowsTest extends DataLayerTestCase
   public function test2()
   {
     $ret = $this->dataLayer->tstTestRows1(1);
-    $this->assertInternalType('array', $ret);
-    $this->assertCount(1, $ret);
+    self::assertIsArray($ret);
+    self::assertCount(1, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -37,8 +37,8 @@ class RowsTest extends DataLayerTestCase
   public function test3()
   {
     $ret = $this->dataLayer->tstTestRows1(2);
-    $this->assertInternalType('array', $ret);
-    $this->assertCount(2, $ret);
+    self::assertIsArray($ret);
+    self::assertCount(2, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

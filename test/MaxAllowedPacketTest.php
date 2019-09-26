@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql\Test;
 
 use SetBased\Exception\RuntimeException;
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 
 /**
  * Test cases with max-allowed-packet.
@@ -13,6 +14,8 @@ class MaxAllowedPacketTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Generate test for the data Lob type different size.
+   *
+   * @param int $size The size of the BLOB.
    */
   public function crc32WithStoredRoutine(int $size)
   {
@@ -52,22 +55,20 @@ class MaxAllowedPacketTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Calling a stored routine with a BLOB of larger than max_allowed_packet bytes is not possible.
-   *
-   * @expectedException RuntimeException
    */
   public function test4()
   {
+    $this->expectException(MySqlQueryErrorException::class);
     $this->crc32WithStoredRoutine(2 * $this->dataLayer->getMaxAllowedPacket());
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Calling a stored routine with a BLOB larger than max_allowed_packet bytes is not possible.
-   *
-   * @expectedException RuntimeException
    */
   public function xtest3()
   {
+    $this->expectException(RuntimeException::class);
     $this->crc32WithStoredRoutine((int)(1.05 * $this->dataLayer->getMaxAllowedPacket()));
   }
 

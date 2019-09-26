@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Test;
 
+use SetBased\Stratum\Middle\Exception\ResultException;
+
 /**
  * Test cases for stored routines with designation type singleton1.
  */
@@ -21,35 +23,32 @@ class Singleton1Test extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * An exception must be thrown when a stored routine with designation type singleton1 returns 0 rows.
-   *
-   * @expectedException \SetBased\Stratum\Exception\ResultException
    */
   public function test02()
   {
+    $this->expectException(ResultException::class);
     $this->dataLayer->tstTestSingleton1a(0);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * An exception must be thrown when a stored routine with designation type singleton1 returns more than 1 rows.
-   *
-   * @expectedException \SetBased\Stratum\Exception\ResultException
    */
   public function test03()
   {
+    $this->expectException(ResultException::class);
     $this->dataLayer->tstTestSingleton1a(2);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    *  An exception must be thrown when a stored routine with designation type singleton1 return type bool returns 0 rows.
-   *
-   * @expectedException \SetBased\Stratum\Exception\ResultException
    */
   public function test11()
   {
+    $this->expectException(ResultException::class);
     $value = $this->dataLayer->tstTestSingleton1b(0, 1);
-    $this->assertFalse($value);
+    self::assertFalse($value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -60,7 +59,7 @@ class Singleton1Test extends DataLayerTestCase
   public function test12()
   {
     $value = $this->dataLayer->tstTestSingleton1b(1, null);
-    $this->assertFalse($value);
+    self::assertFalse($value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -71,7 +70,7 @@ class Singleton1Test extends DataLayerTestCase
   public function test13()
   {
     $value = $this->dataLayer->tstTestSingleton1b(1, 0);
-    $this->assertFalse($value);
+    self::assertFalse($value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -82,18 +81,17 @@ class Singleton1Test extends DataLayerTestCase
   public function test14()
   {
     $value = $this->dataLayer->tstTestSingleton1b(1, 123);
-    $this->assertTrue($value);
+    self::assertTrue($value);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * An exception must be thrown when a stored routine with designation type singleton1  and return type bool returns
    * more than 1 rows.
-   *
-   * @expectedException \SetBased\Stratum\Exception\ResultException
    */
   public function test15()
   {
+    $this->expectException(ResultException::class);
     $this->dataLayer->tstTestSingleton1b(2, 1);
   }
 

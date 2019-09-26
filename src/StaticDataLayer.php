@@ -5,8 +5,8 @@ namespace SetBased\Stratum\MySql;
 
 use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
-use SetBased\Stratum\BulkHandler;
-use SetBased\Stratum\Exception\ResultException;
+use SetBased\Stratum\Middle\BulkHandler;
+use SetBased\Stratum\Middle\Exception\ResultException;
 use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
 use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 

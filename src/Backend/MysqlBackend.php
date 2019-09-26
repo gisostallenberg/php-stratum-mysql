@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Backend;
 
-use SetBased\Stratum\Backend;
-use SetBased\Stratum\Config;
-use SetBased\Stratum\ConstantWorker;
-use SetBased\Stratum\CrudWorker;
-use SetBased\Stratum\RoutineLoaderWorker;
-use SetBased\Stratum\RoutineWrapperGeneratorWorker;
-use SetBased\Stratum\StratumStyle;
+use SetBased\Stratum\Backend\Backend;
+use SetBased\Stratum\Backend\Config;
+use SetBased\Stratum\Backend\ConstantWorker;
+use SetBased\Stratum\Backend\CrudWorker;
+use SetBased\Stratum\Backend\RoutineLoaderWorker;
+use SetBased\Stratum\Backend\RoutineWrapperGeneratorWorker;
+use SetBased\Stratum\Backend\StratumStyle;
 
 /**
- * The PhpStratum's backend for MySQL and MariadDB using mysqli.
+ * The PhpStratum's backend for MySQL and MariaDB using mysqli.
  */
 class MysqlBackend extends Backend
 {

@@ -4,14 +4,14 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql\Backend;
 
 use SetBased\Exception\RuntimeException;
-use SetBased\Stratum\Exception\RoutineLoaderException;
-use SetBased\Stratum\Helper\SourceFinderHelper;
+use SetBased\Stratum\Backend\RoutineLoaderWorker;
+use SetBased\Stratum\Common\Exception\RoutineLoaderException;
+use SetBased\Stratum\Common\Helper\SourceFinderHelper;
+use SetBased\Stratum\Middle\NameMangler\NameMangler;
 use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
 use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 use SetBased\Stratum\MySql\Helper\RoutineLoaderHelper;
-use SetBased\Stratum\MySql\MetadataDataLayer as DataLayer;
-use SetBased\Stratum\NameMangler\NameMangler;
-use SetBased\Stratum\RoutineLoaderWorker;
+use SetBased\Stratum\MySql\MetaDataLayer;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
 /**
@@ -110,7 +110,6 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   private $sqlMode;
 
   //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * @inheritdoc
    */
@@ -206,7 +205,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
                            strtolower($old_routine['routine_type']),
                            $old_routine['routine_name']);
 
-        DataLayer::dropRoutine($old_routine['routine_type'], $old_routine['routine_name']);
+        MetaDataLayer::dropRoutine($old_routine['routine_type'], $old_routine['routine_name']);
       }
     }
   }
@@ -260,7 +259,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    */
   private function getColumnTypes(): void
   {
-    $rows = DataLayer::allTableColumns();
+    $rows = MetaDataLayer::allTableColumns();
     foreach ($rows as $row)
     {
       $key = '@'.$row['table_name'].'.'.$row['column_name'].'%type@';
@@ -305,7 +304,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    */
   private function getCorrectSqlMode(): void
   {
-    $this->sqlMode = DataLayer::correctSqlMode($this->sqlMode);
+    $this->sqlMode = MetaDataLayer::correctSqlMode($this->sqlMode);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -354,7 +353,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   {
     $this->rdbmsOldMetadata = [];
 
-    $routines = DataLayer::allRoutines();
+    $routines = MetaDataLayer::allRoutines();
     foreach ($routines as $routine)
     {
       $this->rdbmsOldMetadata[$routine['routine_name']] = $routine;

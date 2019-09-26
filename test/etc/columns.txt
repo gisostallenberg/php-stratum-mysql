@@ -1114,12 +1114,17 @@ test.TST_TABLE.tst_c04 16
 test.TST_TABLE.t       10
 test.TST_TABLE.s       10
 
-test_audit.TABLE1.c1  3
-test_audit.TABLE1.c2  5
-test_audit.TABLE1.c4 10
+test_audit.FOO_EMPLOYEE.audit_timestamp 16
+test_audit.FOO_EMPLOYEE.audit_uuid      20
+test_audit.FOO_EMPLOYEE.audit_rownum    10
+test_audit.FOO_EMPLOYEE.audit_user      80
+test_audit.FOO_EMPLOYEE.emp_id          10
+test_audit.FOO_EMPLOYEE.emp_name        60
+test_audit.FOO_EMPLOYEE.emp_salary      11
+test_audit.FOO_EMPLOYEE.emp_role        20
 
-test_data.TABLE1.c1  3
-test_data.TABLE1.c2  5
-test_data.TABLE1.c3  7
-test_data.TABLE1.c4 10
+test_data.FOO_EMPLOYEE.emp_id     10
+test_data.FOO_EMPLOYEE.emp_name   80
+test_data.FOO_EMPLOYEE.emp_salary 11
+test_data.FOO_EMPLOYEE.emp_role   20
 

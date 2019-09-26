@@ -41,11 +41,10 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with a list with an invalid value in CSV format.
-   *
-   * @expectedException RuntimeException
    */
   public function test3()
   {
+    $this->expectException(RuntimeException::class);
     $ids = "2,not_int";
     $this->dataLayer->tstTestListOfInt($ids);
   }
@@ -53,11 +52,10 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with an array of with an invalid value.
-   *
-   * @expectedException RuntimeException
    */
   public function test4a()
   {
+    $this->expectException(RuntimeException::class);
     $ids = ['not_int', 3];
     $this->dataLayer->tstTestListOfInt($ids);
   }
@@ -65,11 +63,10 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with an array of with an invalid value.
-   *
-   * @expectedException RuntimeException
    */
   public function test4b()
   {
+    $this->expectException(RuntimeException::class);
     $ids = [[], 3];
     $this->dataLayer->tstTestListOfInt($ids);
   }
@@ -107,11 +104,10 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with a list of integers and an empty value in CSV format.
-   *
-   * @expectedException RuntimeException
    */
   public function test7a()
   {
+    $this->expectException(RuntimeException::class);
     $ids = "1,2,,3";
     $this->dataLayer->tstTestListOfInt($ids);
   }
@@ -119,11 +115,10 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with a list of integers and an empty value in CSV format.
-   *
-   * @expectedException RuntimeException
    */
   public function test7b()
   {
+    $this->expectException(RuntimeException::class);
     $ids = "1,2,";
     $this->dataLayer->tstTestListOfInt($ids);
   }
@@ -131,11 +126,10 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with a list of integers and an empty value in CSV format.
-   *
-   * @expectedException RuntimeException
    */
   public function test7c()
   {
+    $this->expectException(RuntimeException::class);
     $ids = ",1,2";
     $this->dataLayer->tstTestListOfInt($ids);
   }
@@ -143,11 +137,10 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with an array of integers and an empty value.
-   *
-   * @expectedException RuntimeException
    */
   public function test8a()
   {
+    $this->expectException(RuntimeException::class);
     $ids = [1, 2, '', 3];
     $this->dataLayer->tstTestListOfInt($ids);
   }
@@ -155,11 +148,10 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with an array of integers and an empty value.
-   *
-   * @expectedException RuntimeException
    */
   public function test8b()
   {
+    $this->expectException(RuntimeException::class);
     $ids = [1, 2, 3, null];
     $this->dataLayer->tstTestListOfInt($ids);
   }
@@ -167,11 +159,10 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with an array of integers and an empty value.
-   *
-   * @expectedException RuntimeException
    */
   public function test8c()
   {
+    $this->expectException(RuntimeException::class);
     $ids = [false, 1, 2, 3];
     $this->dataLayer->tstTestListOfInt($ids);
   }

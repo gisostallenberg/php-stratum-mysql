@@ -15,11 +15,11 @@ class MapWithLobTest extends DataLayerTestCase
   public function test1()
   {
     $map = $this->dataLayer->tstTestMap1WithLob(100, 'blob');
-    $this->assertInternalType('array', $map);
-    $this->assertCount(3, $map);
-    $this->assertEquals(1, $map['c1']);
-    $this->assertEquals(2, $map['c2']);
-    $this->assertEquals(3, $map['c3']);
+    self::assertIsArray($map);
+    self::assertCount(3, $map);
+    self::assertEquals(1, $map['c1']);
+    self::assertEquals(2, $map['c2']);
+    self::assertEquals(3, $map['c3']);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -29,8 +29,8 @@ class MapWithLobTest extends DataLayerTestCase
   public function test2()
   {
     $rows = $this->dataLayer->tstTestMap1WithLob(0, 'blob');
-    $this->assertInternalType('array', $rows);
-    $this->assertCount(0, $rows);
+    self::assertIsArray($rows);
+    self::assertCount(0, $rows);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

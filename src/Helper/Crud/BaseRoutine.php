@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql\Helper\Crud;
 
 use SetBased\Helper\CodeStore\MySqlCompoundSyntaxCodeStore;
-use SetBased\Stratum\Helper\RowSetHelper;
-use SetBased\Stratum\MySql\MetadataDataLayer;
+use SetBased\Stratum\Middle\Helper\RowSetHelper;
+use SetBased\Stratum\MySql\MetaDataLayer;
 
 /**
  * Abstract parent class for classes for generating CRUD stored routines.
@@ -95,9 +95,9 @@ abstract class BaseRoutine
     $this->routineName = $routineName;
     $this->schemaName  = $schemaName;
 
-    $this->tableColumns  = MetadataDataLayer::tableColumns($this->schemaName, $this->tableName);
-    $this->primaryKey    = MetadataDataLayer::tablePrimaryKey($this->schemaName, $this->tableName);
-    $this->uniqueIndexes = MetadataDataLayer::tableUniqueIndexes($this->schemaName, $this->tableName);
+    $this->tableColumns  = MetaDataLayer::tableColumns($this->schemaName, $this->tableName);
+    $this->primaryKey    = MetaDataLayer::tablePrimaryKey($this->schemaName, $this->tableName);
+    $this->uniqueIndexes = MetaDataLayer::tableUniqueIndexes($this->schemaName, $this->tableName);
 
     $this->codeStore = new MySqlCompoundSyntaxCodeStore();
   }

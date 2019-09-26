@@ -64,7 +64,7 @@ class Row0Wrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData(): void
   {
-    $this->imports[] = 'SetBased\Stratum\Exception\ResultException';
+    $this->imports[] = 'SetBased\Stratum\Middle\Exception\ResultException';
 
     $this->codeStore->append('if ($b===false) self::dataLayerError(\'mysqli_stmt::fetch\');');
     $this->codeStore->append('if (sizeof($tmp)>1) throw new ResultException([0, 1], sizeof($tmp), $query);');
