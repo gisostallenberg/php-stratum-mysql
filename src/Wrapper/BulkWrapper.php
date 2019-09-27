@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Wrapper;
 
+use SetBased\Stratum\Middle\BulkHandler;
+
 /**
  * Class for generating a wrapper method for a stored procedure selecting a large amount of rows.
  */
@@ -14,7 +16,7 @@ class BulkWrapper extends Wrapper
    */
   protected function enhancePhpDocParameters(array &$parameters): void
   {
-    $this->imports[] = 'SetBased\Stratum\BulkHandler';
+    $this->imports[] = BulkHandler::class;
 
     $parameter = ['php_name'             => '$bulkHandler',
                   'description'          => 'The bulk row handler',

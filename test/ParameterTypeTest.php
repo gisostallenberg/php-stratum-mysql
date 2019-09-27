@@ -14,7 +14,7 @@ class ParameterTypeTest extends DataLayerTestCase
    */
   public function test1()
   {
-    $reflection_class  = new \ReflectionClass('SetBased\Stratum\MySql\Test\TestDataLayer');
+    $reflection_class  = new \ReflectionClass(TestDataLayer::class);
     $reflection_method = $reflection_class->getMethod('tstTestParameterType');
 
     $doc_block = $reflection_method->getDocComment();
