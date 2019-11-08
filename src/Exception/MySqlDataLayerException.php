@@ -94,7 +94,7 @@ class MySqlDataLayerException extends \RuntimeException implements DataLayerExce
   /**
    * @inheritdoc
    */
-  public function getName()
+  public function getName(): string
   {
     return 'MySQL Error';
   }
