@@ -83,6 +83,8 @@ order by routine_name';
   ,      column_type
   ,      data_type
   ,      character_maximum_length
+  ,      character_set_name
+  ,      collation_name
   ,      numeric_precision
   ,      numeric_scale
   from   information_schema.COLUMNS
@@ -101,6 +103,8 @@ union all
   ,      column_type
   ,      data_type
   ,      character_maximum_length
+  ,      character_set_name
+  ,      collation_name
   ,      numeric_precision
   ,      numeric_scale
   from   information_schema.COLUMNS

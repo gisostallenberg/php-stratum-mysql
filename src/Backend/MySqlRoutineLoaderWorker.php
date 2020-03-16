@@ -266,7 +266,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
       $key = strtoupper($key);
 
       $value = $row['column_type'];
-      if (isset($row['character_set_name'])) $value .= ' character set '.$row['character_set_name'];
+      if ($row['character_set_name']!==null) $value .= ' character set '.$row['character_set_name'];
 
       $this->replacePairs[$key] = $value;
     }
