@@ -7,6 +7,7 @@ use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Backend\RoutineLoaderWorker;
 use SetBased\Stratum\Common\Exception\RoutineLoaderException;
 use SetBased\Stratum\Common\Helper\SourceFinderHelper;
+use SetBased\Stratum\Middle\Helper\RowSetHelper;
 use SetBased\Stratum\Middle\NameMangler\NameMangler;
 use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
 use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
@@ -21,18 +22,17 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * The default character set under which the stored routine will be loaded and run.
+   * The maximum column size in bytes.
    *
-   * @var string
    */
-  private $characterSet;
+  const MAX_COLUMN_SIZE = 65532;
 
   /**
-   * The default collate under which the stored routine will be loaded and run.
+   * Details of all character sets.
    *
-   * @var string
+   * @var array[]
    */
-  private $collate;
+  private $characterSets;
 
   /**
    * Name of the class that contains all constants.
@@ -40,6 +40,20 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    * @var string
    */
   private $constantClassName;
+
+  /**
+   * The default character set under which the stored routine will be loaded and run.
+   *
+   * @var string
+   */
+  private $defaultCharacterSet;
+
+  /**
+   * The default collate under which the stored routine will be loaded and run.
+   *
+   * @var string
+   */
+  private $defaultCollate;
 
   /**
    * An array with source filenames that are not loaded into MySQL.
@@ -120,12 +134,14 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
     $this->phpStratumMetadataFilename = $this->settings->manString('loader.metadata');
     $this->sourcePattern              = $this->settings->manString('loader.sources');
     $this->sqlMode                    = $this->settings->manString('loader.sql_mode');
-    $this->characterSet               = $this->settings->manString('loader.character_set');
-    $this->collate                    = $this->settings->manString('loader.collate');
+    $this->defaultCharacterSet        = $this->settings->manString('loader.character_set');
+    $this->defaultCollate             = $this->settings->manString('loader.collate');
     $this->constantClassName          = $this->settings->optString('constants.class');
     $this->nameMangler                = $this->settings->optString('wrapper.mangler_class');
 
     $this->connect();
+
+    $this->characterSets = MetaDataLayer::allCharacterSets();
 
     if (empty($sources))
     {
@@ -150,7 +166,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   private function detectNameConflicts(): void
   {
     // Get same method names from array
-    list($sources_by_path, $sources_by_method) = $this->getDuplicates();
+    [$sources_by_path, $sources_by_method] = $this->getDuplicates();
 
     // Add every not unique method name to myErrorFileNames
     foreach ($sources_by_path as $source)
@@ -181,8 +197,6 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
       }
     }
   }
-
-  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Drops obsolete stored routines (i.e. stored routines that exits in the current schema but for which we don't have
    * a source file).
@@ -209,8 +223,6 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
       }
     }
   }
-
-  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Searches recursively for all source files.
    */
@@ -251,51 +263,6 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
                             'method_name'  => $this->methodName($routineName)];
       }
     }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
-   */
-  private function getColumnTypes(): void
-  {
-    $rows = MetaDataLayer::allTableColumns();
-    foreach ($rows as $row)
-    {
-      $key = '@'.$row['table_name'].'.'.$row['column_name'].'%type@';
-      $key = strtoupper($key);
-
-      $value = $row['column_type'];
-      if ($row['character_set_name']!==null) $value .= ' character set '.$row['character_set_name'];
-
-      $this->replacePairs[$key] = $value;
-    }
-
-    $this->io->text(sprintf('Selected %d column types for substitution', sizeof($rows)));
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Reads constants set the PHP configuration file and  adds them to the replace pairs.
-   */
-  private function getConstants(): void
-  {
-    // If myTargetConfigFilename is not set return immediately.
-    if (!isset($this->constantClassName)) return;
-
-    $reflection = new \ReflectionClass($this->constantClassName);
-
-    $constants = $reflection->getConstants();
-    foreach ($constants as $name => $value)
-    {
-      if (!is_numeric($value)) $value = "'".$value."'";
-
-      $this->replacePairs['@'.$name.'@'] = $value;
-    }
-
-    $this->io->text(sprintf('Read %d constants for substitution from <fso>%s</fso>',
-                            sizeof($constants),
-                            OutputFormatter::escape($reflection->getFileName())));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -368,9 +335,8 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   {
     $this->findSourceFiles();
     $this->detectNameConflicts();
-    $this->getColumnTypes();
+    $this->replacePairs();
     $this->readStoredRoutineMetadata();
-    $this->getConstants();
     $this->getOldStoredRoutinesInfo();
     $this->getCorrectSqlMode();
 
@@ -387,7 +353,6 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
     // Write the metadata to file.
     $this->writeStoredRoutineMetadata();
   }
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Loads all stored routines in a list into MySQL.
@@ -398,9 +363,8 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   {
     $this->findSourceFilesFromList($sources);
     $this->detectNameConflicts();
-    $this->getColumnTypes();
+    $this->replacePairs();
     $this->readStoredRoutineMetadata();
-    $this->getConstants();
     $this->getOldStoredRoutinesInfo();
     $this->getCorrectSqlMode();
 
@@ -435,8 +399,8 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
                                         $this->replacePairs,
                                         $this->rdbmsOldMetadata[$routineName] ?? [],
                                         $this->sqlMode,
-                                        $this->characterSet,
-                                        $this->collate);
+                                        $this->defaultCharacterSet,
+                                        $this->defaultCollate);
 
       try
       {
@@ -475,6 +439,24 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
       $this->io->warning('Routines in the files below are not loaded:');
       $this->io->listing($this->errorFilenames);
     }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns the maximum number of characters in a VARCHAR or CHAR.
+   *
+   * @param string $characterSetName The name of the character set of the column.
+   *
+   * @return int
+   */
+  private function maxCharacters(string $characterSetName): ?int
+  {
+    $key = RowSetHelper::searchInRowSet($this->characterSets, 'character_set_name', $characterSetName);
+    if ($key===null) return null;
+
+    $size = $this->characterSets[$key]['maxlen'];
+
+    return (int)floor(self::MAX_COLUMN_SIZE  / $size);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -531,6 +513,121 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
     }
 
     $this->phpStratumMetadata = $clean;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Gathers all replace pairs.
+   */
+  private function replacePairs(): void
+  {
+    $this->replacePairsColumnTypes();
+    $this->replacePairsConstants();
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
+   */
+  private function replacePairsColumnTypes(): void
+  {
+    $columns = MetaDataLayer::allTableColumns();
+
+    $this->replacePairsColumnTypesExact($columns);
+    $this->replacePairsColumnTypesMaxLength($columns);
+
+    $this->io->text(sprintf('Selected %d column types for substitution', sizeof($columns)));
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Gathers replace pairs based on exact column types.
+   *
+   * @param array[] $columns The details of all table columns.
+   */
+  private function replacePairsColumnTypesExact($columns): void
+  {
+    foreach ($columns as $column)
+    {
+      $key = mb_strtoupper('@'.$column['table_name'].'.'.$column['column_name'].'%type@');
+
+      $value = $column['column_type'];
+
+      // For VARCHAR and TEXT columns add character set.
+      if ($column['character_set_name']!==null)
+      {
+        $value .= ' character set '.$column['character_set_name'];
+      }
+
+      $this->replacePairs[$key] = $value;
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Gathers replace pairs based on column types with maximum length.
+   *
+   * @param array[] $columns The details of all table columns.
+   */
+  private function replacePairsColumnTypesMaxLength($columns): void
+  {
+    foreach ($columns as $column)
+    {
+      $key = mb_strtoupper('@'.$column['table_name'].'.'.$column['column_name'].'%sort@');
+
+      switch ($column['data_type'])
+      {
+        case 'char':
+        case 'varchar':
+          $max = $this->maxCharacters($column['character_set_name']);
+          if ($max!==null)
+          {
+            $value = sprintf('%s(%d) character set %s',
+                             $column['data_type'],
+                             $max,
+                             $column['character_set_name']);
+          }
+          else
+          {
+            $value = null;
+          }
+          break;
+
+        case 'binary':
+        case 'varbinary':
+          $value = sprintf('%s(%d)', $column['data_type'], self::MAX_COLUMN_SIZE);
+          break;
+
+        default:
+          $value = null;
+      }
+
+      if ($value!==null) $this->replacePairs[$key] = $value;
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Reads constants set the PHP configuration file and  adds them to the replace pairs.
+   */
+  private function replacePairsConstants(): void
+  {
+    // If myTargetConfigFilename is not set return immediately.
+    if (!isset($this->constantClassName)) return;
+
+    $reflection = new \ReflectionClass($this->constantClassName);
+
+    $constants = $reflection->getConstants();
+    foreach ($constants as $name => $value)
+    {
+      if (!is_numeric($value)) $value = "'".$value."'";
+
+      $this->replacePairs['@'.$name.'@'] = $value;
+    }
+
+    $this->io->text(sprintf('Read %d constants for substitution from <fso>%s</fso>',
+                            sizeof($constants),
+                            OutputFormatter::escape($reflection->getFileName())));
   }
 
   //--------------------------------------------------------------------------------------------------------------------

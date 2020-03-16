@@ -506,7 +506,7 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
     }
 
     // Read the source of the class without actually loading the class. Otherwise, we can not (re)load the class in
-    // \SetBased\Stratum\MySqlRoutineLoaderWorker::getConstants.
+    // \SetBased\Stratum\MySqlRoutineLoaderWorker::replacePairsConstants.
     $source = file_get_contents($file_name);
     if ($source===false)
     {

@@ -584,6 +584,24 @@ class TestDataLayer extends DataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Test for column%sort v.s. column%type.
+   *
+   * @param string|null $pTstLastName   Can be a long string.
+   *                                    varchar(16383) character set utf8mb4 collation utf8mb4_general_ci
+   * @param string|null $pTstFirstName  Can be a long string.
+   *                                    varchar(21844) character set utf8 collation utf8_general_ci
+   * @param string|null $pTstInstrument Can be a long string.
+   *                                    varchar(65532) character set ascii collation ascii_general_ci
+   *
+   * @return array|null
+   */
+  public function tstTestParameterSort(?string $pTstLastName, ?string $pTstFirstName, ?string $pTstInstrument): ?array
+  {
+    return $this->executeRow0('call tst_test_parameter_sort('.$this->quoteString($pTstLastName).','.$this->quoteString($pTstFirstName).','.$this->quoteString($pTstInstrument).')');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Test for conversion of MySQL types to PHP types.
    *
    * @param int|float|string|null $pPhpType1 Must be converted to PHP type string in the TestDataLayer.

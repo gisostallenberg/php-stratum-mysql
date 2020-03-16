@@ -132,3 +132,23 @@ values( 'spam'
 ;
 
 -- ---------------------------------------------------------------------------------------------------------------------
+drop table if exists TST_SORT;
+
+create table TST_SORT( tst_id         int unsigned not null auto_increment
+,                      tst_last_name  varchar(40) character set utf8mb4
+,                      tst_first_name varchar(40) character set utf8
+,                      tst_instrument varchar(40) character set ascii
+,  primary key(tst_id)
+) engine=myisam
+;
+
+insert into TST_SORT( tst_last_name
+,                     tst_first_name
+,                     tst_instrument )
+values( 'Morrison', 'Jim',   'vocals')
+,     ( 'Manzarek', 'Ray',   'keyboards')
+,     ( 'Krieger',  'Robby', 'guitar')
+,     ( 'Densmore', 'John',  'drums')
+;
+
+-- ---------------------------------------------------------------------------------------------------------------------

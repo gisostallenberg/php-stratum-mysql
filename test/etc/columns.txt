@@ -40,6 +40,11 @@ TST_LABEL.tst_id    10
 TST_LABEL.tst_test  40
 TST_LABEL.tst_label 20
 
+TST_SORT.tst_id         10
+TST_SORT.tst_last_name  40
+TST_SORT.tst_first_name 40
+TST_SORT.tst_instrument 40
+
 TST_TABLE.tst_c00 20
 TST_TABLE.tst_c01 10
 TST_TABLE.tst_c02 22
@@ -74,8 +79,8 @@ information_schema.CHARACTER_SETS.MAXLEN               19
 
 information_schema.CHECK_CONSTRAINTS.CONSTRAINT_CATALOG 512
 information_schema.CHECK_CONSTRAINTS.CONSTRAINT_SCHEMA   64
-information_schema.CHECK_CONSTRAINTS.CONSTRAINT_NAME     64
 information_schema.CHECK_CONSTRAINTS.TABLE_NAME          64
+information_schema.CHECK_CONSTRAINTS.CONSTRAINT_NAME     64
 information_schema.CHECK_CONSTRAINTS.CHECK_CLAUSE        64
 
 information_schema.COLLATIONS.COLLATION_NAME     32
@@ -1105,6 +1110,11 @@ test.TST_FOO2.tst_c04 10
 test.TST_LABEL.tst_id    10
 test.TST_LABEL.tst_test  40
 test.TST_LABEL.tst_label 20
+
+test.TST_SORT.tst_id         10
+test.TST_SORT.tst_last_name  40
+test.TST_SORT.tst_first_name 40
+test.TST_SORT.tst_instrument 40
 
 test.TST_TABLE.tst_c00 20
 test.TST_TABLE.tst_c01 10

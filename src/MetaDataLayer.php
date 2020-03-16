@@ -27,6 +27,23 @@ class MetaDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Selects the details of all character sets.
+   *
+   * @return array[]
+   */
+  public static function allCharacterSets(): array
+  {
+    $sql = "
+select CHARACTER_SET_NAME as character_set_name
+,      MAXLEN             as maxlen
+from   information_schema.CHARACTER_SETS
+order by CHARACTER_SET_NAME";
+
+    return self::$dl->executeRows($sql);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Selects metadata of tables with a label column.
    *
    * @return array[]

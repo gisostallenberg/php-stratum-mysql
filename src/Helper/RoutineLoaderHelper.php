@@ -595,7 +595,7 @@ class RoutineLoaderHelper
   {
     $unknown = [];
 
-    preg_match_all('(@[A-Za-z0-9_.]+(%type)?@)', $this->routineSourceCode, $matches);
+    preg_match_all('(@[A-Za-z0-9_.]+(%(type|sort))?@)', $this->routineSourceCode, $matches);
     if (!empty($matches[0]))
     {
       foreach ($matches[0] as $placeholder)
@@ -613,7 +613,6 @@ class RoutineLoaderHelper
 
     $this->logUnknownPlaceholders($unknown);
   }
-
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
