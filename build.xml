@@ -21,10 +21,13 @@
         <move file="test/psql/rename" tofile="test/psql/ test_escape ' &quot; @ $ ! ." overwrite="true" haltonerror="false"/>
         <!-- Run unit test with static data layer. -->
         <exec command="ln -fs stratum-static.ini test/etc/stratum.ini" passthru="true" checkreturn="true"/>
+        <exec command="bin/stratum stratum test/etc/stratum.ini" passthru="true" checkreturn="true"/>
+        <delete file="test/etc/routines.json"/>
         <exec command="bin/phpunit" passthru="true" checkreturn="true"/>
         <!-- Run unit test with non static data layer. -->
-        <delete file="test/etc/routines.json"/>
         <exec command="ln -fs stratum-non-static.ini test/etc/stratum.ini" passthru="true" checkreturn="true"/>
+        <exec command="bin/stratum stratum test/etc/stratum.ini" passthru="true" checkreturn="true"/>
+        <delete file="test/etc/routines.json"/>
         <exec command="bin/phpunit" passthru="true" checkreturn="true"/>
         <!-- Rename folder back for \MagicConstantTest::test5 -->
         <move file="test/psql/ test_escape ' &quot; @ $ ! ." tofile="test/psql/rename" overwrite="true"/>
