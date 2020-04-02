@@ -11,10 +11,9 @@
     "Wrapper",
     "Loader"
   ],
-  "type": "tool",
   "license": "MIT",
   "require": {
-    "php": ">=7.3.0",
+    "php": ">=7.3",
     "ext-json": "*",
     "ext-mysqli": "*",
     "setbased/exception": "^2.1",
@@ -44,6 +43,7 @@
     ]
   },
   "config": {
-    "bin-dir": "bin/"
+    "bin-dir": "bin/",
+    "sort-packages": true
   }
 }
