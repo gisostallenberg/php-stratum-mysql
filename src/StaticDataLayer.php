@@ -105,6 +105,7 @@ class StaticDataLayer
   protected static $queryLog = [];
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * Starts a transaction.
    *
@@ -491,12 +492,17 @@ class StaticDataLayer
 
     if (self::$mysqli->more_results()) self::$mysqli->next_result();
 
-    if (!($n==0 || $n==1))
+    if ($n==0)
     {
-      throw new ResultException([0, 1], $n, $query);
+      return null;
     }
 
-    return $row[0];
+    if ($n==1)
+    {
+      return $row[0];
+    }
+
+    throw new ResultException([0, 1], $n, $query);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
