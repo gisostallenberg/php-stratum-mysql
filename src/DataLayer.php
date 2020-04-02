@@ -105,6 +105,7 @@ class DataLayer
   protected $queryLog = [];
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * Starts a transaction.
    *
@@ -491,12 +492,17 @@ class DataLayer
 
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    if (!($n==0 || $n==1))
+    if ($n==0)
     {
-      throw new ResultException([0, 1], $n, $query);
+      return null;
     }
 
-    return $row[0];
+    if ($n==1)
+    {
+      return $row[0];
+    }
+
+    throw new ResultException([0, 1], $n, $query);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
