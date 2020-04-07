@@ -77,13 +77,6 @@ class DataLayer
   protected $chunkSize;
 
   /**
-   * True if method mysqli_result::fetch_all exists (i.e. we are using MySQL native driver).
-   *
-   * @var bool
-   */
-  protected $haveFetchAll;
-
-  /**
    * Value of variable max_allowed_packet
    *
    * @var int
@@ -105,7 +98,6 @@ class DataLayer
   protected $queryLog = [];
 
   //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * Starts a transaction.
    *
@@ -204,9 +196,6 @@ class DataLayer
 
     // Set transaction isolation level.
     $this->executeNone("set session tx_isolation = '".$this->transactionIsolationLevel."'");
-
-    // Set flag to use method mysqli_result::fetch_all if we are using MySQL native driver.
-    $this->haveFetchAll = method_exists('mysqli_result', 'fetch_all');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -326,20 +315,7 @@ class DataLayer
       if ($this->mysqli->errno) $this->dataLayerError('mysqli::store_result');
       if ($result)
       {
-        if ($this->haveFetchAll)
-        {
-          $ret[] = $result->fetch_all(MYSQLI_ASSOC);
-        }
-        else
-        {
-          $tmp = [];
-          while (($row = $result->fetch_assoc()))
-          {
-            $tmp[] = $row;
-          }
-
-          $ret[] = $tmp;
-        }
+        $ret[] = $result->fetch_all(MYSQLI_ASSOC);
         $result->free();
       }
       else
@@ -452,23 +428,12 @@ class DataLayer
   public function executeRows(string $query): array
   {
     $result = $this->query($query);
-    if ($this->haveFetchAll)
-    {
-      $ret = $result->fetch_all(MYSQLI_ASSOC);
-    }
-    else
-    {
-      $ret = [];
-      while (($row = $result->fetch_assoc()))
-      {
-        $ret[] = $row;
-      }
-    }
+    $rows   = $result->fetch_all(MYSQLI_ASSOC);
     $result->free();
 
     if ($this->mysqli->more_results()) $this->mysqli->next_result();
 
-    return $ret;
+    return $rows;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

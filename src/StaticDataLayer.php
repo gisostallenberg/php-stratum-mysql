@@ -77,13 +77,6 @@ class StaticDataLayer
   protected static $chunkSize;
 
   /**
-   * True if method mysqli_result::fetch_all exists (i.e. we are using MySQL native driver).
-   *
-   * @var bool
-   */
-  protected static $haveFetchAll;
-
-  /**
    * Value of variable max_allowed_packet
    *
    * @var int
@@ -105,7 +98,6 @@ class StaticDataLayer
   protected static $queryLog = [];
 
   //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * Starts a transaction.
    *
@@ -204,9 +196,6 @@ class StaticDataLayer
 
     // Set transaction isolation level.
     self::executeNone("set session tx_isolation = '".self::$transactionIsolationLevel."'");
-
-    // Set flag to use method mysqli_result::fetch_all if we are using MySQL native driver.
-    self::$haveFetchAll = method_exists('mysqli_result', 'fetch_all');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -326,20 +315,7 @@ class StaticDataLayer
       if (self::$mysqli->errno) self::dataLayerError('mysqli::store_result');
       if ($result)
       {
-        if (self::$haveFetchAll)
-        {
-          $ret[] = $result->fetch_all(MYSQLI_ASSOC);
-        }
-        else
-        {
-          $tmp = [];
-          while (($row = $result->fetch_assoc()))
-          {
-            $tmp[] = $row;
-          }
-
-          $ret[] = $tmp;
-        }
+        $ret[] = $result->fetch_all(MYSQLI_ASSOC);
         $result->free();
       }
       else
@@ -452,23 +428,12 @@ class StaticDataLayer
   public static function executeRows(string $query): array
   {
     $result = self::query($query);
-    if (self::$haveFetchAll)
-    {
-      $ret = $result->fetch_all(MYSQLI_ASSOC);
-    }
-    else
-    {
-      $ret = [];
-      while (($row = $result->fetch_assoc()))
-      {
-        $ret[] = $row;
-      }
-    }
+    $rows   = $result->fetch_all(MYSQLI_ASSOC);
     $result->free();
 
     if (self::$mysqli->more_results()) self::$mysqli->next_result();
 
-    return $ret;
+    return $rows;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
