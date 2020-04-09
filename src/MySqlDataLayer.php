@@ -859,14 +859,14 @@ class MySqlDataLayer
       $time0 = microtime(true);
 
       $ret = $this->mysqli->query($query);
-      if ($ret===false) $this->queryError('mysqli::query', $query);
+      if (is_bool($ret)) $this->queryError('mysqli::query', $query);
 
       $this->queryLog[] = ['query' => $query, 'time' => microtime(true) - $time0];
     }
     else
     {
       $ret = $this->mysqli->query($query);
-      if ($ret===false) $this->queryError('mysqli::query', $query);
+      if (is_bool($ret)) $this->queryError('mysqli::query', $query);
     }
 
     return $ret;
