@@ -12,7 +12,6 @@ use SetBased\Stratum\Middle\NameMangler\NameMangler;
 use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
 use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 use SetBased\Stratum\MySql\Helper\RoutineLoaderHelper;
-use SetBased\Stratum\MySql\MetaDataLayer;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
 /**
@@ -141,7 +140,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
 
     $this->connect();
 
-    $this->characterSets = MetaDataLayer::allCharacterSets();
+    $this->characterSets = $this->dl->allCharacterSets();
 
     if (empty($sources))
     {
@@ -219,7 +218,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
                            strtolower($old_routine['routine_type']),
                            $old_routine['routine_name']);
 
-        MetaDataLayer::dropRoutine($old_routine['routine_type'], $old_routine['routine_name']);
+        $this->dl->dropRoutine($old_routine['routine_type'], $old_routine['routine_name']);
       }
     }
   }
@@ -271,7 +270,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    */
   private function getCorrectSqlMode(): void
   {
-    $this->sqlMode = MetaDataLayer::correctSqlMode($this->sqlMode);
+    $this->sqlMode = $this->dl->correctSqlMode($this->sqlMode);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -320,7 +319,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   {
     $this->rdbmsOldMetadata = [];
 
-    $routines = MetaDataLayer::allRoutines();
+    $routines = $this->dl->allRoutines();
     foreach ($routines as $routine)
     {
       $this->rdbmsOldMetadata[$routine['routine_name']] = $routine;
@@ -393,7 +392,8 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
     {
       $routineName = $filename['routine_name'];
 
-      $helper = new RoutineLoaderHelper($this->io,
+      $helper = new RoutineLoaderHelper($this->dl,
+                                        $this->io,
                                         $filename['path_name'],
                                         $this->phpStratumMetadata[$routineName] ?? [],
                                         $this->replacePairs,
@@ -531,7 +531,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    */
   private function replacePairsColumnTypes(): void
   {
-    $columns = MetaDataLayer::allTableColumns();
+    $columns = $this->dl->allTableColumns();
 
     $this->replacePairsColumnTypesExact($columns);
     $this->replacePairsColumnTypesMaxLength($columns);

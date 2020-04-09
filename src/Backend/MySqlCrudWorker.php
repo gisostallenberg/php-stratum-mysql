@@ -9,7 +9,6 @@ use SetBased\Stratum\MySql\Helper\Crud\DeleteRoutine;
 use SetBased\Stratum\MySql\Helper\Crud\InsertRoutine;
 use SetBased\Stratum\MySql\Helper\Crud\SelectRoutine;
 use SetBased\Stratum\MySql\Helper\Crud\UpdateRoutine;
-use SetBased\Stratum\MySql\MetaDataLayer;
 
 /**
  *
@@ -78,7 +77,7 @@ class MySqlCrudWorker extends MySqlWorker implements CrudWorker
   {
     $this->connect();
     $schema = $this->settings->manString('database.database');
-    $rows   = MetaDataLayer::allTablesNames($schema);
+    $rows   = $this->dl->allTablesNames($schema);
     $this->disconnect();
 
     $tables = [];

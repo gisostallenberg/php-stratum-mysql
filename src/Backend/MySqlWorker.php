@@ -5,15 +5,23 @@ namespace SetBased\Stratum\MySql\Backend;
 
 use SetBased\Stratum\Backend\Config;
 use SetBased\Stratum\Backend\StratumStyle;
-use SetBased\Stratum\MySql\MetaDataLayer;
+use SetBased\Stratum\MySql\MySqlDataLayer;
+use SetBased\Stratum\MySql\MySqlMetaDataLayer;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
 /**
- * Base class for commands which needs to connect to a MySQL instance.
+ * Base class for commands which needs a connection to a MySQL instance.
  */
 class MySqlWorker
 {
   //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * The meta data layer.
+   *
+   * @var MySqlMetaDataLayer
+   */
+  protected $dl;
+
   /**
    * The output object.
    *
@@ -47,7 +55,11 @@ class MySqlWorker
    */
   public function disconnect()
   {
-    MetaDataLayer::disconnect();
+    if ($this->dl!==null)
+    {
+      $this->dl->disconnect();
+      $this->dl = null;
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -62,8 +74,10 @@ class MySqlWorker
     $database = $this->settings->manString('database.database');
     $port     = $this->settings->manInt('database.port', 3306);
 
-    MetaDataLayer::setIo($this->io);
-    MetaDataLayer::connect($host, $user, $password, $database, $port);
+    $dataLayer = new MySqlDataLayer();
+    $dataLayer->connect($host, $user, $password, $database, $port);
+
+    $this->dl = new MySqlMetaDataLayer($dataLayer, $this->io);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

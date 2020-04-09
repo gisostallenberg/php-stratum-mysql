@@ -6,6 +6,5 @@
 /composer.lock
 /test/coverage.xml
 /test/etc/routines.json
-/test/etc/stratum.ini
 /test/report/
 /vendor/

@@ -3,11 +3,9 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Backend;
 
-use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
 use SetBased\Helper\CodeStore\PhpCodeStore;
 use SetBased\Stratum\Backend\RoutineWrapperGeneratorWorker;
-use SetBased\Stratum\Frontend\Helper\NonStatic;
 use SetBased\Stratum\Middle\NameMangler\NameMangler;
 use SetBased\Stratum\MySql\Wrapper\Wrapper;
 
@@ -72,13 +70,6 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
    * @var string
    */
   private $wrapperClassName;
-
-  /**
-   * The type of the wrapper class. Either 'static' or 'non static'.
-   *
-   * @var string
-   */
-  private $wrapperClassType;
 
   /**
    * The filename where the generated wrapper class must be stored
@@ -173,7 +164,6 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
       $this->wrapperFilename  = $this->settings->manString('wrapper.wrapper_file');
       $this->lobAsString      = $this->settings->manBool('wrapper.lob_as_string', false);
       $this->metadataFilename = $this->settings->manString('loader.metadata');
-      $this->wrapperClassType = $this->settings->manString('wrapper.wrapper_type');
       $this->strictTypes      = $this->settings->manBool('wrapper.strict_types', true);
     }
   }
@@ -204,21 +194,6 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
   private function storeWrapperClass(): void
   {
     $code = $this->codeStore->getCode();
-
-    switch ($this->wrapperClassType)
-    {
-      case 'static':
-        // Nothing to do.
-        break;
-
-      case 'non static':
-        $code = NonStatic::nonStatic($code);
-        break;
-
-      default:
-        throw new FallenException('wrapper class type', $this->wrapperClassType);
-    }
-
     $this->writeTwoPhases($this->wrapperFilename, $code);
   }
 

@@ -14,7 +14,7 @@ class DataLayerTestCase extends TestCase
   /**
    * The data layer.
    *
-   * @var TestDataLayer
+   * @var TestMySqlDataLayer
    */
   protected $dataLayer;
 
@@ -24,7 +24,7 @@ class DataLayerTestCase extends TestCase
    */
   protected function setUp(): void
   {
-    $this->dataLayer = new TestDataLayer();
+    $this->dataLayer = new TestMySqlDataLayer();
 
     $this->dataLayer->connect('localhost', 'test', 'test', 'test');
   }

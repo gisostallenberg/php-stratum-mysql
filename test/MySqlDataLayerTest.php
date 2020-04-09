@@ -1,15 +1,15 @@
 <?php
+declare(strict_types=0);
 
 namespace SetBased\Stratum\MySql\Test;
 
-use SetBased\Stratum\MySql\StaticDataLayer;
+use SetBased\Stratum\MySql\MySqlDataLayer;
 
 /**
- * Test cases for class DataLayer.
+ * Test cases for class MySqlDataLayer.
  */
-class StaticDataLayerTest extends DataLayerTestCase
+class MySqlDataLayerTest extends DataLayerTestCase
 {
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Tests for quoteFloat.
@@ -126,7 +126,7 @@ class StaticDataLayerTest extends DataLayerTestCase
   public function testQuoteString4()
   {
     $this->expectException(\TypeError::class);
-    $this->dataLayer->quoteString(new StaticDataLayer());
+    $this->dataLayer->quoteString(new MySqlDataLayer());
   }
 
   //--------------------------------------------------------------------------------------------------------------------

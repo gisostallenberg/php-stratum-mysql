@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql\Test;
 
 use SetBased\Stratum\Middle\Exception\ResultException;
-use SetBased\Stratum\MySql\DataLayer;
+use SetBased\Stratum\MySql\MySqlDataLayer;
 
 /**
  * The data layer.
  */
-class TestDataLayer extends DataLayer
+class TestMySqlDataLayer extends MySqlDataLayer
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -604,9 +604,9 @@ class TestDataLayer extends DataLayer
   /**
    * Test for conversion of MySQL types to PHP types.
    *
-   * @param int|float|string|null $pPhpType1 Must be converted to PHP type string in the TestDataLayer.
+   * @param int|float|string|null $pPhpType1 Must be converted to PHP type string in the TestMySqlDataLayer.
    *                                         decimal(10,2)
-   * @param int|float|string|null $pPhpType2 Must be converted to PHP type string in the TestDataLayer.
+   * @param int|float|string|null $pPhpType2 Must be converted to PHP type string in the TestMySqlDataLayer.
    *                                         decimal(65,0)
    *
    * @return int

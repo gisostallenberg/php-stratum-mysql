@@ -7,7 +7,6 @@ use Composer\Autoload\ClassLoader;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Backend\ConstantWorker;
 use SetBased\Stratum\MySql\Helper\DataTypeHelper;
-use SetBased\Stratum\MySql\MetaDataLayer;
 
 /**
  * Command for creating PHP constants based on column widths, auto increment columns and labels.
@@ -297,7 +296,7 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
    */
   private function loadColumns(): void
   {
-    $rows = MetaDataLayer::allTableColumns();
+    $rows = $this->dl->allTableColumns();
     foreach ($rows as $row)
     {
       $row['length']                                          = DataTypeHelper::deriveFieldLength($row);
@@ -311,10 +310,10 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
    */
   private function loadLabels(): void
   {
-    $tables = MetaDataLayer::allLabelTables();
+    $tables = $this->dl->allLabelTables();
     foreach ($tables as $table)
     {
-      $rows = MetaDataLayer::labelsFromTable($table['table_name'], $table['id'], $table['label']);
+      $rows = $this->dl->labelsFromTable($table['table_name'], $table['id'], $table['label']);
       foreach ($rows as $row)
       {
         $this->labels[$row['label']] = $row['id'];

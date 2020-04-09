@@ -6,7 +6,7 @@ namespace SetBased\Stratum\MySql\Helper;
 use SetBased\Exception\FallenException;
 use SetBased\Stratum\Backend\StratumStyle;
 use SetBased\Stratum\Common\Exception\RoutineLoaderException;
-use SetBased\Stratum\MySql\MetaDataLayer;
+use SetBased\Stratum\MySql\MySqlMetaDataLayer;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Zend\Code\Reflection\DocBlock\Tag\ParamTag;
 use Zend\Code\Reflection\DocBlockReflection;
@@ -58,6 +58,13 @@ class RoutineLoaderHelper
    * @var string
    */
   private $designationType;
+
+  /**
+   * The meta data layer.
+   *
+   * @var MySqlMetaDataLayer
+   */
+  private $dl;
 
   /**
    * All DocBlock parts as found in the source of the stored routine.
@@ -196,19 +203,21 @@ class RoutineLoaderHelper
   /**
    * Object constructor.
    *
-   * @param StratumStyle $io                            The output for log messages.
-   * @param string       $routineFilename               The filename of the source of the stored routine.
-   * @param array        $phpStratumMetadata            The metadata of the stored routine from PhpStratum.
-   * @param array        $replacePairs                  A map from placeholders to their actual values.
-   * @param array        $rdbmsOldRoutineMetadata       The old metadata of the stored routine from MySQL.
-   * @param string       $sqlMode                       The SQL mode under which the stored routine will be loaded and
+   * @param MySqlMetaDataLayer $dl                      The meta data layer.
+   * @param StratumStyle       $io                      The output for log messages.
+   * @param string             $routineFilename         The filename of the source of the stored routine.
+   * @param array              $phpStratumMetadata      The metadata of the stored routine from PhpStratum.
+   * @param array              $replacePairs            A map from placeholders to their actual values.
+   * @param array              $rdbmsOldRoutineMetadata The old metadata of the stored routine from MySQL.
+   * @param string             $sqlMode                 The SQL mode under which the stored routine will be loaded and
    *                                                    run.
-   * @param string       $characterSet                  The default character set under which the stored routine will
+   * @param string             $characterSet            The default character set under which the stored routine will
    *                                                    be loaded and run.
-   * @param string       $collate                       The key or index columns (depending on the designation type) of
+   * @param string             $collate                 The key or index columns (depending on the designation type) of
    *                                                    the stored routine.
    */
-  public function __construct(StratumStyle $io,
+  public function __construct(MySqlMetaDataLayer $dl,
+                              StratumStyle $io,
                               string $routineFilename,
                               array $phpStratumMetadata,
                               array $replacePairs,
@@ -217,6 +226,7 @@ class RoutineLoaderHelper
                               string $characterSet,
                               string $collate)
   {
+    $this->dl                      = $dl;
     $this->io                      = $io;
     $this->sourceFilename          = $routineFilename;
     $this->phpStratumMetadata      = $phpStratumMetadata;
@@ -367,7 +377,7 @@ class RoutineLoaderHelper
   {
     if (!empty($this->rdbmsOldRoutineMetadata))
     {
-      MetaDataLayer::dropRoutine($this->rdbmsOldRoutineMetadata['routine_type'], $this->routineName);
+      $this->dl->dropRoutine($this->rdbmsOldRoutineMetadata['routine_type'], $this->routineName);
     }
   }
 
@@ -381,21 +391,21 @@ class RoutineLoaderHelper
     if ($this->designationType!='bulk_insert') return;
 
     // Check if table is a temporary table or a non-temporary table.
-    $table_is_non_temporary = MetaDataLayer::checkTableExists($this->bulkInsertTableName);
+    $table_is_non_temporary = $this->dl->checkTableExists($this->bulkInsertTableName);
 
     // Create temporary table if table is non-temporary table.
     if (!$table_is_non_temporary)
     {
-      MetaDataLayer::callProcedure($this->routineName);
+      $this->dl->callProcedure($this->routineName);
     }
 
     // Get information about the columns of the table.
-    $description = MetaDataLayer::describeTable($this->bulkInsertTableName);
+    $description = $this->dl->describeTable($this->bulkInsertTableName);
 
     // Drop temporary table if table is non-temporary.
     if (!$table_is_non_temporary)
     {
-      MetaDataLayer::dropTemporaryTable($this->bulkInsertTableName);
+      $this->dl->dropTemporaryTable($this->bulkInsertTableName);
     }
 
     // Check number of columns in the table match the number of fields given in the designation type.
@@ -655,7 +665,7 @@ class RoutineLoaderHelper
    */
   private function extractRoutineParametersInfo(): void
   {
-    $routine_parameters = MetaDataLayer::routineParameters($this->routineName);
+    $routine_parameters = $this->dl->routineParameters($this->routineName);
     foreach ($routine_parameters as $key => $routine_parameter)
     {
       if ($routine_parameter['parameter_name'])
@@ -748,13 +758,13 @@ class RoutineLoaderHelper
     $this->dropRoutine();
 
     // Set the SQL-mode under which the stored routine will run.
-    MetaDataLayer::setSqlMode($this->sqlMode);
+    $this->dl->setSqlMode($this->sqlMode);
 
     // Set the default character set and collate under which the store routine will run.
-    MetaDataLayer::setCharacterSet($this->characterSet, $this->collate);
+    $this->dl->setCharacterSet($this->characterSet, $this->collate);
 
     // Finally, execute the SQL code for loading the stored routine.
-    MetaDataLayer::loadRoutine($routine_source);
+    $this->dl->loadRoutine($routine_source);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -846,9 +856,9 @@ class RoutineLoaderHelper
   {
     $real_path = realpath($this->sourceFilename);
 
-    $this->replace['__FILE__']    = "'".MetaDataLayer::realEscapeString($real_path)."'";
+    $this->replace['__FILE__']    = "'".$this->dl->realEscapeString($real_path)."'";
     $this->replace['__ROUTINE__'] = "'".$this->routineName."'";
-    $this->replace['__DIR__']     = "'".MetaDataLayer::realEscapeString(dirname($real_path))."'";
+    $this->replace['__DIR__']     = "'".$this->dl->realEscapeString(dirname($real_path))."'";
   }
 
   //--------------------------------------------------------------------------------------------------------------------
