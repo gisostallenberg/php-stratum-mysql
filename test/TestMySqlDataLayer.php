@@ -9,7 +9,7 @@ use SetBased\Stratum\MySql\MySqlDataLayer;
 /**
  * The data layer.
  */
-class TestMysqlDataLayer extends MySqlDataLayer
+class TestMySqlDataLayer extends MySqlDataLayer
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
