@@ -11,7 +11,7 @@ use SetBased\Stratum\MySql\Helper\Crud\SelectRoutine;
 use SetBased\Stratum\MySql\Helper\Crud\UpdateRoutine;
 
 /**
- *
+ * Creates stored procedures for CRUD operations.
  */
 class MySqlCrudWorker extends MySqlWorker implements CrudWorker
 {
@@ -27,25 +27,30 @@ class MySqlCrudWorker extends MySqlWorker implements CrudWorker
    */
   public function generateRoutine(string $tableName, string $operation, string $routineName): string
   {
-    $schema = $this->settings->manString('database.database');
+    $schemaName = $this->settings->manString('database.database');
 
     $this->connect();
+
+    $tableColumns  = $this->dl->tableColumns($schemaName, $tableName);
+    $primaryKey    = $this->dl->tablePrimaryKey($schemaName, $tableName);
+    $uniqueIndexes = $this->dl->tableUniqueIndexes($schemaName, $tableName);
+
     switch ($operation)
     {
       case 'update':
-        $routine = new UpdateRoutine($tableName, $operation, $routineName, $schema);
+        $routine = new UpdateRoutine($tableName, $routineName, $tableColumns, $primaryKey, $uniqueIndexes);
         break;
 
       case 'delete':
-        $routine = new DeleteRoutine($tableName, $operation, $routineName, $schema);
+        $routine = new DeleteRoutine($tableName, $routineName, $tableColumns, $primaryKey, $uniqueIndexes);
         break;
 
       case 'select':
-        $routine = new SelectRoutine($tableName, $operation, $routineName, $schema);
+        $routine = new SelectRoutine($tableName, $routineName, $tableColumns, $primaryKey, $uniqueIndexes);
         break;
 
       case 'insert':
-        $routine = new InsertRoutine($tableName, $operation, $routineName, $schema);
+        $routine = new InsertRoutine($tableName, $routineName, $tableColumns, $primaryKey, $uniqueIndexes);
         break;
 
       default:

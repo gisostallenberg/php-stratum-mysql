@@ -5,7 +5,6 @@ namespace SetBased\Stratum\MySql\Helper\Crud;
 
 use SetBased\Helper\CodeStore\MySqlCompoundSyntaxCodeStore;
 use SetBased\Stratum\Middle\Helper\RowSetHelper;
-use SetBased\Stratum\MySql\MySqlMetaDataLayer;
 
 /**
  * Abstract parent class for classes for generating CRUD stored routines.
@@ -21,13 +20,6 @@ abstract class BaseRoutine
   protected $codeStore;
 
   /**
-   * The operation for which a stored routines must be generated.
-   *
-   * @var string
-   */
-  protected $operation;
-
-  /**
    * Metadata about the stored routine parameters.
    *
    * @var array[]
@@ -37,7 +29,7 @@ abstract class BaseRoutine
   /**
    * The primary key of the table.
    *
-   * @var array|array[]
+   * @var array[]
    */
   protected $primaryKey;
 
@@ -47,13 +39,6 @@ abstract class BaseRoutine
    * @var string
    */
   protected $routineName;
-
-  /**
-   * The data schema.
-   *
-   * @var string
-   */
-  protected $schemaName;
 
   /**
    * Metadata about the columns of the table.
@@ -70,7 +55,7 @@ abstract class BaseRoutine
   protected $tableName;
 
   /**
-   * The unique index on the table.
+   * The unique indexes on the table.
    *
    * @var array[]
    */
@@ -80,24 +65,23 @@ abstract class BaseRoutine
   /**
    * Object constructor.
    *
-   * @param string $tableName   The name of the table for which a stored routine must be generated.
-   * @param string $operation   The operation for which a stored routines must be generated.
-   * @param string $routineName The name of the generated stored procedure.
-   * @param string $schemaName  Data schema.
+   * @param string  $tableName     The name of the table for which a stored routine must be generated.
+   * @param string  $routineName   The name of the generated stored procedure.
+   * @param array[] $tableColumns  Metadata about the columns of the table.
+   * @param array[] $primaryKey    The primary key of the table.
+   * @param array[] $uniqueIndexes The unique indexes on the table.
    */
   public function __construct(string $tableName,
-                              string $operation,
                               string $routineName,
-                              string $schemaName)
+                              array $tableColumns,
+                              array $primaryKey,
+                              array $uniqueIndexes)
   {
-    $this->tableName   = $tableName;
-    $this->operation   = $operation;
-    $this->routineName = $routineName;
-    $this->schemaName  = $schemaName;
-
-    $this->tableColumns  = MySqlMetaDataLayer::tableColumns($this->schemaName, $this->tableName);
-    $this->primaryKey    = MySqlMetaDataLayer::tablePrimaryKey($this->schemaName, $this->tableName);
-    $this->uniqueIndexes = MySqlMetaDataLayer::tableUniqueIndexes($this->schemaName, $this->tableName);
+    $this->tableName     = $tableName;
+    $this->routineName   = $routineName;
+    $this->tableColumns  = $tableColumns;
+    $this->primaryKey    = $primaryKey;
+    $this->uniqueIndexes = $uniqueIndexes;
 
     $this->codeStore = new MySqlCompoundSyntaxCodeStore();
   }
