@@ -35,7 +35,7 @@ class Row0Wrapper extends Wrapper
   protected function writeResultHandler(): void
   {
     $routine_args = $this->getRoutineArgs();
-    $this->codeStore->append('return self::executeRow0(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('return $this->executeRow0(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ class Row0Wrapper extends Wrapper
   protected function writeRoutineFunctionLobFetchData(): void
   {
     $this->codeStore->append('$row = [];');
-    $this->codeStore->append('self::bindAssoc($stmt, $row);');
+    $this->codeStore->append('$this->bindAssoc($stmt, $row);');
     $this->codeStore->append('');
     $this->codeStore->append('$tmp = [];');
     $this->codeStore->append('while (($b = $stmt->fetch()))');
@@ -68,7 +68,7 @@ class Row0Wrapper extends Wrapper
   {
     $this->imports[] = ResultException::class;
 
-    $this->codeStore->append('if ($b===false) self::dataLayerError(\'mysqli_stmt::fetch\');');
+    $this->codeStore->append('if ($b===false) $this->dataLayerError(\'mysqli_stmt::fetch\');');
     $this->codeStore->append('if (sizeof($tmp)>1) throw new ResultException([0, 1], sizeof($tmp), $query);');
     $this->codeStore->append('');
     $this->codeStore->append('return ($tmp) ? $tmp[0] : null;');

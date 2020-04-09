@@ -68,7 +68,7 @@ class BulkInsertWrapper extends Wrapper
     }
 
     $routine_args = $this->getRoutineArgs();
-    $this->codeStore->append('self::realQuery(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('$this->realQuery(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
 
     $columns = '';
     $fields  = '';
@@ -98,7 +98,7 @@ class BulkInsertWrapper extends Wrapper
 
     $this->codeStore->append('$first = false;');
     $this->codeStore->append('}');
-    $this->codeStore->append('self::realQuery($sql);');
+    $this->codeStore->append('$this->realQuery($sql);');
     $this->codeStore->append('}');
   }
 

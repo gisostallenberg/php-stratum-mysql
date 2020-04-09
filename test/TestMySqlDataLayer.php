@@ -9,7 +9,7 @@ use SetBased\Stratum\MySql\MySqlDataLayer;
 /**
  * The data layer.
  */
-class TestMySqlDataLayer extends MySqlDataLayer
+class TestMysqlDataLayer extends MySqlDataLayer
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -127,7 +127,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTest01(?int $pTstInt, ?int $pTstSmallint, ?int $pTstTinyint, ?int $pTstMediumint, ?int $pTstBigint, ?int $pTstIntUnsigned, ?int $pTstSmallintUnsigned, ?int $pTstTinyintUnsigned, ?int $pTstMediumintUnsigned, ?int $pTstBigintUnsigned, $pTstDecimal, $pTstDecimal0, ?float $pTstFloat, ?float $pTstDouble, ?string $pTstBit, ?string $pTstDate, ?string $pTstDatetime, ?string $pTstTimestamp, ?string $pTstTime, ?int $pTstYear, ?string $pTstChar, ?string $pTstVarchar, ?string $pTstBinary, ?string $pTstVarbinary, ?string $pTstEnum, ?string $pTstSet): int
   {
-    return $this->executeNone('call tst_test01('.$this->quoteInt($pTstInt).','.$this->quoteInt($pTstSmallint).','.$this->quoteInt($pTstTinyint).','.$this->quoteInt($pTstMediumint).','.$this->quoteInt($pTstBigint).','.$this->quoteInt($pTstIntUnsigned).','.$this->quoteInt($pTstSmallintUnsigned).','.$this->quoteInt($pTstTinyintUnsigned).','.$this->quoteInt($pTstMediumintUnsigned).','.$this->quoteInt($pTstBigintUnsigned).','.$this->quoteDecimal($pTstDecimal).','.$this->quoteDecimal($pTstDecimal0).','.$this->quoteFloat($pTstFloat).','.$this->quoteFloat($pTstDouble).','.$this->quoteBit($pTstBit).','.$this->quoteString($pTstDate).','.$this->quoteString($pTstDatetime).','.$this->quoteString($pTstTimestamp).','.$this->quoteString($pTstTime).','.$this->quoteInt($pTstYear).','.$this->quoteString($pTstChar).','.$this->quoteString($pTstVarchar).','.$this->quoteBinary($pTstBinary).','.$this->quoteBinary($pTstVarbinary).','.$this->quoteString($pTstEnum).','.$this->quoteString($pTstSet).')');
+    return $this->executeNone('call tst_test01('.self::quoteInt($pTstInt).','.self::quoteInt($pTstSmallint).','.self::quoteInt($pTstTinyint).','.self::quoteInt($pTstMediumint).','.self::quoteInt($pTstBigint).','.self::quoteInt($pTstIntUnsigned).','.self::quoteInt($pTstSmallintUnsigned).','.self::quoteInt($pTstTinyintUnsigned).','.self::quoteInt($pTstMediumintUnsigned).','.self::quoteInt($pTstBigintUnsigned).','.self::quoteDecimal($pTstDecimal).','.self::quoteDecimal($pTstDecimal0).','.self::quoteFloat($pTstFloat).','.self::quoteFloat($pTstDouble).','.self::quoteBit($pTstBit).','.self::quoteString($pTstDate).','.self::quoteString($pTstDatetime).','.self::quoteString($pTstTimestamp).','.self::quoteString($pTstTime).','.self::quoteInt($pTstYear).','.self::quoteString($pTstChar).','.self::quoteString($pTstVarchar).','.self::quoteBinary($pTstBinary).','.self::quoteBinary($pTstVarbinary).','.self::quoteString($pTstEnum).','.self::quoteString($pTstSet).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -197,7 +197,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTest02(?int $pTstInt, ?int $pTstSmallint, ?int $pTstTinyint, ?int $pTstMediumint, ?int $pTstBigint, $pTstDecimal, $pTstDecimal0, ?float $pTstFloat, ?float $pTstDouble, ?string $pTstBit, ?string $pTstDate, ?string $pTstDatetime, ?string $pTstTimestamp, ?string $pTstTime, ?int $pTstYear, ?string $pTstChar, ?string $pTstVarchar, ?string $pTstBinary, ?string $pTstVarbinary, ?string $pTstTinyblob, ?string $pTstBlob, ?string $pTstMediumblob, ?string $pTstLongblob, ?string $pTstTinytext, ?string $pTstText, ?string $pTstMediumtext, ?string $pTstLongtext, ?string $pTstEnum, ?string $pTstSet)
   {
-    $query = 'call tst_test02('.$this->quoteInt($pTstInt).','.$this->quoteInt($pTstSmallint).','.$this->quoteInt($pTstTinyint).','.$this->quoteInt($pTstMediumint).','.$this->quoteInt($pTstBigint).','.$this->quoteDecimal($pTstDecimal).','.$this->quoteDecimal($pTstDecimal0).','.$this->quoteFloat($pTstFloat).','.$this->quoteFloat($pTstDouble).','.$this->quoteBit($pTstBit).','.$this->quoteString($pTstDate).','.$this->quoteString($pTstDatetime).','.$this->quoteString($pTstTimestamp).','.$this->quoteString($pTstTime).','.$this->quoteInt($pTstYear).','.$this->quoteString($pTstChar).','.$this->quoteString($pTstVarchar).','.$this->quoteBinary($pTstBinary).','.$this->quoteBinary($pTstVarbinary).',?,?,?,?,?,?,?,?,'.$this->quoteString($pTstEnum).','.$this->quoteString($pTstSet).')';
+    $query = 'call tst_test02('.self::quoteInt($pTstInt).','.self::quoteInt($pTstSmallint).','.self::quoteInt($pTstTinyint).','.self::quoteInt($pTstMediumint).','.self::quoteInt($pTstBigint).','.self::quoteDecimal($pTstDecimal).','.self::quoteDecimal($pTstDecimal0).','.self::quoteFloat($pTstFloat).','.self::quoteFloat($pTstDouble).','.self::quoteBit($pTstBit).','.self::quoteString($pTstDate).','.self::quoteString($pTstDatetime).','.self::quoteString($pTstTimestamp).','.self::quoteString($pTstTime).','.self::quoteInt($pTstYear).','.self::quoteString($pTstChar).','.self::quoteString($pTstVarchar).','.self::quoteBinary($pTstBinary).','.self::quoteBinary($pTstVarbinary).',?,?,?,?,?,?,?,?,'.self::quoteString($pTstEnum).','.self::quoteString($pTstSet).')';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
@@ -257,8 +257,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
       $first = true;
       foreach($rows as $row)
       {
-        if ($first) $sql .=' values('.$this->quoteInt($row['field_int']).','.$this->quoteInt($row['field_smallint']).','.$this->quoteInt($row['field_mediumint']).','.$this->quoteInt($row['field_tinyint']).','.$this->quoteInt($row['field_bigint']).','.$this->quoteInt($row['field_int_unsigned']).','.$this->quoteInt($row['field_smallint_unsigned']).','.$this->quoteInt($row['field_mediumint_unsigned']).','.$this->quoteInt($row['field_tinyint_unsigned']).','.$this->quoteInt($row['field_bigint_unsigned']).','.$this->quoteInt($row['field_year']).','.$this->quoteDecimal($row['field_decimal']).','.$this->quoteDecimal($row['field_decimal0']).','.$this->quoteFloat($row['field_float']).','.$this->quoteFloat($row['field_double']).','.$this->quoteBinary($row['field_binary']).','.$this->quoteBinary($row['field_varbinary']).','.$this->quoteString($row['field_char']).','.$this->quoteString($row['field_varchar']).','.$this->quoteString($row['field_time']).','.$this->quoteString($row['field_timestamp']).','.$this->quoteString($row['field_date']).','.$this->quoteString($row['field_datetime']).','.$this->quoteString($row['field_enum']).','.$this->quoteString($row['field_set']).','.$this->quoteBit($row['field_bit']).')';
-        else        $sql .=',      ('.$this->quoteInt($row['field_int']).','.$this->quoteInt($row['field_smallint']).','.$this->quoteInt($row['field_mediumint']).','.$this->quoteInt($row['field_tinyint']).','.$this->quoteInt($row['field_bigint']).','.$this->quoteInt($row['field_int_unsigned']).','.$this->quoteInt($row['field_smallint_unsigned']).','.$this->quoteInt($row['field_mediumint_unsigned']).','.$this->quoteInt($row['field_tinyint_unsigned']).','.$this->quoteInt($row['field_bigint_unsigned']).','.$this->quoteInt($row['field_year']).','.$this->quoteDecimal($row['field_decimal']).','.$this->quoteDecimal($row['field_decimal0']).','.$this->quoteFloat($row['field_float']).','.$this->quoteFloat($row['field_double']).','.$this->quoteBinary($row['field_binary']).','.$this->quoteBinary($row['field_varbinary']).','.$this->quoteString($row['field_char']).','.$this->quoteString($row['field_varchar']).','.$this->quoteString($row['field_time']).','.$this->quoteString($row['field_timestamp']).','.$this->quoteString($row['field_date']).','.$this->quoteString($row['field_datetime']).','.$this->quoteString($row['field_enum']).','.$this->quoteString($row['field_set']).','.$this->quoteBit($row['field_bit']).')';
+        if ($first) $sql .=' values('.self::quoteInt($row['field_int']).','.self::quoteInt($row['field_smallint']).','.self::quoteInt($row['field_mediumint']).','.self::quoteInt($row['field_tinyint']).','.self::quoteInt($row['field_bigint']).','.self::quoteInt($row['field_int_unsigned']).','.self::quoteInt($row['field_smallint_unsigned']).','.self::quoteInt($row['field_mediumint_unsigned']).','.self::quoteInt($row['field_tinyint_unsigned']).','.self::quoteInt($row['field_bigint_unsigned']).','.self::quoteInt($row['field_year']).','.self::quoteDecimal($row['field_decimal']).','.self::quoteDecimal($row['field_decimal0']).','.self::quoteFloat($row['field_float']).','.self::quoteFloat($row['field_double']).','.self::quoteBinary($row['field_binary']).','.self::quoteBinary($row['field_varbinary']).','.self::quoteString($row['field_char']).','.self::quoteString($row['field_varchar']).','.self::quoteString($row['field_time']).','.self::quoteString($row['field_timestamp']).','.self::quoteString($row['field_date']).','.self::quoteString($row['field_datetime']).','.self::quoteString($row['field_enum']).','.self::quoteString($row['field_set']).','.self::quoteBit($row['field_bit']).')';
+        else        $sql .=',      ('.self::quoteInt($row['field_int']).','.self::quoteInt($row['field_smallint']).','.self::quoteInt($row['field_mediumint']).','.self::quoteInt($row['field_tinyint']).','.self::quoteInt($row['field_bigint']).','.self::quoteInt($row['field_int_unsigned']).','.self::quoteInt($row['field_smallint_unsigned']).','.self::quoteInt($row['field_mediumint_unsigned']).','.self::quoteInt($row['field_tinyint_unsigned']).','.self::quoteInt($row['field_bigint_unsigned']).','.self::quoteInt($row['field_year']).','.self::quoteDecimal($row['field_decimal']).','.self::quoteDecimal($row['field_decimal0']).','.self::quoteFloat($row['field_float']).','.self::quoteFloat($row['field_double']).','.self::quoteBinary($row['field_binary']).','.self::quoteBinary($row['field_varbinary']).','.self::quoteString($row['field_char']).','.self::quoteString($row['field_varchar']).','.self::quoteString($row['field_time']).','.self::quoteString($row['field_timestamp']).','.self::quoteString($row['field_date']).','.self::quoteString($row['field_datetime']).','.self::quoteString($row['field_enum']).','.self::quoteString($row['field_set']).','.self::quoteBit($row['field_bit']).')';
         $first = false;
       }
       $this->realQuery($sql);
@@ -282,8 +282,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
       $first = true;
       foreach($rows as $row)
       {
-        if ($first) $sql .=' values('.$this->quoteInt($row['field1']).','.$this->quoteInt($row['field4']).','.$this->quoteInt($row['field5']).')';
-        else        $sql .=',      ('.$this->quoteInt($row['field1']).','.$this->quoteInt($row['field4']).','.$this->quoteInt($row['field5']).')';
+        if ($first) $sql .=' values('.self::quoteInt($row['field1']).','.self::quoteInt($row['field4']).','.self::quoteInt($row['field5']).')';
+        else        $sql .=',      ('.self::quoteInt($row['field1']).','.self::quoteInt($row['field4']).','.self::quoteInt($row['field5']).')';
         $first = false;
       }
       $this->realQuery($sql);
@@ -303,7 +303,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestFunction(?int $pA, ?int $pB): ?int
   {
-    return $this->executeSingleton0('select tst_test_function('.$this->quoteInt($pA).','.$this->quoteInt($pB).')');
+    return $this->executeSingleton0('select tst_test_function('.self::quoteInt($pA).','.self::quoteInt($pB).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -317,7 +317,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestFunctionBool1(?int $pRet): bool
   {
-    return !empty($this->executeSingleton0('select tst_test_function_bool1('.$this->quoteInt($pRet).')'));
+    return !empty($this->executeSingleton0('select tst_test_function_bool1('.self::quoteInt($pRet).')'));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -331,7 +331,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestFunctionBool2(?string $pRet): bool
   {
-    return !empty($this->executeSingleton0('select tst_test_function_bool2('.$this->quoteString($pRet).')'));
+    return !empty($this->executeSingleton0('select tst_test_function_bool2('.self::quoteString($pRet).')'));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -355,7 +355,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestListOfInt($pIds): array
   {
-    $result = $this->query('call tst_test_list_of_int('.$this->quoteListOfInt($pIds, ',', '\"', '\\').')');
+    $result = $this->query('call tst_test_list_of_int('.self::quoteListOfInt($pIds, ',', '\"', '\\').')');
     $ret = [];
     while (($row = $result->fetch_array(MYSQLI_ASSOC))) $ret[$row['tst_id']] = $row;
     $result->free();
@@ -386,7 +386,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestMap1(?int $pCount): array
   {
-    $result = $this->query('call tst_test_map1('.$this->quoteInt($pCount).')');
+    $result = $this->query('call tst_test_map1('.self::quoteInt($pCount).')');
     $ret = [];
     while (($row = $result->fetch_array(MYSQLI_NUM))) $ret[$row[0]] = $row[1];
     $result->free();
@@ -408,7 +408,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestMap1WithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_map1_with_lob('.$this->quoteInt($pCount).',?)';
+    $query = 'call tst_test_map1_with_lob('.self::quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
@@ -530,7 +530,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestNone(?int $pCount): int
   {
-    return $this->executeNone('call tst_test_none('.$this->quoteInt($pCount).')');
+    return $this->executeNone('call tst_test_none('.self::quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -546,7 +546,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestNoneWithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_none_with_lob('.$this->quoteInt($pCount).',?)';
+    $query = 'call tst_test_none_with_lob('.self::quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
@@ -597,7 +597,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestParameterSort(?string $pTstLastName, ?string $pTstFirstName, ?string $pTstInstrument): ?array
   {
-    return $this->executeRow0('call tst_test_parameter_sort('.$this->quoteString($pTstLastName).','.$this->quoteString($pTstFirstName).','.$this->quoteString($pTstInstrument).')');
+    return $this->executeRow0('call tst_test_parameter_sort('.self::quoteString($pTstLastName).','.self::quoteString($pTstFirstName).','.self::quoteString($pTstInstrument).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -613,7 +613,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestParameterType($pPhpType1, $pPhpType2): int
   {
-    return $this->executeNone('call tst_test_parameter_type('.$this->quoteDecimal($pPhpType1).','.$this->quoteDecimal($pPhpType2).')');
+    return $this->executeNone('call tst_test_parameter_type('.self::quoteDecimal($pPhpType1).','.self::quoteDecimal($pPhpType2).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -627,7 +627,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestRow0a(?int $pCount): ?array
   {
-    return $this->executeRow0('call tst_test_row0a('.$this->quoteInt($pCount).')');
+    return $this->executeRow0('call tst_test_row0a('.self::quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -643,7 +643,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestRow0aWithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_row0a_with_lob('.$this->quoteInt($pCount).',?)';
+    $query = 'call tst_test_row0a_with_lob('.self::quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
@@ -705,7 +705,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestRow1a(?int $pCount): array
   {
-    return $this->executeRow1('call tst_test_row1a('.$this->quoteInt($pCount).')');
+    return $this->executeRow1('call tst_test_row1a('.self::quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -721,7 +721,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestRow1aWithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_row1a_with_lob('.$this->quoteInt($pCount).',?)';
+    $query = 'call tst_test_row1a_with_lob('.self::quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
@@ -783,7 +783,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestRows1(?int $pCount): array
   {
-    return $this->executeRows('call tst_test_rows1('.$this->quoteInt($pCount).')');
+    return $this->executeRows('call tst_test_rows1('.self::quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -799,7 +799,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestRows1WithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_rows1_with_lob('.$this->quoteInt($pCount).',?)';
+    $query = 'call tst_test_rows1_with_lob('.self::quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
@@ -860,7 +860,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestRowsWithIndex1(?int $pCount): array
   {
-    $result = $this->query('call tst_test_rows_with_index1('.$this->quoteInt($pCount).')');
+    $result = $this->query('call tst_test_rows_with_index1('.self::quoteInt($pCount).')');
     $ret = [];
     while (($row = $result->fetch_array(MYSQLI_ASSOC))) $ret[$row['tst_c01']][$row['tst_c02']][] = $row;
     $result->free();
@@ -882,7 +882,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestRowsWithIndex1WithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_rows_with_index1_with_lob('.$this->quoteInt($pCount).',?)';
+    $query = 'call tst_test_rows_with_index1_with_lob('.self::quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
@@ -943,7 +943,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestRowsWithKey1(?int $pCount): array
   {
-    $result = $this->query('call tst_test_rows_with_key1('.$this->quoteInt($pCount).')');
+    $result = $this->query('call tst_test_rows_with_key1('.self::quoteInt($pCount).')');
     $ret = [];
     while (($row = $result->fetch_array(MYSQLI_ASSOC))) $ret[$row['tst_c01']][$row['tst_c02']][$row['tst_c03']] = $row;
     $result->free();
@@ -965,7 +965,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestRowsWithKey1WithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_rows_with_key1_with_lob('.$this->quoteInt($pCount).',?)';
+    $query = 'call tst_test_rows_with_key1_with_lob('.self::quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
@@ -1026,7 +1026,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestSingleton0a(?int $pCount): ?int
   {
-    return $this->executeSingleton0('call tst_test_singleton0a('.$this->quoteInt($pCount).')');
+    return $this->executeSingleton0('call tst_test_singleton0a('.self::quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1042,7 +1042,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestSingleton0aWithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_singleton0a_with_lob('.$this->quoteInt($pCount).',?)';
+    $query = 'call tst_test_singleton0a_with_lob('.self::quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
@@ -1106,7 +1106,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestSingleton0b(?int $pCount, ?int $pValue): bool
   {
-    return !empty($this->executeSingleton0('call tst_test_singleton0b('.$this->quoteInt($pCount).','.$this->quoteInt($pValue).')'));
+    return !empty($this->executeSingleton0('call tst_test_singleton0b('.self::quoteInt($pCount).','.self::quoteInt($pValue).')'));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1124,7 +1124,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestSingleton0bWithLob(?int $pCount, ?int $pValue, ?string $pBlob)
   {
-    $query = 'call tst_test_singleton0b_with_lob('.$this->quoteInt($pCount).','.$this->quoteInt($pValue).',?)';
+    $query = 'call tst_test_singleton0b_with_lob('.self::quoteInt($pCount).','.self::quoteInt($pValue).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
@@ -1186,7 +1186,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestSingleton1a(?int $pCount): int
   {
-    return $this->executeSingleton1('call tst_test_singleton1a('.$this->quoteInt($pCount).')');
+    return $this->executeSingleton1('call tst_test_singleton1a('.self::quoteInt($pCount).')');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1202,7 +1202,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestSingleton1aWithLob(?int $pCount, ?string $pBlob)
   {
-    $query = 'call tst_test_singleton1a_with_lob('.$this->quoteInt($pCount).',?)';
+    $query = 'call tst_test_singleton1a_with_lob('.self::quoteInt($pCount).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->dataLayerError('mysqli::prepare');
 
@@ -1266,7 +1266,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestSingleton1b(?int $pCount, ?int $pValue): bool
   {
-    return !empty($this->executeSingleton1('call tst_test_singleton1b('.$this->quoteInt($pCount).','.$this->quoteInt($pValue).')'));
+    return !empty($this->executeSingleton1('call tst_test_singleton1b('.self::quoteInt($pCount).','.self::quoteInt($pValue).')'));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -1284,7 +1284,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    */
   public function tstTestSingleton1bWithLob(?int $pCount, ?int $pValue, ?string $pBlob)
   {
-    $query = 'call tst_test_singleton1b_with_lob('.$this->quoteInt($pCount).','.$this->quoteInt($pValue).',?)';
+    $query = 'call tst_test_singleton1b_with_lob('.self::quoteInt($pCount).','.self::quoteInt($pValue).',?)';
     $stmt  = $this->mysqli->prepare($query);
     if (!$stmt) $this->dataLayerError('mysqli::prepare');
 

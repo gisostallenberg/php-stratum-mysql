@@ -33,7 +33,7 @@ class RowsWrapper extends Wrapper
   protected function writeResultHandler(): void
   {
     $routine_args = $this->getRoutineArgs();
-    $this->codeStore->append('return self::executeRows(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('return $this->executeRows(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ class RowsWrapper extends Wrapper
   protected function writeRoutineFunctionLobFetchData(): void
   {
     $this->codeStore->append('$row = [];');
-    $this->codeStore->append('self::bindAssoc($stmt, $row);');
+    $this->codeStore->append('$this->bindAssoc($stmt, $row);');
     $this->codeStore->append('');
     $this->codeStore->append('$tmp = [];');
     $this->codeStore->append('while (($b = $stmt->fetch()))');
@@ -64,7 +64,7 @@ class RowsWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData(): void
   {
-    $this->codeStore->append('if ($b===false) self::dataLayerError(\'mysqli_stmt::fetch\');');
+    $this->codeStore->append('if ($b===false) $this->dataLayerError(\'mysqli_stmt::fetch\');');
     $this->codeStore->append('');
     $this->codeStore->append('return $tmp;');
   }

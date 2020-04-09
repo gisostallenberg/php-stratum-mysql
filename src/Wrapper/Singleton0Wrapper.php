@@ -43,11 +43,11 @@ class Singleton0Wrapper extends Wrapper
 
     if ($this->routine['return']=='bool')
     {
-      $this->codeStore->append('return !empty(self::executeSingleton0(\'call '.$this->routine['routine_name'].'('.$routine_args.')\'));');
+      $this->codeStore->append('return !empty($this->executeSingleton0(\'call '.$this->routine['routine_name'].'('.$routine_args.')\'));');
     }
     else
     {
-      $this->codeStore->append('return self::executeSingleton0(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
+      $this->codeStore->append('return $this->executeSingleton0(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
     }
   }
 
@@ -58,7 +58,7 @@ class Singleton0Wrapper extends Wrapper
   protected function writeRoutineFunctionLobFetchData(): void
   {
     $this->codeStore->append('$row = [];');
-    $this->codeStore->append('self::bindAssoc($stmt, $row);');
+    $this->codeStore->append('$this->bindAssoc($stmt, $row);');
     $this->codeStore->append('');
     $this->codeStore->append('$tmp = [];');
     $this->codeStore->append('while (($b = $stmt->fetch()))');
@@ -81,7 +81,7 @@ class Singleton0Wrapper extends Wrapper
   {
     $this->imports[] = ResultException::class;
 
-    $this->codeStore->append('if ($b===false) self::dataLayerError(\'mysqli_stmt::fetch\');');
+    $this->codeStore->append('if ($b===false) $this->dataLayerError(\'mysqli_stmt::fetch\');');
     $this->codeStore->append('if (sizeof($tmp)>1) throw new ResultException([0, 1], sizeof($tmp), $query);');
     $this->codeStore->append('');
 

@@ -33,7 +33,7 @@ class NoneWrapper extends Wrapper
   protected function writeResultHandler(): void
   {
     $routine_args = $this->getRoutineArgs();
-    $this->codeStore->append('return self::executeNone(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('return $this->executeNone(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -42,7 +42,7 @@ class NoneWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobFetchData(): void
   {
-    $this->codeStore->append('$ret = self::$mysqli->affected_rows;');
+    $this->codeStore->append('$ret = $this->mysqli->affected_rows;');
     $this->codeStore->append('');
   }
 

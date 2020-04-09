@@ -40,13 +40,13 @@ class FunctionWrapper extends Wrapper
   {
     if ($this->routine['return']=='bool')
     {
-      $this->codeStore->append(sprintf("return !empty(self::executeSingleton0('select %s(%s)'));",
+      $this->codeStore->append(sprintf("return !empty(\$this->executeSingleton0('select %s(%s)'));",
                                        $this->routine['routine_name'],
                                        $this->getRoutineArgs()));
     }
     else
     {
-      $this->codeStore->append(sprintf("return self::executeSingleton0('select %s(%s)');",
+      $this->codeStore->append(sprintf("return \$this->executeSingleton0('select %s(%s)');",
                                        $this->routine['routine_name'],
                                        $this->getRoutineArgs()));
     }
@@ -58,7 +58,7 @@ class FunctionWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobFetchData(): void
   {
-    $this->codeStore->append('$ret = self::$mysqli->affected_rows;');
+    $this->codeStore->append('$ret = $this->mysqli->affected_rows;');
     $this->codeStore->append('');
   }
 
