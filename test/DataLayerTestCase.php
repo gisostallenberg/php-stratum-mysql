@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql\Test;
 
 use PHPUnit\Framework\TestCase;
+use SetBased\Stratum\MySql\MySqlDefaultConnector;
 
 /**
  * Parent class for all test cases.
@@ -24,9 +25,9 @@ class DataLayerTestCase extends TestCase
    */
   protected function setUp(): void
   {
-    $this->dataLayer = new TestMySqlDataLayer();
-
-    $this->dataLayer->connect('localhost', 'test', 'test', 'test');
+    $connector = new MySqlDefaultConnector('localhost', 'test', 'test', 'test');
+    $this->dataLayer = new TestMySqlDataLayer($connector);
+    $this->dataLayer->connect();
   }
 
   //--------------------------------------------------------------------------------------------------------------------

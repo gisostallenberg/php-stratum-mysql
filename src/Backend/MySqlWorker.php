@@ -6,6 +6,7 @@ namespace SetBased\Stratum\MySql\Backend;
 use SetBased\Stratum\Backend\Config;
 use SetBased\Stratum\Backend\StratumStyle;
 use SetBased\Stratum\MySql\MySqlDataLayer;
+use SetBased\Stratum\MySql\MySqlDefaultConnector;
 use SetBased\Stratum\MySql\MySqlMetaDataLayer;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
@@ -74,8 +75,9 @@ class MySqlWorker
     $database = $this->settings->manString('database.database');
     $port     = $this->settings->manInt('database.port', 3306);
 
-    $dataLayer = new MySqlDataLayer();
-    $dataLayer->connect($host, $user, $password, $database, $port);
+    $connector = new MySqlDefaultConnector($host, $user, $password, $database, $port);
+    $dataLayer = new MySqlDataLayer($connector);
+    $dataLayer->connect();
 
     $this->dl = new MySqlMetaDataLayer($dataLayer, $this->io);
   }

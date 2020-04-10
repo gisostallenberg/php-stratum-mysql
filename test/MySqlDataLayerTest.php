@@ -3,7 +3,7 @@ declare(strict_types=0);
 
 namespace SetBased\Stratum\MySql\Test;
 
-use SetBased\Stratum\MySql\MySqlDataLayer;
+use SetBased\Stratum\MySql\MySqlDefaultConnector;
 
 /**
  * Test cases for class MySqlDataLayer.
@@ -126,7 +126,35 @@ class MySqlDataLayerTest extends DataLayerTestCase
   public function testQuoteString4()
   {
     $this->expectException(\TypeError::class);
-    $this->dataLayer->quoteString(new MySqlDataLayer());
+    $this->dataLayer->quoteString($this);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test connectIfNotAlive.
+   */
+  public function testReconnect()
+  {
+    $connector = new MySqlDefaultConnector('localhost', 'test', 'test', 'test');
+    $dl        = new TestMySqlDataLayer($connector);
+
+    // Reconnect when not connected.
+    $dl->connectIfNotAlive();
+    self::assertTrue(true);
+
+    // Reconnect when alive.
+    $dl->connectIfNotAlive();
+    self::assertTrue(true);
+
+    // Reconnect when server has been gone.
+    exec('sudo systemctl restart mysql');
+    $dl->connectIfNotAlive();
+    self::assertTrue(true);
+
+    // Reconnect when disconnected.
+    $dl->disconnect();
+    $dl->connectIfNotAlive();
+    self::assertTrue(true);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

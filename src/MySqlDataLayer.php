@@ -7,6 +7,7 @@ use SetBased\Exception\FallenException;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Middle\BulkHandler;
 use SetBased\Stratum\Middle\Exception\ResultException;
+use SetBased\Stratum\MySql\Exception\MySqlConnectFailedException;
 use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
 use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 
@@ -97,6 +98,25 @@ class MySqlDataLayer
    */
   protected $queryLog = [];
 
+  /**
+   * The object for connecting to the MySql instance.
+   *
+   * @var MySqlConnector
+   */
+  private $connector;
+
+  //--------------------------------------------------------------------------------------------------------------------
+
+  /**
+   * MySqlDataLayer constructor.
+   *
+   * @param MySqlConnector $connector The object for connecting to the MySql instance.
+   */
+  public function __construct(MySqlConnector $connector)
+  {
+    $this->connector = $connector;
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Starts a transaction.
@@ -155,31 +175,17 @@ class MySqlDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Connects to a MySQL instance.
+   * Connects PHP to the MySQL instance.
    *
-   * Wrapper around [mysqli::__construct](http://php.net/manual/mysqli.construct.php), however on failure an exception
-   * is thrown.
-   *
-   * @param string $host     The hostname.
-   * @param string $user     The MySQL user name.
-   * @param string $password The password.
-   * @param string $database The default database.
-   * @param int    $port     The port number.
+   * @throws MySqlConnectFailedException
+   * @throws MySqlDataLayerException
    *
    * @since 1.0.0
    * @api
    */
-  public function connect(string $host, string $user, string $password, string $database, int $port = 3306): void
+  public function connect(): void
   {
-    $this->mysqli = new \mysqli($host, $user, $password, $database, $port);
-    if ($this->mysqli->connect_errno)
-    {
-      $message = 'MySQL Error no: '.$this->mysqli->connect_errno."\n";
-      $message .= str_replace('%', '%%', $this->mysqli->connect_error);
-      $message .= "\n";
-
-      throw new RuntimeException($message);
-    }
+    $this->mysqli = $this->connector->connect();
 
     // Set the options.
     foreach ($this->options as $option => $value)
@@ -188,14 +194,32 @@ class MySqlDataLayer
     }
 
     // Set the default character set.
-    $ret = $this->mysqli->set_charset($this->charSet);
-    if (!$ret) $this->dataLayerError('mysqli::set_charset');
+    $success = $this->mysqli->set_charset($this->charSet);
+    if (!$success) $this->dataLayerError('mysqli::set_charset');
 
     // Set the SQL mode.
     $this->executeNone("set sql_mode = '".$this->sqlMode."'");
 
     // Set transaction isolation level.
     $this->executeNone("set session tx_isolation = '".$this->transactionIsolationLevel."'");
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Connects or reconnects to the MySQL instance when PHP is not (longer) connected to the MySql instance.
+   *
+   * @throws MySqlConnectFailedException
+   * @throws MySqlDataLayerException
+   *
+   * @since 5.0.0
+   * @api
+   */
+  public function connectIfNotAlive(): void
+  {
+    if (!$this->connector->isAlive())
+    {
+      $this->mysqli = $this->connector->connect();
+    }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -207,11 +231,8 @@ class MySqlDataLayer
    */
   public function disconnect(): void
   {
-    if ($this->mysqli!==null)
-    {
-      $this->mysqli->close();
-      $this->mysqli = null;
-    }
+    $this->mysqli = null;
+    $this->connector->disconnect();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -606,6 +627,22 @@ class MySqlDataLayer
   public function getQueryLog(): array
   {
     return $this->queryLog;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Returns true if PHP is (still) connected with the MySql instance. Otherwise returns false.
+   *
+   * This method will never throw an exception.
+   *
+   * @return bool
+   *
+   * @since 5.0.0
+   * @api
+   */
+  public function isAlive(): bool
+  {
+    return $this->connector->isAlive();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
