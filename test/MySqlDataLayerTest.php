@@ -147,7 +147,7 @@ class MySqlDataLayerTest extends DataLayerTestCase
     self::assertTrue(true);
 
     // Reconnect when server has been gone.
-    exec('sudo systemctl restart mysql');
+    exec('sudo systemctl restart mysql || sudo service mysql restart');
     $dl->connectIfNotAlive();
     self::assertTrue(true);
 

@@ -65,12 +65,12 @@ class MySqlDefaultConnectorTest extends TestCase
     $connector = new MySqlDefaultConnector('localhost', 'test', 'test', 'test');
     $connector->connect();
 
-    exec('sudo systemctl stop mysql');
+    exec('sudo systemctl stop mysql || sudo service mysql stop');
 
     $connector->disconnect();
     self::assertTrue(true);
 
-    exec('sudo systemctl start mysql');
+    exec('sudo systemctl start mysql || sudo service mysql start');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -120,12 +120,12 @@ class MySqlDefaultConnectorTest extends TestCase
     $connector = new MySqlDefaultConnector('localhost', 'test', 'test', 'test');
     $connector->connect();
 
-    exec('sudo systemctl stop mysql');
+    exec('sudo systemctl stop mysql || sudo service mysql stop');
 
     $isAlive = $connector->isAlive();
     self::assertFalse($isAlive);
 
-    exec('sudo systemctl start mysql');
+    exec('sudo systemctl start mysql || sudo service mysql start');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
