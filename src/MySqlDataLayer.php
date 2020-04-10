@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql;
 
 use SetBased\Exception\FallenException;
-use SetBased\Exception\RuntimeException;
+use SetBased\Exception\LogicException;
 use SetBased\Stratum\Middle\BulkHandler;
 use SetBased\Stratum\Middle\Exception\ResultException;
 use SetBased\Stratum\MySql\Exception\MySqlConnectFailedException;
@@ -123,24 +123,28 @@ class MySqlDataLayer
    * Wrapper around [mysqli::autocommit](http://php.net/manual/mysqli.autocommit.php), however on failure an exception
    * is thrown.
    *
-   * @since 1.0.0
+   * @throws MySqlDataLayerException
+   *
    * @api
+   * @since 1.0.0
    */
   public function begin(): void
   {
-    $ret = $this->mysqli->autocommit(false);
-    if (!$ret) $this->dataLayerError('mysqli::autocommit');
+    $success = @$this->mysqli->autocommit(false);
+    if (!$success) throw $this->dataLayerError('mysqli::autocommit');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @param \mysqli_stmt $stmt
    * @param array        $out
+   *
+   * @throws MySqlDataLayerException
    */
   public function bindAssoc(\mysqli_stmt $stmt, array &$out): void
   {
     $data = $stmt->result_metadata();
-    if (!$data) $this->dataLayerError('mysqli_stmt::result_metadata');
+    if (!$data) throw $this->dataLayerError('mysqli_stmt::result_metadata');
 
     $fields = [];
     $out    = [];
@@ -151,7 +155,7 @@ class MySqlDataLayer
     }
 
     $b = call_user_func_array([$stmt, 'bind_result'], $fields);
-    if ($b===false) $this->dataLayerError('mysqli_stmt::bind_result');
+    if ($b===false) throw $this->dataLayerError('mysqli_stmt::bind_result');
 
     $data->free();
   }
@@ -163,13 +167,15 @@ class MySqlDataLayer
    * Wrapper around [mysqli::commit](http://php.net/manual/mysqli.commit.php), however on failure an exception is
    * thrown.
    *
-   * @since 1.0.0
+   * @throws MySqlDataLayerException
+   *
    * @api
+   * @since 1.0.0
    */
   public function commit(): void
   {
-    $ret = $this->mysqli->commit();
-    if (!$ret) $this->dataLayerError('mysqli::commit');
+    $success = @$this->mysqli->commit();
+    if (!$success) throw $this->dataLayerError('mysqli::commit');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -189,12 +195,13 @@ class MySqlDataLayer
     // Set the options.
     foreach ($this->options as $option => $value)
     {
-      $this->mysqli->options($option, $value);
+      $success = @$this->mysqli->options($option, $value);
+      if (!$success) throw $this->dataLayerError('mysqli::set_charset');
     }
 
     // Set the default character set.
-    $success = $this->mysqli->set_charset($this->charSet);
-    if (!$success) $this->dataLayerError('mysqli::set_charset');
+    $success = @$this->mysqli->set_charset($this->charSet);
+    if (!$success) throw $this->dataLayerError('mysqli::set_charset');
 
     // Set the SQL mode.
     $this->executeNone("set sql_mode = '".$this->sqlMode."'");
@@ -241,8 +248,10 @@ class MySqlDataLayer
    * @param BulkHandler $bulkHandler The bulk handler.
    * @param string      $query       The SQL statement.
    *
-   * @since 1.0.0
+   * @throws MySqlQueryErrorException
+   *
    * @api
+   * @since 1.0.0
    */
   public function executeBulk(BulkHandler $bulkHandler, string $query): void
   {
@@ -270,8 +279,10 @@ class MySqlDataLayer
    *
    * @return int The total number of rows selected/logged.
    *
-   * @since 1.0.0
+   * @throws MySqlDataLayerException
+   *
    * @api
+   * @since 1.0.0
    */
   public function executeLog(string $queries): int
   {
@@ -281,8 +292,8 @@ class MySqlDataLayer
     $this->multiQuery($queries);
     do
     {
-      $result = $this->mysqli->store_result();
-      if ($this->mysqli->errno) $this->dataLayerError('mysqli::store_result');
+      $result = @$this->mysqli->store_result();
+      if ($this->mysqli->errno) throw $this->dataLayerError('mysqli::store_result');
       if ($result)
       {
         $fields = $result->fetch_fields();
@@ -303,8 +314,8 @@ class MySqlDataLayer
       $continue = $this->mysqli->more_results();
       if ($continue)
       {
-        $tmp = $this->mysqli->next_result();
-        if ($tmp===false) $this->dataLayerError('mysqli::next_result');
+        $success = @$this->mysqli->next_result();
+        if (!$success) throw $this->dataLayerError('mysqli::next_result');
       }
     } while ($continue);
 
@@ -321,8 +332,10 @@ class MySqlDataLayer
    *
    * @return array
    *
-   * @since 1.0.0
+   * @throws MySqlDataLayerException
+   *
    * @api
+   * @since 1.0.0
    */
   public function executeMulti(string $queries): array
   {
@@ -332,7 +345,7 @@ class MySqlDataLayer
     do
     {
       $result = $this->mysqli->store_result();
-      if ($this->mysqli->errno) $this->dataLayerError('mysqli::store_result');
+      if ($this->mysqli->errno) throw $this->dataLayerError('mysqli::store_result');
       if ($result)
       {
         $ret[] = $result->fetch_all(MYSQLI_ASSOC);
@@ -346,8 +359,8 @@ class MySqlDataLayer
       $continue = $this->mysqli->more_results();
       if ($continue)
       {
-        $tmp = $this->mysqli->next_result();
-        if ($tmp===false) $this->dataLayerError('mysqli::next_result');
+        $success = @$this->mysqli->next_result();
+        if (!$success) throw $this->dataLayerError('mysqli::next_result');
       }
     } while ($continue);
 
@@ -362,8 +375,10 @@ class MySqlDataLayer
    *
    * @return int The number of affected rows (if any).
    *
-   * @since 1.0.0
+   * @throws MySqlQueryErrorException
+   *
    * @api
+   * @since 1.0.0
    */
   public function executeNone(string $query): int
   {
@@ -385,8 +400,11 @@ class MySqlDataLayer
    *
    * @return array|null The selected row.
    *
-   * @since 1.0.0
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
+   *
    * @api
+   * @since 1.0.0
    */
   public function executeRow0(string $query): ?array
   {
@@ -414,8 +432,11 @@ class MySqlDataLayer
    *
    * @return array The selected row.
    *
-   * @since 1.0.0
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
+   *
    * @api
+   * @since 1.0.0
    */
   public function executeRow1(string $query): array
   {
@@ -442,8 +463,10 @@ class MySqlDataLayer
    *
    * @return array[] The selected rows.
    *
-   * @since 1.0.0
+   * @throws MySqlQueryErrorException
+   *
    * @api
+   * @since 1.0.0
    */
   public function executeRows(string $query): array
   {
@@ -465,8 +488,11 @@ class MySqlDataLayer
    *
    * @return mixed The selected value.
    *
-   * @since 1.0.0
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
+   *
    * @api
+   * @since 1.0.0
    */
   public function executeSingleton0(string $query)
   {
@@ -499,8 +525,11 @@ class MySqlDataLayer
    *
    * @return mixed The selected value.
    *
-   * @since 1.0.0
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
+   *
    * @api
+   * @since 1.0.0
    */
   public function executeSingleton1(string $query)
   {
@@ -528,8 +557,10 @@ class MySqlDataLayer
    *
    * @return int The total number of rows in the tables.
    *
-   * @since 1.0.0
+   * @throws MySqlDataLayerException
+   *
    * @api
+   * @since 1.0.0
    */
   public function executeTable(string $query): int
   {
@@ -538,8 +569,8 @@ class MySqlDataLayer
     $this->multiQuery($query);
     do
     {
-      $result = $this->mysqli->store_result();
-      if ($this->mysqli->errno) $this->dataLayerError('mysqli::store_result');
+      $result = @$this->mysqli->store_result();
+      if ($this->mysqli->errno) throw $this->dataLayerError('mysqli::store_result');
       if ($result)
       {
         $columns = [];
@@ -579,8 +610,8 @@ class MySqlDataLayer
       $continue = $this->mysqli->more_results();
       if ($continue)
       {
-        $tmp = $this->mysqli->next_result();
-        if ($tmp===false) $this->dataLayerError('mysqli::next_result');
+        $result = @$this->mysqli->next_result();
+        if (!$result) throw $this->dataLayerError('mysqli::next_result');
       }
     } while ($continue);
 
@@ -592,6 +623,9 @@ class MySqlDataLayer
    * Returns the value of the MySQL variable max_allowed_packet.
    *
    * @return int
+   *
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function getMaxAllowedPacket(): int
   {
@@ -735,6 +769,8 @@ class MySqlDataLayer
    * @param string       $escape    The escape character (one character only)
    *
    * @return string
+   *
+   * @throws LogicException
    */
   public function quoteListOfInt($list, string $delimiter, string $enclosure, string $escape): string
   {
@@ -748,25 +784,20 @@ class MySqlDataLayer
     {
       $list = str_getcsv($list, $delimiter, $enclosure, $escape);
     }
-    elseif (is_array($list))
+    elseif (!is_array($list))
     {
-      // Nothing to do.
-      ;
-    }
-    else
-    {
-      throw new RuntimeException("Unexpected parameter type '%s'. Array or scalar expected.", gettype($list));
+      throw new LogicException("Unexpected parameter type '%s'. Array or scalar expected.", gettype($list));
     }
 
     foreach ($list as $number)
     {
       if ($list===null || $list===false || $list==='')
       {
-        throw new RuntimeException('Empty values are not allowed.');
+        throw new LogicException('Empty values are not allowed.');
       }
       if (!is_numeric($number))
       {
-        throw new RuntimeException("Value '%s' is not a number.", (is_scalar($number)) ? $number : gettype($number));
+        throw new LogicException("Value '%s' is not a number.", (is_scalar($number)) ? $number : gettype($number));
       }
 
       if ($ret) $ret .= ',';
@@ -813,13 +844,15 @@ class MySqlDataLayer
    * Wrapper around [mysqli::rollback](http://php.net/manual/en/mysqli.rollback.php), however on failure an exception
    * is thrown.
    *
-   * @since 1.0.0
+   * @throws MySqlDataLayerException
+   *
    * @api
+   * @since 1.0.0
    */
   public function rollback(): void
   {
-    $ret = $this->mysqli->rollback();
-    if (!$ret) $this->dataLayerError('mysqli::rollback');
+    $success = @$this->mysqli->rollback();
+    if (!$success) throw $this->dataLayerError('mysqli::rollback');
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -828,8 +861,10 @@ class MySqlDataLayer
    *
    * Wrapper around the SQL statement [show warnings](https://dev.mysql.com/doc/refman/5.6/en/show-warnings.html).
    *
-   * @since 1.0.0
+   * @throws MySqlDataLayerException
+   *
    * @api
+   * @since 1.0.0
    */
   public function showWarnings(): void
   {
@@ -838,13 +873,15 @@ class MySqlDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Throws an exception with error information provided by MySQL/[mysqli](http://php.net/manual/en/class.mysqli.php).
+   * Return an exception with error information provided by MySQL/[mysqli](http://php.net/manual/en/class.mysqli.php).
    *
    * @param string $method The name of the method that has failed.
+   *
+   * @return MySqlDataLayerException
    */
-  protected function dataLayerError(string $method): void
+  protected function dataLayerError(string $method): MySqlDataLayerException
   {
-    throw new MySqlDataLayerException($this->mysqli->errno, $this->mysqli->error, $method);
+    return new MySqlDataLayerException($this->mysqli->errno, $this->mysqli->error, $method);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -856,7 +893,7 @@ class MySqlDataLayer
    *
    * @param string $queries The SQL statements.
    *
-   * @return void
+   * @throws MySqlQueryErrorException
    */
   protected function multiQuery(string $queries): void
   {
@@ -865,14 +902,14 @@ class MySqlDataLayer
       $time0 = microtime(true);
 
       $tmp = $this->mysqli->multi_query($queries);
-      if ($tmp===false) $this->queryError('mysqli::multi_query', $queries);
+      if ($tmp===false) throw $this->queryError('mysqli::multi_query', $queries);
 
       $this->queryLog[] = ['query' => $queries, 'time' => microtime(true) - $time0];
     }
     else
     {
       $tmp = $this->mysqli->multi_query($queries);
-      if ($tmp===false) $this->queryError('mysqli::multi_query', $queries);
+      if ($tmp===false) throw $this->queryError('mysqli::multi_query', $queries);
     }
   }
 
@@ -887,6 +924,8 @@ class MySqlDataLayer
    * @param string $query The SQL statement.
    *
    * @return \mysqli_result
+   *
+   * @throws MySqlQueryErrorException
    */
   protected function query(string $query): \mysqli_result
   {
@@ -894,15 +933,15 @@ class MySqlDataLayer
     {
       $time0 = microtime(true);
 
-      $ret = $this->mysqli->query($query);
-      if (is_bool($ret)) $this->queryError('mysqli::query', $query);
+      $ret = @$this->mysqli->query($query);
+      if (is_bool($ret)) throw $this->queryError('mysqli::query', $query);
 
       $this->queryLog[] = ['query' => $query, 'time' => microtime(true) - $time0];
     }
     else
     {
-      $ret = $this->mysqli->query($query);
-      if (is_bool($ret)) $this->queryError('mysqli::query', $query);
+      $ret = @$this->mysqli->query($query);
+      if (is_bool($ret)) throw $this->queryError('mysqli::query', $query);
     }
 
     return $ret;
@@ -914,10 +953,12 @@ class MySqlDataLayer
    *
    * @param string $method The name of the method that has failed.
    * @param string $query  The failed query.
+   *
+   * @return MySqlQueryErrorException
    */
-  protected function queryError(string $method, $query): void
+  protected function queryError(string $method, $query): MySqlQueryErrorException
   {
-    throw new MySqlQueryErrorException($this->mysqli->errno, $this->mysqli->error, $method, $query);
+    return new MySqlQueryErrorException($this->mysqli->errno, $this->mysqli->error, $method, $query);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -930,6 +971,8 @@ class MySqlDataLayer
    * For SELECT, SHOW, DESCRIBE or EXPLAIN queries, see @query.
    *
    * @param string $query The SQL statement.
+   *
+   * @throws MySqlQueryErrorException
    */
   protected function realQuery(string $query): void
   {
@@ -937,16 +980,16 @@ class MySqlDataLayer
     {
       $time0 = microtime(true);
 
-      $tmp = $this->mysqli->real_query($query);
-      if ($tmp===false) $this->queryError('mysqli::real_query', $query);
+      $success = @$this->mysqli->real_query($query);
+      if (!$success) throw $this->queryError('mysqli::real_query', $query);
 
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
     }
     else
     {
-      $tmp = $this->mysqli->real_query($query);
-      if ($tmp===false) $this->queryError('mysqli::real_query', $query);
+      $success = @$this->mysqli->real_query($query);
+      if (!$success) throw $this->queryError('mysqli::real_query', $query);
     }
   }
 
@@ -959,6 +1002,8 @@ class MySqlDataLayer
    * @param \mysqli_stmt $statement The prepared statement.
    * @param int          $paramNr   The 0-indexed parameter number.
    * @param string|null  $data      The data.
+   *
+   * @throws MySqlDataLayerException
    */
   protected function sendLongData(\mysqli_stmt $statement, int $paramNr, ?string $data): void
   {
@@ -968,8 +1013,8 @@ class MySqlDataLayer
       $p = 0;
       while ($p<$n)
       {
-        $b = $statement->send_long_data($paramNr, substr($data, $p, $this->chunkSize));
-        if (!$b) $this->dataLayerError('mysqli_stmt::send_long_data');
+        $success = @$statement->send_long_data($paramNr, substr($data, $p, $this->chunkSize));
+        if (!$success) throw $this->dataLayerError('mysqli_stmt::send_long_data');
         $p += $this->chunkSize;
       }
     }

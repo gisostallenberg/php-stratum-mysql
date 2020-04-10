@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql\Wrapper;
 
 use SetBased\Exception\LogicException;
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 
 /**
@@ -16,7 +17,7 @@ class BulkInsertWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function enhancePhpDocParameters(array &$parameters): void
+  protected function enhancePhpDocBlockParameters(array &$parameters): void
   {
     $parameter = ['php_name'             => '$rows',
                   'description'          => 'The rows that must inserted.',
@@ -59,6 +60,8 @@ class BulkInsertWrapper extends Wrapper
    */
   protected function writeResultHandler(): void
   {
+    $this->throws(MySqlQueryErrorException::class);
+
     // Validate number of column names and number of column types are equal.
     $n1 = sizeof($this->routine['bulk_insert_keys']);
     $n2 = sizeof($this->routine['bulk_insert_columns']);

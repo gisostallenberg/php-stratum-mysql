@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql\Wrapper;
 
 use SetBased\Stratum\Middle\Exception\ResultException;
+use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
 use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 
 /**
@@ -39,6 +40,9 @@ class Singleton0Wrapper extends Wrapper
    */
   protected function writeResultHandler(): void
   {
+    $this->throws(MySqlDataLayerException::class);
+    $this->throws(ResultException::class);
+
     $routine_args = $this->getRoutineArgs();
 
     if ($this->routine['return']=='bool')
@@ -79,9 +83,10 @@ class Singleton0Wrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData(): void
   {
-    $this->imports[] = ResultException::class;
+    $this->throws(MySqlDataLayerException::class);
+    $this->throws(ResultException::class);
 
-    $this->codeStore->append('if ($b===false) $this->dataLayerError(\'mysqli_stmt::fetch\');');
+    $this->codeStore->append('if ($b===false) throw $this->dataLayerError(\'mysqli_stmt::fetch\');');
     $this->codeStore->append('if (sizeof($tmp)>1) throw new ResultException([0, 1], sizeof($tmp), $query);');
     $this->codeStore->append('');
 

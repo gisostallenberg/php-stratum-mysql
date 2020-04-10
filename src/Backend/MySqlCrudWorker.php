@@ -5,6 +5,9 @@ namespace SetBased\Stratum\MySql\Backend;
 
 use SetBased\Exception\FallenException;
 use SetBased\Stratum\Backend\CrudWorker;
+use SetBased\Stratum\MySql\Exception\MySqlConnectFailedException;
+use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 use SetBased\Stratum\MySql\Helper\Crud\DeleteRoutine;
 use SetBased\Stratum\MySql\Helper\Crud\InsertRoutine;
 use SetBased\Stratum\MySql\Helper\Crud\SelectRoutine;
@@ -24,6 +27,9 @@ class MySqlCrudWorker extends MySqlWorker implements CrudWorker
    * @param string $routineName The name of the generated routine.
    *
    * @return string
+   *
+   * @throws MySqlConnectFailedException
+   * @throws MySqlDataLayerException
    */
   public function generateRoutine(string $tableName, string $operation, string $routineName): string
   {
@@ -77,6 +83,10 @@ class MySqlCrudWorker extends MySqlWorker implements CrudWorker
    * Returns a list of all tables in de database of the backend.
    *
    * @return array
+   *
+   * @throws MySqlConnectFailedException
+   * @throws MySqlDataLayerException
+   * @throws MySqlQueryErrorException
    */
   public function tables(): array
   {

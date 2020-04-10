@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Wrapper;
 
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
+
 /**
  * Class for generating a wrapper method for a stored procedure that selects 0 or more rows with 2 columns. The rows are
  * returned as an array the first column are the keys and the second column are the values.
@@ -33,6 +35,8 @@ class MapWrapper extends Wrapper
    */
   protected function writeResultHandler(): void
   {
+    $this->throws(MySqlQueryErrorException::class);
+
     $routine_args = $this->getRoutineArgs();
 
     $this->codeStore->append('$result = $this->query(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');

@@ -6,6 +6,9 @@ namespace SetBased\Stratum\MySql\Backend;
 use Composer\Autoload\ClassLoader;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Backend\ConstantWorker;
+use SetBased\Stratum\MySql\Exception\MySqlConnectFailedException;
+use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 
 /**
@@ -58,6 +61,10 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @inheritdoc
+   *
+   * @throws MySqlConnectFailedException
+   * @throws MySqlDataLayerException
+   * @throws RuntimeException
    */
   public function execute(): int
   {
@@ -114,6 +121,9 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Gathers constants based on column widths.
+   *
+   * @throws RuntimeException
+   * @throws MySqlQueryErrorException
    */
   private function executeColumnWidths(): void
   {
@@ -131,6 +141,9 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Creates constants declarations in a class.
+   *
+   * @throws MySqlQueryErrorException
+   * @throws RuntimeException
    */
   private function executeCreateConstants(): void
   {
@@ -144,6 +157,9 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Executes the enabled functionalities.
+   *
+   * @throws RuntimeException
+   * @throws MySqlQueryErrorException
    */
   private function executeEnabled(): void
   {
@@ -293,6 +309,8 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Loads the width of all columns in the MySQL schema into $columns.
+   *
+   * @throws MySqlQueryErrorException
    */
   private function loadColumns(): void
   {
@@ -307,6 +325,8 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Loads all primary key labels from the MySQL database.
+   *
+   * @throws MySqlQueryErrorException
    */
   private function loadLabels(): void
   {
@@ -325,6 +345,8 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
   /**
    * Loads from file $constantsFilename the previous table and column names, the width of the column,
    * and the constant name (if assigned) and stores this data in $oldColumns.
+   *
+   * @throws RuntimeException
    */
   private function loadOldColumns(): void
   {
@@ -490,6 +512,8 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Inserts new and replace old (if any) constant declaration statements in a PHP source file.
+   *
+   * @throws RuntimeException
    */
   private function writeConstantClass(): void
   {

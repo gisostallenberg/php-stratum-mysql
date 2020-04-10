@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Wrapper;
 
+use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
+
 /**
  * Class for generating a wrapper method for a stored procedure that selects 0, 1, or more rows.
  */
@@ -32,6 +35,8 @@ class RowsWrapper extends Wrapper
    */
   protected function writeResultHandler(): void
   {
+    $this->throws(MySqlQueryErrorException::class);
+
     $routine_args = $this->getRoutineArgs();
     $this->codeStore->append('return $this->executeRows(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
   }
@@ -42,6 +47,8 @@ class RowsWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobFetchData(): void
   {
+    $this->throws(MySqlQueryErrorException::class);
+
     $this->codeStore->append('$row = [];');
     $this->codeStore->append('$this->bindAssoc($stmt, $row);');
     $this->codeStore->append('');
@@ -64,7 +71,10 @@ class RowsWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData(): void
   {
-    $this->codeStore->append('if ($b===false) $this->dataLayerError(\'mysqli_stmt::fetch\');');
+    $this->throws(MySqlDataLayerException::class);
+    $this->throws(MySqlQueryErrorException::class);
+
+    $this->codeStore->append('if ($b===false) throw $this->dataLayerError(\'mysqli_stmt::fetch\');');
     $this->codeStore->append('');
     $this->codeStore->append('return $tmp;');
   }

@@ -5,6 +5,8 @@ namespace SetBased\Stratum\MySql\Backend;
 
 use SetBased\Stratum\Backend\Config;
 use SetBased\Stratum\Backend\StratumStyle;
+use SetBased\Stratum\MySql\Exception\MySqlConnectFailedException;
+use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
 use SetBased\Stratum\MySql\MySqlDataLayer;
 use SetBased\Stratum\MySql\MySqlDefaultConnector;
 use SetBased\Stratum\MySql\MySqlMetaDataLayer;
@@ -66,6 +68,9 @@ class MySqlWorker
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Connects to a MySQL instance.
+   *
+   * @throws MySqlConnectFailedException
+   * @throws MySqlDataLayerException
    */
   protected function connect(): void
   {

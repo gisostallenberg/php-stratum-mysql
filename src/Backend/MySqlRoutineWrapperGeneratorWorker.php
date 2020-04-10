@@ -81,6 +81,8 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @inheritdoc
+   *
+   * @throws RuntimeException
    */
   public function execute(): int
   {
@@ -97,6 +99,8 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Generates the wrapper class.
+   *
+   * @throws RuntimeException
    */
   private function generateWrapperClass(): void
   {
@@ -173,6 +177,8 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
    * Returns the metadata of stored routines.
    *
    * @return array
+   *
+   * @throws RuntimeException
    */
   private function readRoutineMetadata(): array
   {

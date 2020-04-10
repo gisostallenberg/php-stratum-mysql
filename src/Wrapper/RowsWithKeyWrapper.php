@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Wrapper;
 
+use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
+
 /**
  * Class for generating a wrapper method for a stored procedure that selects 0 or more rows. The rows are returned as
  * nested arrays.
@@ -33,6 +36,8 @@ class RowsWithKeyWrapper extends Wrapper
    */
   protected function writeResultHandler(): void
   {
+    $this->throws(MySqlQueryErrorException::class);
+
     $routine_args = $this->getRoutineArgs();
 
     $key = '';
@@ -84,7 +89,9 @@ class RowsWithKeyWrapper extends Wrapper
    */
   protected function writeRoutineFunctionLobReturnData(): void
   {
-    $this->codeStore->append('if ($b===false) $this->dataLayerError(\'mysqli_stmt::fetch\');');
+    $this->throws(MySqlDataLayerException::class);
+
+    $this->codeStore->append('if ($b===false) throw $this->dataLayerError(\'mysqli_stmt::fetch\');');
     $this->codeStore->append('');
     $this->codeStore->append('return $ret;');
   }

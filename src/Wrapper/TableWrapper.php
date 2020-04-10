@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Wrapper;
 
+use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
+
 /**
  * Class for generating a wrapper method for a stored procedure of which the selected rows must be echoed in a table
  * layout.
@@ -33,6 +35,8 @@ class TableWrapper extends Wrapper
    */
   protected function writeResultHandler(): void
   {
+    $this->throws(MySqlDataLayerException::class);
+
     $routine_args = $this->getRoutineArgs();
     $this->codeStore->append('return $this->executeTable(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
   }

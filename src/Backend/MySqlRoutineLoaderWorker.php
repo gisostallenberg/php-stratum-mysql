@@ -7,8 +7,10 @@ use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Backend\RoutineLoaderWorker;
 use SetBased\Stratum\Common\Exception\RoutineLoaderException;
 use SetBased\Stratum\Common\Helper\SourceFinderHelper;
+use SetBased\Stratum\Middle\Exception\ResultException;
 use SetBased\Stratum\Middle\Helper\RowSetHelper;
 use SetBased\Stratum\Middle\NameMangler\NameMangler;
+use SetBased\Stratum\MySql\Exception\MySqlConnectFailedException;
 use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
 use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 use SetBased\Stratum\MySql\Helper\RoutineLoaderHelper;
@@ -125,6 +127,12 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * @inheritdoc
+   *
+   * @throws MySqlDataLayerException
+   * @throws MySqlQueryErrorException
+   * @throws RuntimeException
+   * @throws MySqlConnectFailedException
+   * @throws \ReflectionException
    */
   public function execute(?array $sources = null): int
   {
@@ -196,9 +204,13 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
       }
     }
   }
+
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Drops obsolete stored routines (i.e. stored routines that exits in the current schema but for which we don't have
    * a source file).
+   *
+   * @throws MySqlQueryErrorException
    */
   private function dropObsoleteRoutines(): void
   {
@@ -267,6 +279,9 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Gets the SQL mode in the order as preferred by MySQL.
+   *
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   private function getCorrectSqlMode(): void
   {
@@ -314,6 +329,8 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Retrieves information about all stored routines in the current schema.
+   *
+   * @throws MySqlQueryErrorException
    */
   private function getOldStoredRoutinesInfo(): void
   {
@@ -329,6 +346,10 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Loads all stored routines into MySQL.
+   *
+   * @throws MySqlQueryErrorException
+   * @throws RuntimeException
+   * @throws \ReflectionException
    */
   private function loadAll(): void
   {
@@ -357,6 +378,10 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    * Loads all stored routines in a list into MySQL.
    *
    * @param string[] $sources The list of files to be loaded.
+   *
+   * @throws MySqlQueryErrorException
+   * @throws RuntimeException
+   * @throws \ReflectionException
    */
   private function loadList(array $sources): void
   {
@@ -376,6 +401,8 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Loads all stored routines.
+   *
+   * @throws ResultException
    */
   private function loadStoredRoutines(): void
   {
@@ -483,6 +510,8 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Reads the metadata of stored routines from the metadata file.
+   *
+   * @throws RuntimeException
    */
   private function readStoredRoutineMetadata(): void
   {
@@ -518,6 +547,9 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Gathers all replace pairs.
+   *
+   * @throws \ReflectionException
+   * @throws MySqlQueryErrorException
    */
   private function replacePairs(): void
   {
@@ -528,6 +560,8 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Selects schema, table, column names and the column type from MySQL and saves them as replace pairs.
+   *
+   * @throws MySqlQueryErrorException
    */
   private function replacePairsColumnTypes(): void
   {
@@ -609,6 +643,8 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Reads constants set the PHP configuration file and  adds them to the replace pairs.
+   *
+   * @throws \ReflectionException
    */
   private function replacePairsConstants(): void
   {
@@ -633,6 +669,8 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Writes the metadata of all stored routines to the metadata file.
+   *
+   * @throws RuntimeException
    */
   private function writeStoredRoutineMetadata(): void
   {

@@ -6,6 +6,8 @@ namespace SetBased\Stratum\MySql\Helper;
 use SetBased\Exception\FallenException;
 use SetBased\Stratum\Backend\StratumStyle;
 use SetBased\Stratum\Common\Exception\RoutineLoaderException;
+use SetBased\Stratum\Middle\Exception\ResultException;
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 use SetBased\Stratum\MySql\MySqlMetaDataLayer;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Zend\Code\Reflection\DocBlock\Tag\ParamTag;
@@ -339,6 +341,10 @@ class RoutineLoaderHelper
    * Loads the stored routine into the instance of MySQL and returns the metadata of the stored routine.
    *
    * @return array
+   *
+   * @throws RoutineLoaderException
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function loadStoredRoutine(): array
   {
@@ -372,6 +378,8 @@ class RoutineLoaderHelper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Drops the stored routine if it exists.
+   *
+   * @throws MySqlQueryErrorException
    */
   private function dropRoutine(): void
   {
@@ -384,6 +392,11 @@ class RoutineLoaderHelper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    *  Extracts the column names and column types of the current table for bulk insert.
+   *
+   * @throws RoutineLoaderException
+   * @throws MySqlQueryErrorException
+   *
+   * @throws ResultException
    */
   private function extractBulkInsertTableColumnsInfo(): void
   {
@@ -422,6 +435,8 @@ class RoutineLoaderHelper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Extracts the designation type of the stored routine.
+   *
+   * @throws RoutineLoaderException
    */
   private function extractDesignationType(): void
   {
@@ -541,6 +556,8 @@ class RoutineLoaderHelper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Extracts extended info of the routine parameters.
+   *
+   * @throws RoutineLoaderException
    */
   private function extractExtendedParametersInfo(): void
   {
@@ -600,6 +617,8 @@ class RoutineLoaderHelper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Extracts the placeholders from the stored routine source.
+   *
+   * @throws RoutineLoaderException
    */
   private function extractPlaceholders(): void
   {
@@ -662,6 +681,9 @@ class RoutineLoaderHelper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Extracts info about the parameters of the stored routine.
+   *
+   * @throws RoutineLoaderException
+   * @throws MySqlQueryErrorException
    */
   private function extractRoutineParametersInfo(): void
   {
@@ -692,6 +714,8 @@ class RoutineLoaderHelper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Extracts the name of the stored routine and the stored routine type (i.e. procedure or function) source.
+   *
+   * @throws RoutineLoaderException
    */
   private function extractRoutineTypeAndName(): void
   {
@@ -735,6 +759,8 @@ class RoutineLoaderHelper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Loads the stored routine into the database.
+   *
+   * @throws MySqlQueryErrorException
    */
   private function loadRoutineFile(): void
   {
@@ -772,6 +798,8 @@ class RoutineLoaderHelper
    * Logs the unknown placeholder (if any).
    *
    * @param array $unknown The unknown placeholders.
+   *
+   * @throws RoutineLoaderException
    */
   private function logUnknownPlaceholders(array $unknown): void
   {
@@ -836,6 +864,8 @@ class RoutineLoaderHelper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Reads the source code of the stored routine.
+   *
+   * @throws RoutineLoaderException
    */
   private function readSourceCode(): void
   {
@@ -896,6 +926,8 @@ class RoutineLoaderHelper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Update information about specific parameters of stored routine.
+   *
+   * @throws RoutineLoaderException
    */
   private function updateParametersInfo(): void
   {
@@ -963,6 +995,8 @@ class RoutineLoaderHelper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Validates the specified return type of the stored routine.
+   *
+   * @throws RoutineLoaderException
    */
   private function validateReturnType(): void
   {

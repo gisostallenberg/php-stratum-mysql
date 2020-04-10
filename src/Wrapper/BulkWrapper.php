@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql\Wrapper;
 
 use SetBased\Stratum\Middle\BulkHandler;
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 
 /**
  * Class for generating a wrapper method for a stored procedure selecting a large amount of rows.
@@ -14,7 +15,7 @@ class BulkWrapper extends Wrapper
   /**
    * @inheritdoc
    */
-  protected function enhancePhpDocParameters(array &$parameters): void
+  protected function enhancePhpDocBlockParameters(array &$parameters): void
   {
     $this->imports[] = BulkHandler::class;
 
@@ -50,6 +51,8 @@ class BulkWrapper extends Wrapper
    */
   protected function writeResultHandler(): void
   {
+    $this->throws(MySqlQueryErrorException::class);
+
     $routine_args = $this->getRoutineArgs();
     $this->codeStore->append('$this->executeBulk($bulkHandler, \'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
   }

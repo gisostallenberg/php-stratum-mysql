@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql;
 
 use SetBased\Stratum\Backend\StratumStyle;
+use SetBased\Stratum\Middle\Exception\ResultException;
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 
 /**
  * Data layer for retrieving metadata and loading stored routines.
@@ -43,6 +45,8 @@ class MySqlMetaDataLayer
    * Selects the details of all character sets.
    *
    * @return array[]
+   *
+   * @throws MySqlQueryErrorException
    */
   public function allCharacterSets(): array
   {
@@ -60,6 +64,8 @@ order by CHARACTER_SET_NAME";
    * Selects metadata of tables with a label column.
    *
    * @return array[]
+   *
+   * @throws MySqlQueryErrorException
    */
   public function allLabelTables(): array
   {
@@ -82,6 +88,8 @@ and   t2.column_name like '%%\\_label'";
    * Selects all routines in the current schema.
    *
    * @return array[]
+   *
+   * @throws MySqlQueryErrorException
    */
   public function allRoutines(): array
   {
@@ -103,6 +111,8 @@ order by routine_name';
    * Selects metadata of all columns of all tables.
    *
    * @return array[]
+   *
+   * @throws MySqlQueryErrorException
    */
   public function allTableColumns(): array
   {
@@ -156,6 +166,8 @@ union all
    * @param string $schemaName The name of the schema.
    *
    * @return array[]
+   *
+   * @throws MySqlQueryErrorException
    */
   public function allTablesNames(string $schemaName): array
   {
@@ -174,6 +186,8 @@ order by TABLE_NAME", $this->dl->quoteString($schemaName));
    * Class a stored procedure without arguments.
    *
    * @param string $procedureName The name of the procedure.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function callProcedure(string $procedureName): void
   {
@@ -189,6 +203,9 @@ order by TABLE_NAME", $this->dl->quoteString($schemaName));
    * @param string $tableName The name of the table.
    *
    * @return bool
+   *
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function checkTableExists(string $tableName): bool
   {
@@ -208,6 +225,9 @@ and   table_name   = %s', $this->dl->quoteString($tableName));
    * @param string $sqlMode The SQL mode.
    *
    * @return string
+   *
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function correctSqlMode(string $sqlMode): string
   {
@@ -226,6 +246,8 @@ and   table_name   = %s', $this->dl->quoteString($tableName));
    * @param string $tableName The table name.
    *
    * @return array[]
+   *
+   * @throws MySqlQueryErrorException
    */
   public function describeTable(string $tableName): array
   {
@@ -253,6 +275,8 @@ and   table_name   = %s', $this->dl->quoteString($tableName));
    *
    * @param string $routineType The type of the routine (function of procedure).
    * @param string $routineName The name of the routine.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function dropRoutine(string $routineType, string $routineName): void
   {
@@ -266,6 +290,8 @@ and   table_name   = %s', $this->dl->quoteString($tableName));
    * Drops a temporary table.
    *
    * @param string $tableName the name of the temporary table.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function dropTemporaryTable(string $tableName): void
   {
@@ -279,6 +305,8 @@ and   table_name   = %s', $this->dl->quoteString($tableName));
    * @param string $sql The SQL statement.
    *
    * @return int The number of affected rows (if any).
+   *
+   * @throws MySqlQueryErrorException
    */
   public function executeNone(string $sql): int
   {
@@ -295,6 +323,9 @@ and   table_name   = %s', $this->dl->quoteString($tableName));
    * @param string $sql The SQL statement.
    *
    * @return array|null The selected row.
+   *
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function executeRow0(string $sql): ?array
   {
@@ -311,6 +342,9 @@ and   table_name   = %s', $this->dl->quoteString($tableName));
    * @param string $sql The SQL statement.
    *
    * @return array The selected row.
+   *
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function executeRow1(string $sql): array
   {
@@ -326,6 +360,8 @@ and   table_name   = %s', $this->dl->quoteString($tableName));
    * @param string $sql The SQL statement.
    *
    * @return array[]
+   *
+   * @throws MySqlQueryErrorException
    */
   public function executeRows(string $sql): array
   {
@@ -341,6 +377,9 @@ and   table_name   = %s', $this->dl->quoteString($tableName));
    * @param string $sql The SQL statement.
    *
    * @return mixed The selected row.
+   *
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function executeSingleton0(string $sql)
   {
@@ -357,6 +396,9 @@ and   table_name   = %s', $this->dl->quoteString($tableName));
    * @param string $sql The SQL statement.
    *
    * @return mixed The selected row.
+   *
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function executeSingleton1(string $sql)
   {
@@ -374,6 +416,8 @@ and   table_name   = %s', $this->dl->quoteString($tableName));
    * @param string $labelColumnName The name of the column with labels.
    *
    * @return array[]
+   *
+   * @throws MySqlQueryErrorException
    */
   public function labelsFromTable(string $tableName, string $idColumnName, string $labelColumnName): array
   {
@@ -393,6 +437,8 @@ where   nullif(`%s`,'') is not null";
    * Loads a stored routine.
    *
    * @param string $routineSource The source of the routine.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function loadRoutine(string $routineSource): void
   {
@@ -421,6 +467,8 @@ where   nullif(`%s`,'') is not null";
    * @param string $routineName The name of the routine.
    *
    * @return array[]
+   *
+   * @throws MySqlQueryErrorException
    */
   public function routineParameters(string $routineName): array
   {
@@ -448,6 +496,8 @@ and   t1.routine_name   = '%s'", $routineName);
    *
    * @param string $characterSet The character set.
    * @param string $collate      The collate.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function setCharacterSet(string $characterSet, string $collate): void
   {
@@ -461,6 +511,8 @@ and   t1.routine_name   = '%s'", $routineName);
    * Sets the SQL mode.
    *
    * @param string $sqlMode The SQL mode.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function setSqlMode(string $sqlMode): void
   {
@@ -477,6 +529,8 @@ and   t1.routine_name   = '%s'", $routineName);
    * @param string $tableName  The name of the table.
    *
    * @return array[]
+   *
+   * @throws MySqlQueryErrorException
    */
   public function tableColumns(string $schemaName, string $tableName): array
   {
@@ -505,6 +559,8 @@ order by ORDINAL_POSITION',
    * @param string $tableName  The name of the table.
    *
    * @return array[]
+   *
+   * @throws MySqlQueryErrorException
    */
   public function tablePrimaryKey(string $schemaName, string $tableName): array
   {
@@ -525,6 +581,8 @@ where Key_name = \'PRIMARY\'',
    * @param string $tableName  The name of the table.
    *
    * @return array[]
+   *
+   * @throws MySqlQueryErrorException
    */
   public function tableUniqueIndexes(string $schemaName, string $tableName): array
   {

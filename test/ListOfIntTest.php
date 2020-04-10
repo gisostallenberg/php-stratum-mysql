@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Test;
 
-use SetBased\Exception\RuntimeException;
-
 /**
  * Test cases for a parameter with a list on integers.
  */
@@ -44,7 +42,7 @@ class ListOfIntTest extends DataLayerTestCase
    */
   public function test3()
   {
-    $this->expectException(RuntimeException::class);
+    $this->expectException(\LogicException::class);
     $ids = "2,not_int";
     $this->dataLayer->tstTestListOfInt($ids);
   }
@@ -55,7 +53,7 @@ class ListOfIntTest extends DataLayerTestCase
    */
   public function test4a()
   {
-    $this->expectException(RuntimeException::class);
+    $this->expectException(\LogicException::class);
     $ids = ['not_int', 3];
     $this->dataLayer->tstTestListOfInt($ids);
   }
@@ -66,7 +64,7 @@ class ListOfIntTest extends DataLayerTestCase
    */
   public function test4b()
   {
-    $this->expectException(RuntimeException::class);
+    $this->expectException(\LogicException::class);
     $ids = [[], 3];
     $this->dataLayer->tstTestListOfInt($ids);
   }
@@ -107,7 +105,7 @@ class ListOfIntTest extends DataLayerTestCase
    */
   public function test7a()
   {
-    $this->expectException(RuntimeException::class);
+    $this->expectException(\LogicException::class);
     $ids = "1,2,,3";
     $this->dataLayer->tstTestListOfInt($ids);
   }
@@ -118,7 +116,7 @@ class ListOfIntTest extends DataLayerTestCase
    */
   public function test7b()
   {
-    $this->expectException(RuntimeException::class);
+    $this->expectException(\LogicException::class);
     $ids = "1,2,";
     $this->dataLayer->tstTestListOfInt($ids);
   }
@@ -129,7 +127,7 @@ class ListOfIntTest extends DataLayerTestCase
    */
   public function test7c()
   {
-    $this->expectException(RuntimeException::class);
+    $this->expectException(\LogicException::class);
     $ids = ",1,2";
     $this->dataLayer->tstTestListOfInt($ids);
   }
@@ -140,7 +138,7 @@ class ListOfIntTest extends DataLayerTestCase
    */
   public function test8a()
   {
-    $this->expectException(RuntimeException::class);
+    $this->expectException(\LogicException::class);
     $ids = [1, 2, '', 3];
     $this->dataLayer->tstTestListOfInt($ids);
   }
@@ -151,7 +149,7 @@ class ListOfIntTest extends DataLayerTestCase
    */
   public function test8b()
   {
-    $this->expectException(RuntimeException::class);
+    $this->expectException(\LogicException::class);
     $ids = [1, 2, 3, null];
     $this->dataLayer->tstTestListOfInt($ids);
   }
@@ -162,7 +160,7 @@ class ListOfIntTest extends DataLayerTestCase
    */
   public function test8c()
   {
-    $this->expectException(RuntimeException::class);
+    $this->expectException(\LogicException::class);
     $ids = [false, 1, 2, 3];
     $this->dataLayer->tstTestListOfInt($ids);
   }

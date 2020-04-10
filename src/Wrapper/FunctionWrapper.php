@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Wrapper;
 
+use SetBased\Stratum\Middle\Exception\ResultException;
+use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
 use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 
 /**
@@ -38,6 +40,9 @@ class FunctionWrapper extends Wrapper
    */
   protected function writeResultHandler(): void
   {
+    $this->throws(MySqlDataLayerException::class);
+    $this->throws(ResultException::class);
+
     if ($this->routine['return']=='bool')
     {
       $this->codeStore->append(sprintf("return !empty(\$this->executeSingleton0('select %s(%s)'));",

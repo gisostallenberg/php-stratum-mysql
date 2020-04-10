@@ -5,7 +5,10 @@ namespace SetBased\Stratum\MySql\Wrapper;
 
 use SetBased\Exception\FallenException;
 use SetBased\Helper\CodeStore\PhpCodeStore;
+use SetBased\Stratum\Middle\Exception\ResultException;
 use SetBased\Stratum\Middle\NameMangler\NameMangler;
+use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 
 /**
@@ -46,6 +49,13 @@ abstract class Wrapper
    * @var bool If true BLOBs and CLOBs must be treated as strings.
    */
   private $lobAsStringFlag;
+
+  /**
+   * The exceptions that the wrapper can throw.
+   *
+   * @var string[]
+   */
+  private $throws;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -183,6 +193,19 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Adds a throw tag to the odc block of the generated method.
+   *
+   * @param string $class The name of the exception.
+   */
+  public function throws(string $class): void
+  {
+    $parts                = explode('\\', $class);
+    $this->throws[$class] = array_pop($parts);
+    $this->imports[]      = $class;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Generates a complete wrapper method.
    */
   public function writeRoutineFunction(): void
@@ -203,6 +226,10 @@ abstract class Wrapper
    */
   public function writeRoutineFunctionWithLob(): void
   {
+    $this->throws(MySqlDataLayerException::class);
+    $this->throws(MysqlQueryErrorException::class);
+    $this->throws(ResultException::class);
+
     $wrapper_args = $this->getWrapperArgs();
     $routine_args = $this->getRoutineArgs();
     $method_name  = $this->nameMangler->getMethodName($this->routine['routine_name']);
@@ -221,16 +248,16 @@ abstract class Wrapper
     }
 
     $this->codeStore->appendSeparator();
-    $this->generatePhpDoc();
+    $this->generatePhpDocBlock();
     $this->codeStore->append('public function '.$method_name.'('.$wrapper_args.')');
     $this->codeStore->append('{');
     $this->codeStore->append('$query = \'call '.$this->routine['routine_name'].'('.$routine_args.')\';');
-    $this->codeStore->append('$stmt  = $this->mysqli->prepare($query);');
-    $this->codeStore->append('if (!$stmt) $this->dataLayerError(\'mysqli::prepare\');');
+    $this->codeStore->append('$stmt  = @$this->mysqli->prepare($query);');
+    $this->codeStore->append('if (!$stmt) throw $this->dataLayerError(\'mysqli::prepare\');');
     $this->codeStore->append('');
     $this->codeStore->append('$null = null;');
-    $this->codeStore->append('$b = $stmt->bind_param(\''.$bindings.'\', '.$nulls.');');
-    $this->codeStore->append('if (!$b) $this->dataLayerError(\'mysqli_stmt::bind_param\');');
+    $this->codeStore->append('$success = @$stmt->bind_param(\''.$bindings.'\', '.$nulls.');');
+    $this->codeStore->append('if (!$success) throw $this->dataLayerError(\'mysqli_stmt::bind_param\');');
     $this->codeStore->append('');
     $this->codeStore->append('$this->getMaxAllowedPacket();');
     $this->codeStore->append('');
@@ -257,16 +284,16 @@ abstract class Wrapper
     $this->codeStore->append('{');
     $this->codeStore->append('$time0 = microtime(true);');
     $this->codeStore->append('');
-    $this->codeStore->append('$b = $stmt->execute();');
-    $this->codeStore->append('if (!$b) $this->queryError(\'mysqli_stmt::execute\', $query);');
+    $this->codeStore->append('$success = @$stmt->execute();');
+    $this->codeStore->append('if (!$success) throw $this->queryError(\'mysqli_stmt::execute\', $query);');
     $this->codeStore->append('');
     $this->codeStore->append('$this->queryLog[] = [\'query\' => $query,');
     $this->codeStore->append('                     \'time\'  => microtime(true) - $time0];', false);
     $this->codeStore->append('}');
     $this->codeStore->append('else');
     $this->codeStore->append('{');
-    $this->codeStore->append('$b = $stmt->execute();');
-    $this->codeStore->append('if (!$b) $this->queryError(\'mysqli_stmt::execute\', $query);');
+    $this->codeStore->append('$success = $stmt->execute();');
+    $this->codeStore->append('if (!$success) throw $this->queryError(\'mysqli_stmt::execute\', $query);');
     $this->codeStore->append('}');
     $this->codeStore->append('');
     $this->writeRoutineFunctionLobFetchData();
@@ -288,12 +315,17 @@ abstract class Wrapper
     $methodName  = $this->nameMangler->getMethodName($this->routine['routine_name']);
     $returnType  = $this->getReturnTypeDeclaration();
 
+    $tmp             = $this->codeStore;
+    $this->codeStore = new PhpCodeStore();
+    $this->writeResultHandler();
+    $body            = $this->codeStore->getRawCode();
+    $this->codeStore = $tmp;
+
     $this->codeStore->appendSeparator();
-    $this->generatePhpDoc();
+    $this->generatePhpDocBlock();
     $this->codeStore->append('public function '.$methodName.'('.$wrapperArgs.')'.$returnType);
     $this->codeStore->append('{');
-
-    $this->writeResultHandler();
+    $this->codeStore->append($body, false);
     $this->codeStore->append('}');
     $this->codeStore->append('');
   }
@@ -305,14 +337,14 @@ abstract class Wrapper
    * @param array[] $parameters The metadata of the parameters. For each parameter the
    *                            following keys must be defined:
    *                            <ul>
-   *                            <li> php_name             The name of the parader (including $).
+   *                            <li> php_name             The name of the parameter (including $).
    *                            <li> description          The description of the parameter.
    *                            <li> php_type             The type of the parameter.
    *                            <li> data_type_descriptor The data type of the corresponding parameter of the stored
    *                            routine. Null if there is no corresponding parameter.
    *                            </ul>
    */
-  protected function enhancePhpDocParameters(array &$parameters): void
+  protected function enhancePhpDocBlockParameters(array &$parameters): void
   {
     // Nothing to do.
   }
@@ -393,7 +425,6 @@ abstract class Wrapper
    * @return void
    */
   abstract protected function writeResultHandler(): void;
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Generates code for fetching data of a stored routine with one or more LOB parameters.
@@ -414,44 +445,33 @@ abstract class Wrapper
   /**
    * Generate php doc block in the data layer for stored routine.
    */
-  private function generatePhpDoc(): void
+  private function generatePhpDocBlock(): void
   {
     $this->codeStore->append('/**', false);
 
     // Generate phpdoc with short description of routine wrapper.
-    $this->generatePhpDocSortDescription();
+    $this->generatePhpDocBlockSortDescription();
 
     // Generate phpdoc with long description of routine wrapper.
-    $this->generatePhpDocLongDescription();
+    $this->generatePhpDocBlockLongDescription();
 
     // Generate phpDoc with parameters and descriptions of parameters.
-    $this->generatePhpDocParameters();
+    $this->generatePhpDocBlockParameters();
 
     // Generate return parameter doc.
     $this->generatePhpDocBlockReturn();
+
+    // Generate throw tags.
+    $this->generatePhpDocBlockThrow();
 
     $this->codeStore->append(' */', false);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Generates the PHP doc block for the return type of the stored routine wrapper.
-   */
-  private function generatePhpDocBlockReturn(): void
-  {
-    $return = $this->getDocBlockReturnType();
-    if ($return!=='')
-    {
-      $this->codeStore->append(' *', false);
-      $this->codeStore->append(' * @return '.$return, false);
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Generates the long description of stored routine wrapper.
    */
-  private function generatePhpDocLongDescription(): void
+  private function generatePhpDocBlockLongDescription(): void
   {
     if ($this->routine['phpdoc']['long_description']!=='')
     {
@@ -463,7 +483,7 @@ abstract class Wrapper
   /**
    * Generates the doc block for parameters of stored routine wrapper.
    */
-  private function generatePhpDocParameters(): void
+  private function generatePhpDocBlockParameters(): void
   {
     $parameters = [];
     foreach ($this->routine['phpdoc']['parameters'] as $parameter)
@@ -476,7 +496,7 @@ abstract class Wrapper
                        'data_type_descriptor' => $parameter['data_type_descriptor']];
     }
 
-    $this->enhancePhpDocParameters($parameters);
+    $this->enhancePhpDocBlockParameters($parameters);
 
     if (!empty($parameters))
     {
@@ -521,13 +541,45 @@ abstract class Wrapper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Generates the PHP doc block for the return type of the stored routine wrapper.
+   */
+  private function generatePhpDocBlockReturn(): void
+  {
+    $return = $this->getDocBlockReturnType();
+    if ($return!=='')
+    {
+      $this->codeStore->append(' *', false);
+      $this->codeStore->append(' * @return '.$return, false);
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Generates the sort description of stored routine wrapper.
    */
-  private function generatePhpDocSortDescription(): void
+  private function generatePhpDocBlockSortDescription(): void
   {
     if ($this->routine['phpdoc']['sort_description']!=='')
     {
       $this->codeStore->append(' * '.$this->routine['phpdoc']['sort_description'], false);
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Generates the PHP doc block with throw tags.
+   */
+  private function generatePhpDocBlockThrow()
+  {
+    if (!empty($this->throws))
+    {
+      $this->codeStore->append(' *', false);
+
+      $this->throws = array_unique($this->throws, SORT_REGULAR);
+      foreach ($this->throws as $class)
+      {
+        $this->codeStore->append(sprintf(' * @throws %s;', $class), false);
+      }
     }
   }
 

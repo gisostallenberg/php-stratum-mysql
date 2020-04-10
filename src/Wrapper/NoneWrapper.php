@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Wrapper;
 
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
+
 /**
  * Class for generating a wrapper method for a stored procedure without result set.
  */
@@ -32,6 +34,8 @@ class NoneWrapper extends Wrapper
    */
   protected function writeResultHandler(): void
   {
+    $this->throws(MySqlQueryErrorException::class);
+
     $routine_args = $this->getRoutineArgs();
     $this->codeStore->append('return $this->executeNone(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
   }
