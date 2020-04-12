@@ -178,6 +178,12 @@ class DataTypeHelper
 
       case 'char':
       case 'varchar':
+      case 'time':
+      case 'timestamp':
+      case 'date':
+      case 'datetime':
+      case 'enum':
+      case 'set':
         $ret = "'.self::quoteString(".$expression.").'";
         break;
 
@@ -190,18 +196,6 @@ class DataTypeHelper
         $ret = "'.self::quoteDecimal(".$expression.").'";
         break;
 
-      case 'time':
-      case 'timestamp':
-      case 'date':
-      case 'datetime':
-        $ret = "'.self::quoteString(".$expression.").'";
-        break;
-
-      case 'enum':
-      case 'set':
-        $ret = "'.self::quoteString(".$expression.").'";
-        break;
-
       case 'bit':
         $ret = "'.self::quoteBit(".$expression.").'";
         break;
@@ -210,9 +204,6 @@ class DataTypeHelper
       case 'text':
       case 'mediumtext':
       case 'longtext':
-        $ret = '?';
-        break;
-
       case 'tinyblob':
       case 'blob':
       case 'mediumblob':
@@ -274,10 +265,8 @@ class DataTypeHelper
       case 'date':
       case 'datetime':
       case 'varbinary':
-        $ret = 's';
-        break;
-
       case 'decimal':
+      case 'list_of_int':
         $ret = 's';
         break;
 
@@ -290,10 +279,6 @@ class DataTypeHelper
       case 'mediumblob':
       case 'longblob':
         $ret .= 'b';
-        break;
-
-      case 'list_of_int':
-        $ret = 's';
         break;
 
       default:
