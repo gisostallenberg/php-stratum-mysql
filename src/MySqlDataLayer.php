@@ -52,14 +52,14 @@ class MySqlDataLayer
    * @since 1.0.0
    * @api
    */
-  public $sqlMode = 'STRICT_ALL_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_AUTO_VALUE_ON_ZERO,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE,ONLY_FULL_GROUP_BY';
+  public $sqlMode = 'STRICT_ALL_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_VALUE_ON_ZERO,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE,ONLY_FULL_GROUP_BY';
 
   /**
    * The transaction isolation level. Possible values are:
    * <ul>
-   * <li> REPEATABLE-READ
-   * <li> READ-COMMITTED
-   * <li> READ-UNCOMMITTED
+   * <li> REPEATABLE READ
+   * <li> READ COMMITTED
+   * <li> READ UNCOMMITTED
    * <li> SERIALIZABLE
    * </ul>
    *
@@ -68,7 +68,7 @@ class MySqlDataLayer
    * @since 1.0.0
    * @api
    */
-  public $transactionIsolationLevel = 'READ-COMMITTED';
+  public $transactionIsolationLevel = 'READ COMMITTED';
 
   /**
    * Chunk size when transmitting LOB to the MySQL instance. Must be less than max_allowed_packet.
@@ -207,7 +207,7 @@ class MySqlDataLayer
     $this->executeNone("set sql_mode = '".$this->sqlMode."'");
 
     // Set transaction isolation level.
-    $this->executeNone("set session tx_isolation = '".$this->transactionIsolationLevel."'");
+    $this->executeNone('set session transaction isolation level '.$this->transactionIsolationLevel);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
