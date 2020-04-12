@@ -168,12 +168,12 @@ class DataTypeHelper
       case 'int':
       case 'bigint':
       case 'year':
-        $ret = "'.self::quoteInt(".$expression.").'";
+        $ret = "'.\$this->quoteInt(".$expression.").'";
         break;
 
       case 'float':
       case 'double':
-        $ret = "'.self::quoteFloat(".$expression.").'";
+        $ret = "'.\$this->quoteFloat(".$expression.").'";
         break;
 
       case 'char':
@@ -184,20 +184,20 @@ class DataTypeHelper
       case 'datetime':
       case 'enum':
       case 'set':
-        $ret = "'.self::quoteString(".$expression.").'";
+        $ret = "'.\$this->quoteString(".$expression.").'";
         break;
 
       case 'binary':
       case 'varbinary':
-        $ret = "'.self::quoteBinary(".$expression.").'";
+        $ret = "'.\$this->quoteBinary(".$expression.").'";
         break;
 
       case 'decimal':
-        $ret = "'.self::quoteDecimal(".$expression.").'";
+        $ret = "'.\$this->quoteDecimal(".$expression.").'";
         break;
 
       case 'bit':
-        $ret = "'.self::quoteBit(".$expression.").'";
+        $ret = "'.\$this->quoteBit(".$expression.").'";
         break;
 
       case 'tinytext':
@@ -212,7 +212,7 @@ class DataTypeHelper
         break;
 
       case 'list_of_int':
-        $ret = "'.self::quoteListOfInt(".$expression.", '".
+        $ret = "'.\$this->quoteListOfInt(".$expression.", '".
           addslashes($dataTypeInfo['delimiter'])."', '".
           addslashes($dataTypeInfo['enclosure'])."', '".
           addslashes($dataTypeInfo['escape'])."').'";
