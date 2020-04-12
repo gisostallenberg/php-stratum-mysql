@@ -97,7 +97,7 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
    */
   private function generateWrapperClass(): void
   {
-    $this->io->title('PhpStratum MySql: Wrapper');
+    $this->io->title('PhpStratum: MySql Wrapper');
 
     $this->codeStore = new PhpCodeStore();
 

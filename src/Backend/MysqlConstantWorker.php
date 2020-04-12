@@ -73,7 +73,7 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
 
     if ($this->constantsFilename!==null || $this->className!==null)
     {
-      $this->io->title('PhpStratum MySql: Constants');
+      $this->io->title('PhpStratum: MySql Constants');
 
       $this->connect();
 
