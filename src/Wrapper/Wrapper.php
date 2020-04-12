@@ -46,11 +46,6 @@ abstract class Wrapper
   protected $routine;
 
   /**
-   * @var bool If true BLOBs and CLOBs must be treated as strings.
-   */
-  private $lobAsStringFlag;
-
-  /**
    * The exceptions that the wrapper can throw.
    *
    * @var string[]
@@ -64,15 +59,12 @@ abstract class Wrapper
    * @param array        $routine     The metadata of the stored routine.
    * @param PhpCodeStore $codeStore   The code store for the generated code.
    * @param NameMangler  $nameMangler The mangler for wrapper and parameter names.
-   * @param bool         $lobAsString If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
-   *                                  send as long data.
    */
-  public function __construct(array $routine, PhpCodeStore $codeStore, NameMangler $nameMangler, bool $lobAsString)
+  public function __construct(array $routine, PhpCodeStore $codeStore, NameMangler $nameMangler)
   {
-    $this->routine         = $routine;
-    $this->codeStore       = $codeStore;
-    $this->nameMangler     = $nameMangler;
-    $this->lobAsStringFlag = $lobAsString;
+    $this->routine     = $routine;
+    $this->codeStore   = $codeStore;
+    $this->nameMangler = $nameMangler;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -82,72 +74,69 @@ abstract class Wrapper
    * @param array        $routine     The metadata of the stored routine.
    * @param PhpCodeStore $codeStore   The code store for the generated code.
    * @param NameMangler  $nameMangler The mangler for wrapper and parameter names.
-   * @param bool         $lobAsString If set BLOBs and CLOBs are treated as string. Otherwise, BLOBs and CLOBs will be
-   *                                  send as long data.
    *
    * @return Wrapper
    */
   public static function createRoutineWrapper(array $routine,
                                               PhpCodeStore $codeStore,
-                                              NameMangler $nameMangler,
-                                              bool $lobAsString): Wrapper
+                                              NameMangler $nameMangler): Wrapper
   {
     switch ($routine['designation'])
     {
       case 'bulk':
-        $wrapper = new BulkWrapper($routine, $codeStore, $nameMangler, $lobAsString);
+        $wrapper = new BulkWrapper($routine, $codeStore, $nameMangler);
         break;
 
       case 'bulk_insert':
-        $wrapper = new BulkInsertWrapper($routine, $codeStore, $nameMangler, $lobAsString);
+        $wrapper = new BulkInsertWrapper($routine, $codeStore, $nameMangler);
         break;
 
       case 'log':
-        $wrapper = new LogWrapper($routine, $codeStore, $nameMangler, $lobAsString);
+        $wrapper = new LogWrapper($routine, $codeStore, $nameMangler);
         break;
 
       case 'map':
-        $wrapper = new MapWrapper($routine, $codeStore, $nameMangler, $lobAsString);
+        $wrapper = new MapWrapper($routine, $codeStore, $nameMangler);
         break;
 
       case 'none':
-        $wrapper = new NoneWrapper($routine, $codeStore, $nameMangler, $lobAsString);
+        $wrapper = new NoneWrapper($routine, $codeStore, $nameMangler);
         break;
 
       case 'row0':
-        $wrapper = new Row0Wrapper($routine, $codeStore, $nameMangler, $lobAsString);
+        $wrapper = new Row0Wrapper($routine, $codeStore, $nameMangler);
         break;
 
       case 'row1':
-        $wrapper = new Row1Wrapper($routine, $codeStore, $nameMangler, $lobAsString);
+        $wrapper = new Row1Wrapper($routine, $codeStore, $nameMangler);
         break;
 
       case 'rows':
-        $wrapper = new RowsWrapper($routine, $codeStore, $nameMangler, $lobAsString);
+        $wrapper = new RowsWrapper($routine, $codeStore, $nameMangler);
         break;
 
       case 'rows_with_key':
-        $wrapper = new RowsWithKeyWrapper($routine, $codeStore, $nameMangler, $lobAsString);
+        $wrapper = new RowsWithKeyWrapper($routine, $codeStore, $nameMangler);
         break;
 
       case 'rows_with_index':
-        $wrapper = new RowsWithIndexWrapper($routine, $codeStore, $nameMangler, $lobAsString);
+        $wrapper = new RowsWithIndexWrapper($routine, $codeStore, $nameMangler);
         break;
 
       case 'singleton0':
-        $wrapper = new Singleton0Wrapper($routine, $codeStore, $nameMangler, $lobAsString);
+        $wrapper = new Singleton0Wrapper($routine, $codeStore, $nameMangler);
         break;
 
       case 'singleton1':
-        $wrapper = new Singleton1Wrapper($routine, $codeStore, $nameMangler, $lobAsString);
+        $wrapper = new Singleton1Wrapper($routine, $codeStore, $nameMangler);
         break;
 
       case 'function':
-        $wrapper = new FunctionWrapper($routine, $codeStore, $nameMangler, $lobAsString);
+        $wrapper = new FunctionWrapper($routine, $codeStore, $nameMangler);
         break;
 
       case 'table':
-        $wrapper = new TableWrapper($routine, $codeStore, $nameMangler, $lobAsString);
+        $wrapper = new TableWrapper($routine, $codeStore, $nameMangler);
         break;
 
       default:
@@ -210,7 +199,7 @@ abstract class Wrapper
    */
   public function writeRoutineFunction(): void
   {
-    if (!$this->lobAsStringFlag && $this->isBlobParameter($this->routine['parameters']))
+    if ($this->isBlobParameter($this->routine['parameters']))
     {
       $this->writeRoutineFunctionWithLob();
     }
@@ -238,7 +227,7 @@ abstract class Wrapper
     $nulls    = '';
     foreach ($this->routine['parameters'] as $parameter_info)
     {
-      $binding = DataTypeHelper::getBindVariableType($parameter_info, $this->lobAsStringFlag);
+      $binding = DataTypeHelper::getBindVariableType($parameter_info);
       if ($binding=='b')
       {
         $bindings .= 'b';
@@ -265,7 +254,7 @@ abstract class Wrapper
     $blobArgumentIndex = 0;
     foreach ($this->routine['parameters'] as $parameter_info)
     {
-      if (DataTypeHelper::getBindVariableType($parameter_info, $this->lobAsStringFlag)=='b')
+      if (DataTypeHelper::getBindVariableType($parameter_info)=='b')
       {
         $mangledName = $this->nameMangler->getParameterName($parameter_info['parameter_name']);
 
@@ -380,7 +369,7 @@ abstract class Wrapper
       $mangledName = $this->nameMangler->getParameterName($parameter_info['parameter_name']);
 
       if ($ret) $ret .= ',';
-      $ret .= DataTypeHelper::escapePhpExpression($parameter_info, '$'.$mangledName, $this->lobAsStringFlag);
+      $ret .= DataTypeHelper::escapePhpExpression($parameter_info, '$'.$mangledName);
     }
 
     return $ret;

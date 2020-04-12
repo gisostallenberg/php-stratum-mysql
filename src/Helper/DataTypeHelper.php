@@ -155,11 +155,10 @@ class DataTypeHelper
    *
    * @param array  $dataTypeInfo Metadata of the column on which the field is based.
    * @param string $expression   The PHP expression.
-   * @param bool   $lobAsString  A flag indication LOBs must be treated as strings.
    *
    * @return string The generated PHP code.
    */
-  public static function escapePhpExpression(array $dataTypeInfo, string $expression, bool $lobAsString): string
+  public static function escapePhpExpression(array $dataTypeInfo, string $expression): string
   {
     switch ($dataTypeInfo['data_type'])
     {
@@ -211,14 +210,14 @@ class DataTypeHelper
       case 'text':
       case 'mediumtext':
       case 'longtext':
-        $ret = ($lobAsString) ? "'.self::quoteString(".$expression.").'" : '?';
+        $ret = '?';
         break;
 
       case 'tinyblob':
       case 'blob':
       case 'mediumblob':
       case 'longblob':
-        $ret = ($lobAsString) ? "'.self::quoteBinary(".$expression.").'" : '?';
+        $ret = '?';
         break;
 
       case 'list_of_int':
@@ -242,11 +241,10 @@ class DataTypeHelper
    * @see http://php.net/manual/en/mysqli-stmt.bind-param.php
    *
    * @param array $dataTypeInfo Metadata of the column on which the field is based.
-   * @param bool  $lobAsString  A flag indication LOBs must be treated as strings.
    *
    * @return string
    */
-  public static function getBindVariableType(array $dataTypeInfo, bool $lobAsString): string
+  public static function getBindVariableType(array $dataTypeInfo): string
   {
     $ret = '';
     switch ($dataTypeInfo['data_type'])
@@ -291,7 +289,7 @@ class DataTypeHelper
       case 'blob':
       case 'mediumblob':
       case 'longblob':
-        $ret .= ($lobAsString) ? 's' : 'b';
+        $ret .= 'b';
         break;
 
       case 'list_of_int':

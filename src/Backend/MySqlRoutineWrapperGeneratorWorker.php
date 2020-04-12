@@ -30,13 +30,6 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
   private $imports = [];
 
   /**
-   * If true BLOBs and CLOBs must be treated as strings.
-   *
-   * @var bool
-   */
-  private $lobAsString;
-
-  /**
    * The filename of the file with the metadata of all stored procedures.
    *
    * @var string
@@ -166,7 +159,6 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
       $this->parentClassName  = $this->settings->manString('wrapper.parent_class');
       $this->nameMangler      = $this->settings->manString('wrapper.mangler_class');
       $this->wrapperFilename  = $this->settings->manString('wrapper.wrapper_file');
-      $this->lobAsString      = $this->settings->manBool('wrapper.lob_as_string', false);
       $this->metadataFilename = $this->settings->manString('loader.metadata');
       $this->strictTypes      = $this->settings->manBool('wrapper.strict_types', true);
     }
@@ -287,7 +279,7 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
    */
   private function writeRoutineFunction(array $routine, NameMangler $nameMangler): void
   {
-    $wrapper = Wrapper::createRoutineWrapper($routine, $this->codeStore, $nameMangler, $this->lobAsString);
+    $wrapper = Wrapper::createRoutineWrapper($routine, $this->codeStore, $nameMangler);
     $wrapper->writeRoutineFunction();
 
     $this->imports = array_merge($this->imports, $wrapper->getImports());
