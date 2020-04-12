@@ -103,9 +103,12 @@ class MySqlDefaultConnector implements MySqlConnector
     $this->mysqli = @new \mysqli($this->host, $this->user, $this->password, $this->database, $this->port);
     if ($this->mysqli->connect_errno)
     {
-      throw new MySqlConnectFailedException($this->mysqli->connect_errno,
-                                            $this->mysqli->connect_error,
-                                            'mysqli::__construct');
+      $exception    = new MySqlConnectFailedException($this->mysqli->connect_errno,
+                                                      $this->mysqli->connect_error,
+                                                      'mysqli::__construct');
+      $this->mysqli = null;
+
+      throw $exception;
     }
 
     return $this->mysqli;
