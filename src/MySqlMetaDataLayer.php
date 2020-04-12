@@ -51,8 +51,8 @@ class MySqlMetaDataLayer
   public function allCharacterSets(): array
   {
     $sql = "
-select CHARACTER_SET_NAME as character_set_name
-,      MAXLEN             as maxlen
+select CHARACTER_SET_NAME  as  character_set_name
+,      MAXLEN              as  maxlen
 from   information_schema.CHARACTER_SETS
 order by CHARACTER_SET_NAME";
 
@@ -70,11 +70,11 @@ order by CHARACTER_SET_NAME";
   public function allLabelTables(): array
   {
     $sql = "
-select t1.table_name  table_name
-,      t1.column_name id
-,      t2.column_name label
-from       information_schema.columns t1
-inner join information_schema.columns t2 on t1.table_name = t2.table_name
+select t1.TABLE_NAME   as  table_name
+,      t1.COLUMN_NAME  as  id
+,      t2.COLUMN_NAME  as  label
+from       information_schema.COLUMNS t1
+inner join information_schema.COLUMNS t2 on t1.table_name = t2.table_name
 where t1.table_schema = database()
 and   t1.extra        = 'auto_increment'
 and   t2.table_schema = database()
@@ -94,11 +94,11 @@ and   t2.column_name like '%%\\_label'";
   public function allRoutines(): array
   {
     $sql = '
-select routine_name
-,      routine_type
-,      sql_mode
-,      character_set_client
-,      collation_connection
+select ROUTINE_NAME          as  routine_name                            
+,      ROUTINE_TYPE          as  routine_type           
+,      SQL_MODE              as  sql_mode       
+,      CHARACTER_SET_CLIENT  as  character_set_client                   
+,      COLLATION_CONNECTION  as  collation_connection                   
 from  information_schema.ROUTINES
 where ROUTINE_SCHEMA = database()
 order by routine_name';
@@ -118,15 +118,15 @@ order by routine_name';
   {
     $sql = "
 (
-  select table_name
-  ,      column_name
-  ,      column_type
-  ,      data_type
-  ,      character_maximum_length
-  ,      character_set_name
-  ,      collation_name
-  ,      numeric_precision
-  ,      numeric_scale
+  select TABLE_NAME                as  table_name                                                       
+  ,      COLUMN_NAME               as  column_name                                 
+  ,      COLUMN_TYPE               as  column_type                                 
+  ,      DATA_TYPE                 as  data_type                                 
+  ,      CHARACTER_MAXIMUM_LENGTH  as  character_maximum_length                                 
+  ,      CHARACTER_SET_NAME        as  character_set_name                                 
+  ,      COLLATION_NAME            as  collation_name                                 
+  ,      NUMERIC_PRECISION         as  numeric_precision                                 
+  ,      NUMERIC_SCALE             as  numeric_scale                                 
   from   information_schema.COLUMNS
   where  table_schema = database()
   and    table_name  rlike '^[a-zA-Z0-9_]*$'
@@ -172,7 +172,7 @@ union all
   public function allTablesNames(string $schemaName): array
   {
     $sql = sprintf("
-select TABLE_NAME as table_name
+select TABLE_NAME  as  table_name
 from   information_schema.TABLES
 where  TABLE_SCHEMA = %s
 and    TABLE_TYPE   = 'BASE TABLE'
@@ -473,13 +473,13 @@ where   nullif(`%s`,'') is not null";
   public function routineParameters(string $routineName): array
   {
     $sql = sprintf("
-select t2.parameter_name
-,      t2.data_type
-,      t2.numeric_precision
-,      t2.numeric_scale
-,      t2.character_set_name
-,      t2.collation_name
-,      t2.dtd_identifier
+select t2.PARAMETER_NAME      as  parameter_name                            
+,      t2.DATA_TYPE           as  data_type             
+,      t2.NUMERIC_PRECISION   as  numeric_precision                     
+,      t2.NUMERIC_SCALE       as  numeric_scale                 
+,      t2.CHARACTER_SET_NAME  as  character_set_name                      
+,      t2.COLLATION_NAME      as  collation_name                  
+,      t2.DTD_IDENTIFIER      as  dtd_identifier                  
 from            information_schema.ROUTINES   t1
 left outer join information_schema.PARAMETERS t2  on  t2.specific_schema = t1.routine_schema and
                                                       t2.specific_name   = t1.routine_name and
@@ -535,12 +535,12 @@ and   t1.routine_name   = '%s'", $routineName);
   public function tableColumns(string $schemaName, string $tableName): array
   {
     $sql = sprintf('
-select COLUMN_NAME        as column_name
-,      COLUMN_TYPE        as column_type
-,      IS_NULLABLE        as is_nullable
-,      CHARACTER_SET_NAME as character_set_name
-,      COLLATION_NAME     as collation_name
-,      EXTRA              as extra
+select COLUMN_NAME         as  column_name
+,      COLUMN_TYPE         as  column_type
+,      IS_NULLABLE         as  is_nullable
+,      CHARACTER_SET_NAME  as  character_set_name
+,      COLLATION_NAME      as  collation_name
+,      EXTRA               as  extra
 from   information_schema.COLUMNS
 where  TABLE_SCHEMA = %s
 and    TABLE_NAME   = %s
