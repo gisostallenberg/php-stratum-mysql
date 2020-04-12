@@ -113,6 +113,7 @@ class DataTypeHelper
       case 'mediumblob':
       case 'longblob':
       case 'bit':
+      case 'json':
         $ret = $dataTypeInfo['character_maximum_length'];
         break;
 
