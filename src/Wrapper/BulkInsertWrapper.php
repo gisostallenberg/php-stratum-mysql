@@ -89,13 +89,12 @@ class BulkInsertWrapper extends Wrapper
 
     $this->codeStore->append('if (is_array($rows) && !empty($rows))');
     $this->codeStore->append('{');
-    $this->codeStore->append('$sql = "INSERT INTO `'.$this->routine['bulk_insert_table_name'].'`('.$columns.')";');
+    $this->codeStore->append('$sql = "INSERT INTO `'.$this->routine['bulk_insert_table_name'].'`('.$columns.')".PHP_EOL;');
     $this->codeStore->append('$first = true;');
     $this->codeStore->append('foreach($rows as $row)');
     $this->codeStore->append('{');
 
-    $this->codeStore->append('if ($first) $sql .=\' values('.$fields.')\';');
-    $this->codeStore->append('else        $sql .=\',      ('.$fields.')\';');
+    $this->codeStore->append('$sql .= (($first) ? \'values\' : \',     \').\'('.$fields.')\'.PHP_EOL;');
 
     $this->codeStore->append('$first = false;');
     $this->codeStore->append('}');
