@@ -1,6 +1,6 @@
-# PhpStratum
+# PhpStratum: MySQL and MariaDB backend
 
-A stored procedure loader and wrapper class generator for MySQL in PHP.
+The backend of PhpStratum for MySQL and MariaDB.
 
 <table>
 <thead>
@@ -23,19 +23,24 @@ A stored procedure loader and wrapper class generator for MySQL in PHP.
 <td>
 <a href="https://packagist.org/packages/setbased/php-stratum-mysql"><img src="https://poser.pugx.org/setbased/php-stratum-mysql/v/stable" alt="Latest Stable Version"/></a><br/>
 </td>
-<td><a href="https://travis-ci.org/SetBased/php-stratum-mysql"><img src="https://travis-ci.org/SetBased/php-stratum-mysql.svg?branch=master" alt="Build Status"/></a><br/>
-<a href="https://scrutinizer-ci.com/g/SetBased/php-stratum-mysql/?branch=master"><img src="https://scrutinizer-ci.com/g/SetBased/php-stratum-mysql/badges/coverage.png?b=master" alt="Code Coverage"/></a><br/>
+<td><a href="https://travis-ci.org/DatabaseStratum/php-stratum-mysql"><img src="https://travis-ci.org/DatabaseStratum/php-stratum-mysql.svg?branch=master" alt="Build Status"/></a><br/>
+<a href="https://scrutinizer-ci.com/g/DatabaseStratum/php-stratum-mysql/?branch=master"><img src="https://scrutinizer-ci.com/g/DatabaseStratum/php-stratum-mysql/badges/coverage.png?b=master" alt="Code Coverage"/></a><br/>
 </td>
 <td>
-<a href="https://scrutinizer-ci.com/g/SetBased/php-stratum-mysql/?branch=master"><img src="https://scrutinizer-ci.com/g/SetBased/php-stratum-mysql/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality"/></a>
+<a href="https://scrutinizer-ci.com/g/DatabaseStratum/php-stratum-mysql/?branch=master"><img src="https://scrutinizer-ci.com/g/DatabaseStratum/php-stratum-mysql/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality"/></a>
 </td>
 </tr>
 </tbody>
 </table>
 
+PhpStratum MySQL is a set of PHP packages for loading stored procedures into a MySQL or MariaDB database and invoking those stored procedures conveniently from your application using an automatically generated wrapper class.
+
+Documentation
+=============
+
+The documentation of PhpStratum MySQL is available at [phpstratum-mysql.readthedocs.io](https://phpstratum-mysql.readthedocs.io). 
+
 License
 =======
 
 This project is licensed under the terms of the MIT license.
-
-
