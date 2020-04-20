@@ -4,6 +4,7 @@
 /bin/phpunit
 /bin/stratum
 /composer.lock
+/docs/_build/
 /test/coverage.xml
 /test/etc/routines.json
 /test/report/
