@@ -42,13 +42,13 @@ The constants section
 
 The ``constants`` section is optional and holds the variables for constants based on column sizes and constants defined in PHP available in the sources of stored routines.
 
-  ``columns``
+  ``columns`` (mandatory)
     A plain text file with table column names and their corresponding constant names.
 
-  ``class``
+  ``class`` (mandatory)
     The class defining constants.
 
-  ``prefix``
+  ``prefix`` (mandatory)
     The default prefix to used when generating a constant name based on the size of a column.
 
 The loader section
@@ -56,23 +56,23 @@ The loader section
 
 The ``loader`` section is mandatory and holds the variables for loading your stored routines into the database.
 
-  ``sources``
+  ``sources`` (mandatory)
     Holds the pattern with sources of stored routines. This variable can have two forms:
 
     * A wildcard pattern like ``lib/psql/**/*.psql``.
 
     * A filename like ``file:stratum-sources.txt``. The filename is relative to the directory of the stratum config file. The file holds a wildcard pattern per line.
 
-  ``metadata``
+  ``metadata`` (mandatory)
     The path to the file were the metadata of stored routines must be stored in JSON format. This metadata is used to determine which stored routines must loaded or removed from the database and provide information for wrapper generator.
 
-  ``sql_mode``
+  ``sql_mode`` (mandatory)
     The SQL mode under which the stored routines must run.
 
-  ``character_set``
+  ``character_set`` (mandatory)
     The (default) character set under which the stored routine must run.
 
-  ``collate``
+  ``collate`` (mandatory)
     The (default) collate under which the stored routine must run.
 
 Note: the SQL mode, character set, and collate under which a store routine runs is determined when the stored routine is defined and not inherited from the session that call the stored routine.

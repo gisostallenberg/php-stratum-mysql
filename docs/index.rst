@@ -1,7 +1,7 @@
 Welcome to PhpStratum's documentation for MySQL and MariaDB!
 ============================================================
 
-PhpStratum is a set of PHP packages for loading stored procedures into your application's database and invoking those stored procedures conveniently from your application using an automatically generated wrapper class. PhpStratum is available for the following database management systems:
+PhpStratum is a set of PHP packages for loading stored procedures into your application's database and invoking those stored procedures conveniently from your application using an automatically generated wrapper class. Currently, PhpStratum is available for the following database management systems:
 
 * `MySQL and MariaDB`_
 * `SQLite`_
