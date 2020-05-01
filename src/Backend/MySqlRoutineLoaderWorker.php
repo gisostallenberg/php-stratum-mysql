@@ -234,6 +234,8 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
       }
     }
   }
+
+  //--------------------------------------------------------------------------------------------------------------------
   /**
    * Searches recursively for all source files.
    */
