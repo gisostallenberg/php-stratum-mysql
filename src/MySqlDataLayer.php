@@ -857,6 +857,22 @@ class MySqlDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Sets the connector of this data layer. The data layer must be disconnected from the MySQL instance.
+   *
+   * @param MySqlConnector $connector The new connector.
+   */
+  public function setConnector(MySqlConnector $connector): void
+  {
+    if ($this->mysqli!==null)
+    {
+      throw new \LogicException('Can not set connector of a connected data layer. Disconnect first.');
+    }
+
+    $this->connector = $connector;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Logs the warnings of the last executed SQL statement.
    *
    * Wrapper around the SQL statement [show warnings](https://dev.mysql.com/doc/refman/5.6/en/show-warnings.html).

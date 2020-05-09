@@ -132,6 +132,8 @@ class MySqlDataLayerTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test connectIfNotAlive.
+   *
+   * @throws \Exception
    */
   public function testReconnect()
   {
@@ -155,6 +157,26 @@ class MySqlDataLayerTest extends DataLayerTestCase
     $dl->disconnect();
     $dl->connectIfNotAlive();
     self::assertTrue(true);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test connectIfNotAlive.
+   *
+   * @throws \Exception
+   */
+  public function testSetConnector()
+  {
+    $connector1 = new MySqlDefaultConnector('x-localhost', 'x-test', 'x-test', 'x-test');
+    $dl         = new TestMySqlDataLayer($connector1);
+
+    $connector2 = new MySqlDefaultConnector('localhost', 'test', 'test', 'test');
+    $dl->setConnector($connector2);
+    self::assertTrue(true);
+
+    $this->expectException(\LogicException::class);
+    $dl->connect();
+    $dl->setConnector($connector1);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
