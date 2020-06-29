@@ -467,6 +467,8 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
    */
   private function writeColumns(): void
   {
+    ksort($this->columns);
+
     $content = '';
     foreach ($this->columns as $table)
     {
