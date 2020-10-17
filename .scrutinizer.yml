@@ -14,16 +14,14 @@ build:
     override:
       - composer install --no-interaction
 
-  nodes:
-    analysis:
-      tests:
-        before:
-          - mysql --version
-          - mysql -u root -e "set global binlog_format = 'row';"
-          - mysql -u root -e "set global log_bin_trust_function_creators = 1;"
+  tests:
+    before:
+      - mysql --version
+      - mysql -u root -e "set global binlog_format = 'row';"
+      - mysql -u root -e "set global log_bin_trust_function_creators = 1;"
 
-        override:
-          - command: './bin/phing unit'
-            coverage:
-              file:   'test/coverage.xml'
-              format: 'php-clover'
+    override:
+      - command: './bin/phing unit'
+        coverage:
+          file:   'test/coverage.xml'
+          format: 'php-clover'
