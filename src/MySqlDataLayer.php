@@ -85,11 +85,11 @@ class MySqlDataLayer
   protected $maxAllowedPacket;
 
   /**
-   * The connection between PHP and the MySQL instance.
+   * The connection between PHP and the MySQL or MariaDB instance.
    *
-   * @var \mysqli
+   * @var \mysqli|null
    */
-  protected $mysqli;
+  protected $mysqli = null;
 
   /**
    * The query log.
@@ -99,7 +99,7 @@ class MySqlDataLayer
   protected $queryLog = [];
 
   /**
-   * The object for connecting to the MySql instance.
+   * The object for connecting to a MySQL or MariaDB instance.
    *
    * @var MySqlConnector
    */
@@ -109,7 +109,7 @@ class MySqlDataLayer
   /**
    * MySqlDataLayer constructor.
    *
-   * @param MySqlConnector $connector The object for connecting to the MySql instance.
+   * @param MySqlConnector $connector The object for connecting to a MySQL or MariaDB instance.
    */
   public function __construct(MySqlConnector $connector)
   {
@@ -212,7 +212,7 @@ class MySqlDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Connects or reconnects to the MySQL instance when PHP is not (longer) connected to the MySql instance.
+   * Connects or reconnects to the MySQL instance when PHP is not (longer) connected to a MySQL or MariaDB instance.
    *
    * @throws MySqlConnectFailedException
    * @throws MySqlDataLayerException
@@ -664,7 +664,7 @@ class MySqlDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns true if PHP is (still) connected with the MySql instance. Otherwise returns false.
+   * Returns true if PHP is (still) connected to a MySQL or MariaDB instance. Otherwise returns false.
    *
    * This method will never throw an exception.
    *

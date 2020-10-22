@@ -6,7 +6,7 @@ namespace SetBased\Stratum\MySql;
 use SetBased\Stratum\MySql\Exception\MySqlConnectFailedException;
 
 /**
- * Connects to a MySql instance using user name and password.
+ * Connects to a MySQL or MariaDB instance using user name and password.
  */
 class MySqlDefaultConnector implements MySqlConnector
 {
@@ -56,7 +56,7 @@ class MySqlDefaultConnector implements MySqlConnector
    * Object constructor.
    *
    * @param string $host     The hostname.
-   * @param string $user     The MySQL user name.
+   * @param string $user     The username.
    * @param string $password The password.
    * @param string $database The default database.
    * @param int    $port     The port number.
@@ -87,7 +87,7 @@ class MySqlDefaultConnector implements MySqlConnector
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Connects to the MySql instance.
+   * Connects to the MySQL or MariaDB instance.
    *
    * @return \mysqli
    *
@@ -116,7 +116,7 @@ class MySqlDefaultConnector implements MySqlConnector
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Disconnects from the MySql instance.
+   * If connected to a MySQL or MariaDB disconnects from the MySQL or MariaDB instance.
    *
    * @since 5.0.0
    * @api
@@ -132,7 +132,7 @@ class MySqlDefaultConnector implements MySqlConnector
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns true if PHP is (still) connected with the MySql instance.
+   * Returns true if PHP is (still) connected to a MySQL or MariaDB instance.
    *
    * @return bool
    *

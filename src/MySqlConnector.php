@@ -6,13 +6,13 @@ namespace SetBased\Stratum\MySql;
 use SetBased\Stratum\MySql\Exception\MySqlConnectFailedException;
 
 /**
- * Interface for classes connection a MySql instance.
+ * Interface for classes for connecting to a MySQL or MariaDB instance.
  */
 interface MySqlConnector
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Connects to the MySql instance.
+   * Connects to a MySQL or MariaDB instance.
    *
    * @return \mysqli
    *
@@ -25,7 +25,7 @@ interface MySqlConnector
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Disconnects from the MySql instance.
+   * If connected to a MySQL or MariaDB disconnects from the MySQL or MariaDB instance.
    *
    * This method will never throw an exception.
    *
@@ -36,7 +36,7 @@ interface MySqlConnector
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns true if PHP is (still) connected with the MySql instance. Otherwise returns false.
+   * Returns true if PHP is (still) connected to a MySQL or MariaDB instance. Otherwise returns false.
    *
    * This method will never throw an exception.
    *
