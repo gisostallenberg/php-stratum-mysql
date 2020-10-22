@@ -106,6 +106,7 @@ class MySqlDataLayer
   private $connector;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * MySqlDataLayer constructor.
    *
@@ -763,10 +764,10 @@ class MySqlDataLayer
    * Returns a literal for an expression with a separated list of integers that can be safely used in SQL
    * statements. Throws an exception if the value is a list of integers.
    *
-   * @param string|array $list      The list of integers.
-   * @param string       $delimiter The field delimiter (one character only).
-   * @param string       $enclosure The field enclosure character (one character only).
-   * @param string       $escape    The escape character (one character only)
+   * @param string|array|null $list      The list of integers.
+   * @param string            $delimiter The field delimiter (one character only).
+   * @param string            $enclosure The field enclosure character (one character only).
+   * @param string            $escape    The escape character (one character only)
    *
    * @return string
    *
