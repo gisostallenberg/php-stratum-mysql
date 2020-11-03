@@ -531,12 +531,8 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
     }
 
     // Read the source of the class without actually loading the class. Otherwise, we can not (re)load the class in
-    // \SetBased\Stratum\MySqlRoutineLoaderWorker::replacePairsConstants.
+    // MySqlRoutineLoaderWorker::replacePairsConstants.
     $source = file_get_contents($file_name);
-    if ($source===false)
-    {
-      throw new RuntimeException("Unable the open source file '%s'.", $file_name);
-    }
     $source_lines = explode("\n", $source);
 
     // Search for the lines where to insert and replace constant declaration statements.

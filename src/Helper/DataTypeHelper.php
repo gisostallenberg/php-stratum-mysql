@@ -117,6 +117,7 @@ class DataTypeHelper
         $ret = $dataTypeInfo['character_maximum_length'];
         break;
 
+      case 'datetime':
       case 'timestamp':
         $ret = 16;
         break;
@@ -131,10 +132,6 @@ class DataTypeHelper
 
       case 'date':
         $ret = 10;
-        break;
-
-      case 'datetime':
-        $ret = 16;
         break;
 
       case 'enum':

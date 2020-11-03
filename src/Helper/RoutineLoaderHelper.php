@@ -150,7 +150,7 @@ class RoutineLoaderHelper
    *
    * @var array
    */
-  private $replacePairs = [];
+  private $replacePairs;
 
   /**
    * The return type of the stored routine (only if designation type singleton0, singleton1, or function).
@@ -179,13 +179,6 @@ class RoutineLoaderHelper
    * @var array
    */
   private $routineSourceCodeLines;
-
-  /**
-   * The stored routine type (i.e. procedure or function) of the stored routine.
-   *
-   * @var string
-   */
-  private $routineType;
 
   /**
    * The source filename holding the stored routine.
@@ -295,7 +288,7 @@ class RoutineLoaderHelper
         case 'decimal':
           preg_match('/^\((\d+),(\d+)\)$/', $parts1[2], $parts2);
           $tmp['numeric_precision'] = (int)$parts2[1];
-          $tmp['numeric_scale']     = (int)$parts2[2];;
+          $tmp['numeric_scale']     = (int)$parts2[2];
           break;
 
         case 'time':
@@ -722,8 +715,6 @@ class RoutineLoaderHelper
     $n = preg_match('/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i', $this->routineSourceCode, $matches);
     if ($n==1)
     {
-      $this->routineType = strtolower($matches[1]);
-
       if ($this->routineName!=$matches[2])
       {
         throw new RoutineLoaderException("Stored routine name '%s' does not corresponds with filename", $matches[2]);
@@ -770,7 +761,7 @@ class RoutineLoaderHelper
     // Replace all place holders with their values.
     $lines          = explode("\n", $this->routineSourceCode);
     $routine_source = [];
-    foreach ($lines as $i => &$line)
+    foreach ($lines as $i => $line)
     {
       $this->replace['__LINE__'] = $i + 1;
       $routine_source[$i]        = strtr($line, $this->replace);

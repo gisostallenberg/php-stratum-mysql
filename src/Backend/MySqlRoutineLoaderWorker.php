@@ -375,6 +375,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
     // Write the metadata to file.
     $this->writeStoredRoutineMetadata();
   }
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Loads all stored routines in a list into MySQL.
@@ -581,7 +582,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    *
    * @param array[] $columns The details of all table columns.
    */
-  private function replacePairsColumnTypesExact($columns): void
+  private function replacePairsColumnTypesExact(array $columns): void
   {
     foreach ($columns as $column)
     {
@@ -605,7 +606,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    *
    * @param array[] $columns The details of all table columns.
    */
-  private function replacePairsColumnTypesMaxLength($columns): void
+  private function replacePairsColumnTypesMaxLength(array $columns): void
   {
     foreach ($columns as $column)
     {

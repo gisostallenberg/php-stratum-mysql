@@ -973,7 +973,7 @@ class MySqlDataLayer
    *
    * @return MySqlQueryErrorException
    */
-  protected function queryError(string $method, $query): MySqlQueryErrorException
+  protected function queryError(string $method, string $query): MySqlQueryErrorException
   {
     return new MySqlQueryErrorException($this->mysqli->errno, $this->mysqli->error, $method, $query);
   }
