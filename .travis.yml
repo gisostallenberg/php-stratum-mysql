@@ -3,14 +3,10 @@ php:
   - '7.3'
   - '7.4'
 
-jobs:
-  include:
-    - env: DB=MYSQL8
-      dist: xenial
-    - env: DB=MARIA10_1
-      dist: xenial
-    - env: DB=MARIA10_2
-      dist: xenial
+sudo:     true
+
+addons:
+  mariadb: "10.2"
 
 before_install:
   - mysql --version
