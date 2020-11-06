@@ -5,13 +5,12 @@ namespace SetBased\Stratum\MySql\Helper;
 
 use SetBased\Exception\FallenException;
 use SetBased\Stratum\Backend\StratumStyle;
+use SetBased\Stratum\Common\DocBlock\DocBlockReflection;
 use SetBased\Stratum\Common\Exception\RoutineLoaderException;
 use SetBased\Stratum\Middle\Exception\ResultException;
 use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 use SetBased\Stratum\MySql\MySqlMetaDataLayer;
 use Symfony\Component\Console\Formatter\OutputFormatter;
-use Zend\Code\Reflection\DocBlock\Tag\ParamTag;
-use Zend\Code\Reflection\DocBlockReflection;
 
 /**
  * Class for loading a single stored routine into a MySQL instance from pseudo SQL file.
@@ -491,32 +490,32 @@ class RoutineLoaderHelper
   private function extractDocBlockPartsSource(): void
   {
     // Get the DocBlock for the source.
-    $tmp = PHP_EOL;
+    $docBlock = PHP_EOL;
     foreach ($this->routineSourceCodeLines as $line)
     {
       $n = preg_match('/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i', $line);
       if ($n) break;
 
-      $tmp .= $line;
-      $tmp .= PHP_EOL;
+      $docBlock .= $line;
+      $docBlock .= PHP_EOL;
     }
 
-    $phpdoc = new DocBlockReflection($tmp);
+    DocBlockReflection::setTagParameters('param', 1);
+    $reflection = new DocBlockReflection($docBlock);
 
     // Get the short description.
-    $this->docBlockPartsSource['sort_description'] = $phpdoc->getShortDescription();
+    $this->docBlockPartsSource['sort_description'] = $reflection->getShortDescription();
 
     // Get the long description.
-    $this->docBlockPartsSource['long_description'] = $phpdoc->getLongDescription();
+    $this->docBlockPartsSource['long_description'] = $reflection->getLongDescription();
 
     // Get the description for each parameter of the stored routine.
-    foreach ($phpdoc->getTags() as $key => $tag)
+    foreach ($reflection->getTags() as $key => $tag)
     {
-      if ($tag->getName()=='param')
+      if ($tag['tag']==='param')
       {
-        /* @var $tag ParamTag */
-        $this->docBlockPartsSource['parameters'][$key] = ['name'        => $tag->getTypes()[0],
-                                                          'description' => $tag->getDescription()];
+        $this->docBlockPartsSource['parameters'][$key] = ['name'        => $tag['arguments'][0],
+                                                          'description' => $tag['description']];
       }
     }
   }
@@ -732,9 +731,9 @@ class RoutineLoaderHelper
    *
    * @param string $name Name of the parameter.
    *
-   * @return string|null
+   * @return array
    */
-  private function getParameterDocDescription(string $name): ?string
+  private function getParameterDocDescription(string $name): array
   {
     if (isset($this->docBlockPartsSource['parameters']))
     {
@@ -744,7 +743,7 @@ class RoutineLoaderHelper
       }
     }
 
-    return null;
+    return [];
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -18,15 +18,14 @@
     "ext-mysqli": "*",
     "setbased/exception": "^2.1",
     "setbased/helper-code-store-mysql": "^2.1",
-    "setbased/helper-code-store-php": "^2.3",
+    "setbased/helper-code-store-php": "^2.4",
     "setbased/php-stratum-backend": "^5.2",
-    "setbased/php-stratum-common": "^5.2",
-    "setbased/php-stratum-middle": "^5.6",
-    "zendframework/zend-code": "^3.0"
+    "setbased/php-stratum-common": "^5.3",
+    "setbased/php-stratum-middle": "^5.6"
   },
   "require-dev": {
-    "phpunit/phpunit": "^9.0",
-    "phing/phing": "^2.0",
+    "phpunit/phpunit": "^9.4",
+    "phing/phing": "^2.16",
     "setbased/php-stratum": "^6.0"
   },
   "autoload": {

@@ -20,7 +20,7 @@ class BulkInsertWrapper extends Wrapper
   protected function enhancePhpDocBlockParameters(array &$parameters): void
   {
     $parameter = ['php_name'             => '$rows',
-                  'description'          => 'The rows that must inserted.',
+                  'description'          => ['The rows that must inserted.'],
                   'php_type'             => 'array[]',
                   'data_type_descriptor' => null];
 

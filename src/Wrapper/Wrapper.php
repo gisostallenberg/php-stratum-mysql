@@ -462,9 +462,12 @@ abstract class Wrapper
    */
   private function generatePhpDocBlockLongDescription(): void
   {
-    if ($this->routine['phpdoc']['long_description']!=='')
+    if (!empty($this->routine['phpdoc']['long_description']))
     {
-      $this->codeStore->append(' * '.$this->routine['phpdoc']['long_description'], false);
+      foreach ($this->routine['phpdoc']['long_description'] as $line)
+      {
+        $this->codeStore->append(' * '.$line, false);
+      }
     }
   }
 
@@ -501,11 +504,12 @@ abstract class Wrapper
       $this->codeStore->append(' *', false);
 
       // Generate phpDoc for the parameters of the wrapper method.
-      foreach ($parameters as $parameter)
+
+       foreach ($parameters as $parameter)
       {
         $format = sprintf(' * %%-%ds %%-%ds %%-%ds %%s', mb_strlen('@param'), $max_type_length, $max_name_length);
 
-        $lines = explode(PHP_EOL, $parameter['description'] ?? '');
+        $lines = $parameter['description'];
         if (!empty($lines))
         {
           $line = array_shift($lines);
@@ -548,9 +552,12 @@ abstract class Wrapper
    */
   private function generatePhpDocBlockSortDescription(): void
   {
-    if ($this->routine['phpdoc']['sort_description']!=='')
+    if (!empty($this->routine['phpdoc']['sort_description']))
     {
-      $this->codeStore->append(' * '.$this->routine['phpdoc']['sort_description'], false);
+      foreach ($this->routine['phpdoc']['sort_description'] as $line)
+      {
+        $this->codeStore->append(' * '.$line, false);
+      }
     }
   }
 

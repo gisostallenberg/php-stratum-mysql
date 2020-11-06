@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Backend;
 
-use Composer\Autoload\ClassLoader;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Backend\ConstantWorker;
+use SetBased\Stratum\Common\Helper\ClassReflectionHelper;
 use SetBased\Stratum\MySql\Exception\MySqlConnectFailedException;
 use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
 use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
@@ -59,6 +59,7 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
   private $oldColumns = [];
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * @inheritdoc
    *
@@ -519,39 +520,29 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
    */
   private function writeConstantClass(): void
   {
-    // Get the class loader.
-    /** @var ClassLoader $loader */
-    $loader = spl_autoload_functions()[0][0];
-
-    // Find the source file of the constant class.
-    $file_name = $loader->findFile($this->className);
-    if ($file_name===false)
-    {
-      throw new RuntimeException("ClassLoader can not find class '%s'.", $this->className);
-    }
-
     // Read the source of the class without actually loading the class. Otherwise, we can not (re)load the class in
     // MySqlRoutineLoaderWorker::replacePairsConstants.
-    $source = file_get_contents($file_name);
-    $source_lines = explode("\n", $source);
+    $fileName    = ClassReflectionHelper::getFileName($this->className);
+    $source      = file_get_contents($fileName);
+    $sourceLines = explode("\n", $source);
 
     // Search for the lines where to insert and replace constant declaration statements.
-    $line_numbers = $this->extractLines($source);
-    if (!isset($line_numbers[0]))
+    $lineNumbers = $this->extractLines($source);
+    if (!isset($lineNumbers[0]))
     {
-      throw new RuntimeException("Annotation not found in '%s'.", $file_name);
+      throw new RuntimeException("Annotation not found in '%s'.", $fileName);
     }
 
     // Generate the constant declaration statements.
     $constants = $this->makeConstantStatements();
 
     // Insert new and replace old (if any) constant declaration statements.
-    $tmp1         = array_splice($source_lines, 0, $line_numbers[1]);
-    $tmp2         = array_splice($source_lines, (isset($line_numbers[2])) ? $line_numbers[2] - $line_numbers[1] : 0);
-    $source_lines = array_merge($tmp1, $constants, $tmp2);
+    $tmp1        = array_splice($sourceLines, 0, $lineNumbers[1]);
+    $tmp2        = array_splice($sourceLines, (isset($lineNumbers[2])) ? $lineNumbers[2] - $lineNumbers[1] : 0);
+    $sourceLines = array_merge($tmp1, $constants, $tmp2);
 
     // Save the configuration file.
-    $this->writeTwoPhases($file_name, implode("\n", $source_lines));
+    $this->writeTwoPhases($fileName, implode("\n", $sourceLines));
   }
 
   //--------------------------------------------------------------------------------------------------------------------

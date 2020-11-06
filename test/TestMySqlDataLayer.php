@@ -684,7 +684,10 @@ class TestMySqlDataLayer extends MySqlDataLayer
   /**
    * Test for designation type row0.
    *
-   * @param int|null $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
+   * @param int|null $pCount The number of rows selected.
+   *                         * 0 For a valid test.
+   *                         * 1 For a valid test.
+   *                         * 2 For a invalid test.
    *                         int(11)
    *
    * @return array|null
@@ -701,7 +704,10 @@ class TestMySqlDataLayer extends MySqlDataLayer
   /**
    * Test for designation type row0 with BLOB.
    *
-   * @param int|null    $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
+   * @param int|null    $pCount The number of rows selected.
+   *                            * 0 For a valid test.
+   *                            * 1 For a valid test.
+   *                            * 2 For a invalid test.
    *                            int(11)
    * @param string|null $pBlob  The BLOB.
    *                            blob
@@ -769,7 +775,10 @@ class TestMySqlDataLayer extends MySqlDataLayer
   /**
    * Test for designation type row1.
    *
-   * @param int|null $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
+   * @param int|null $pCount The number of rows selected.
+   *                         * 0 For a invalid test.
+   *                         * 1 For a valid test.
+   *                         * 2 For a invalid test.
    *                         int(11)
    *
    * @return array
@@ -786,7 +795,10 @@ class TestMySqlDataLayer extends MySqlDataLayer
   /**
    * Test for designation type row1 with BLOB.
    *
-   * @param int|null    $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
+   * @param int|null    $pCount The number of rows selected.
+   *                            * 0 For a invalid test.
+   *                            * 1 For a valid test.
+   *                            * 2 For a invalid test.
    *                            int(11)
    * @param string|null $pBlob  The BLOB.
    *                            blob
@@ -1115,7 +1127,10 @@ class TestMySqlDataLayer extends MySqlDataLayer
   /**
    * Test for designation type singleton0.
    *
-   * @param int|null $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
+   * @param int|null $pCount The number of rows selected.
+   *                         * 0 For a valid test.
+   *                         * 1 For a valid test.
+   *                         * 2 For a invalid test.
    *                         int(11)
    *
    * @return int|null
@@ -1132,7 +1147,10 @@ class TestMySqlDataLayer extends MySqlDataLayer
   /**
    * Test for designation type singleton0 with BLOB..
    *
-   * @param int|null    $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
+   * @param int|null    $pCount The number of rows selected.
+   *                            * 0 For a valid test.
+   *                            * 1 For a valid test.
+   *                            * 2 For a invalid test.
    *                            int(11)
    * @param string|null $pBlob  The BLOB.
    *                            blob
@@ -1200,7 +1218,10 @@ class TestMySqlDataLayer extends MySqlDataLayer
   /**
    * Test for designation type singleton0 with return type bool.
    *
-   * @param int|null $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
+   * @param int|null $pCount The number of rows selected.
+   *                         * 0 For a valid test.
+   *                         * 1 For a valid test.
+   *                         * 2 For a invalid test.
    *                         int(11)
    * @param int|null $pValue The selected value.
    *                         int(11)
@@ -1219,7 +1240,10 @@ class TestMySqlDataLayer extends MySqlDataLayer
   /**
    * Test for designation type singleton0 with BLOB..
    *
-   * @param int|null    $pCount The number of rows selected. * 0 For a valid test. * 1 For a valid test. * 2 For a invalid test.
+   * @param int|null    $pCount The number of rows selected.
+   *                            * 0 For a valid test.
+   *                            * 1 For a valid test.
+   *                            * 2 For a invalid test.
    *                            int(11)
    * @param int|null    $pValue The selected value.
    *                            int(11)
@@ -1289,7 +1313,10 @@ class TestMySqlDataLayer extends MySqlDataLayer
   /**
    * Test for designation type singleton1.
    *
-   * @param int|null $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
+   * @param int|null $pCount The number of rows selected.
+   *                         * 0 For a invalid test.
+   *                         * 1 For a valid test.
+   *                         * 2 For a invalid test.
    *                         int(11)
    *
    * @return int
@@ -1306,7 +1333,10 @@ class TestMySqlDataLayer extends MySqlDataLayer
   /**
    * Test for designation type singleton1 with BLOB.
    *
-   * @param int|null    $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
+   * @param int|null    $pCount The number of rows selected.
+   *                            * 0 For a invalid test.
+   *                            * 1 For a valid test.
+   *                            * 2 For a invalid test.
    *                            int(11)
    * @param string|null $pBlob  The BLOB.
    *                            blob
@@ -1374,7 +1404,10 @@ class TestMySqlDataLayer extends MySqlDataLayer
   /**
    * Test for designation type singleton1 with return type bool.
    *
-   * @param int|null $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
+   * @param int|null $pCount The number of rows selected.
+   *                         * 0 For a invalid test.
+   *                         * 1 For a valid test.
+   *                         * 2 For a invalid test.
    *                         int(11)
    * @param int|null $pValue The selected value.
    *                         int(11)
@@ -1393,7 +1426,10 @@ class TestMySqlDataLayer extends MySqlDataLayer
   /**
    * Test for designation type singleton1 with BLOB.
    *
-   * @param int|null    $pCount The number of rows selected. * 0 For a invalid test. * 1 For a valid test. * 2 For a invalid test.
+   * @param int|null    $pCount The number of rows selected.
+   *                            * 0 For a invalid test.
+   *                            * 1 For a valid test.
+   *                            * 2 For a invalid test.
    *                            int(11)
    * @param int|null    $pValue The selected value.
    *                            int(11)
