@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql\Helper;
 
 use SetBased\Exception\FallenException;
+use SetBased\Helper\Cast;
 use SetBased\Stratum\Backend\StratumStyle;
 use SetBased\Stratum\Common\DocBlock\DocBlockReflection;
 use SetBased\Stratum\Common\Exception\RoutineLoaderException;
@@ -194,6 +195,7 @@ class RoutineLoaderHelper
   private $sqlMode;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * Object constructor.
    *
@@ -245,10 +247,10 @@ class RoutineLoaderHelper
 
     foreach ($description as $column)
     {
-      preg_match('/^(\w+)(.*)?$/', $column['Type'], $parts1);
+      preg_match('/^(?<data_type>\w+)(?<extra>.*)?$/', $column['Type'], $parts1);
 
       $tmp = ['column_name'       => $column['Field'],
-              'data_type'         => $parts1[1],
+              'data_type'         => $parts1['data_type'],
               'numeric_precision' => null,
               'numeric_scale'     => null,
               'dtd_identifier'    => $column['Type']];
@@ -256,12 +258,32 @@ class RoutineLoaderHelper
       switch ($parts1[1])
       {
         case 'tinyint':
+          preg_match('/^\((?<precision>\d+)\)/', $parts1['extra'], $parts2);
+          $tmp['numeric_precision'] = Cast::toManInt($parts2['precision'] ?? 4);
+          $tmp['numeric_scale']     = 0;
+          break;
+
         case 'smallint':
+          preg_match('/^\((?<precision>\d+)\)/', $parts1['extra'], $parts2);
+          $tmp['numeric_precision'] = Cast::toManInt($parts2['precision'] ?? 6);
+          $tmp['numeric_scale']     = 0;
+          break;
+
         case 'mediumint':
+          preg_match('/^\((?<precision>\d+)\)/', $parts1['extra'], $parts2);
+          $tmp['numeric_precision'] = Cast::toManInt($parts2['precision'] ?? 9);
+          $tmp['numeric_scale']     = 0;
+          break;
+
         case 'int':
+          preg_match('/^\((?<precision>\d+)\)/', $parts1['extra'], $parts2);
+          $tmp['numeric_precision'] = Cast::toManInt($parts2['precision'] ?? 11);
+          $tmp['numeric_scale']     = 0;
+          break;
+
         case 'bigint':
-          preg_match('/^\((\d+)\)/', $parts1[2], $parts2);
-          $tmp['numeric_precision'] = (int)$parts2[1];
+          preg_match('/^\((?<precision>\d+)\)/', $parts1['extra'], $parts2);
+          $tmp['numeric_precision'] = Cast::toManInt($parts2['precision'] ?? 20);
           $tmp['numeric_scale']     = 0;
           break;
 
@@ -285,9 +307,9 @@ class RoutineLoaderHelper
           break;
 
         case 'decimal':
-          preg_match('/^\((\d+),(\d+)\)$/', $parts1[2], $parts2);
-          $tmp['numeric_precision'] = (int)$parts2[1];
-          $tmp['numeric_scale']     = (int)$parts2[2];
+          preg_match('/^\((?<precision>\d+),(<?scale>\d+)\)$/', $parts1['extra'], $parts2);
+          $tmp['numeric_precision'] = Cast::toManInt($parts2['precision'] ?? 65);
+          $tmp['numeric_scale']     = Cast::toManInt($parts2['scale'] ?? 0);
           break;
 
         case 'time':
@@ -303,8 +325,8 @@ class RoutineLoaderHelper
           break;
 
         case 'bit':
-          preg_match('/^\((\d+)\)$/', $parts1[2], $parts2);
-          $tmp['numeric_precision'] = (int)$parts2[1];
+          preg_match('/^\((?<precision>\d+)\)$/', $parts1['extra'], $parts2);
+          $tmp['numeric_precision'] = Cast::toManInt($parts2['precision']);
           break;
 
         case 'tinytext':
