@@ -1,0 +1,14 @@
+/**
+ * Selects its argument.
+ *
+ * @param p_message The message to be echoed.
+ *
+ * @type singleton1
+ *
+ * @return string
+ */
+create procedure tst_oracle_echo(p_message varchar)
+as
+begin
+  select p_message;
+end

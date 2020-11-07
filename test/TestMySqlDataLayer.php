@@ -85,6 +85,75 @@ class TestMySqlDataLayer extends MySqlDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Adds two numbers.
+   *
+   * @param int|null $pLeft  The left operand.
+   *                         int(11)
+   * @param int|null $pRight The right operand.
+   *                         int(11)
+   *
+   * @return int
+   *
+   * @throws MySqlDataLayerException;
+   * @throws ResultException;
+   */
+  public function tstOracleAddFunction(?int $pLeft, ?int $pRight): int
+  {
+    return $this->executeSingleton0('select tst_oracle_add_function('.$this->quoteInt($pLeft).','.$this->quoteInt($pRight).')');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Adds two numbers
+   *
+   * @param int|null $pLeft  The left operand.
+   *                         int(11)
+   * @param int|null $pRight The right operand.
+   *                         int(11)
+   *
+   * @return int
+   *
+   * @throws MySqlDataLayerException;
+   * @throws ResultException;
+   */
+  public function tstOracleAddProcedure(?int $pLeft, ?int $pRight): int
+  {
+    return $this->executeSingleton1('call tst_oracle_add_procedure('.$this->quoteInt($pLeft).','.$this->quoteInt($pRight).')');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects its argument.
+   *
+   * @param string|null $pMessage The message to be echoed.
+   *                              varchar(4000) character set utf8 collation utf8_general_ci
+   *
+   * @return string
+   *
+   * @throws MySqlDataLayerException;
+   * @throws ResultException;
+   */
+  public function tstOracleEcho(?string $pMessage): string
+  {
+    return $this->executeSingleton1('call tst_oracle_echo('.$this->quoteString($pMessage).')');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects Hello, World!
+   *
+   * @return string
+   *
+   * @throws MySqlDataLayerException;
+   * @throws ResultException;
+   */
+  public function tstOracleHelloWorld(): string
+  {
+    return $this->executeSingleton1('call tst_oracle_hello_world()');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Test for all possible types of parameters excluding LOB's.
    *
    * @param int|null              $pTstInt               Parameter of type int.

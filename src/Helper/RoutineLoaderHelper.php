@@ -21,6 +21,17 @@ class RoutineLoaderHelper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * MySQL's and MariaDB's SQL/PSM syntax.
+   */
+  const SQL_PSM_SYNTAX = 1;
+
+  /**
+   * Oracle PL/SQL syntax.
+   */
+  const PL_SQL_SYNTAX = 2;
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * The metadata of the table columns of the table for bulk insert.
    *
    * @var array[]
@@ -187,6 +198,13 @@ class RoutineLoaderHelper
    * @var SqlModeHelper
    */
   private $sqlModeHelper;
+
+  /**
+   * The syntax of the stored routine. Either SQL_PSM_SYNTAX or PL_SQL_SYNTAX.
+   *
+   * @var int
+   */
+  private $syntax;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -371,6 +389,7 @@ class RoutineLoaderHelper
       $this->extractDesignationType();
       $this->extractReturnType();
       $this->extractRoutineTypeAndName();
+      $this->extractSyntax();
       $this->validateReturnType();
       $this->loadRoutineFile();
       $this->extractBulkInsertTableColumnsInfo();
@@ -491,6 +510,45 @@ class RoutineLoaderHelper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Detects the syntax of the stored procedure. Either SQL/PSM or PL/SQL.
+   *
+   * @throws RoutineLoaderException
+   */
+  private function extractSyntax(): void
+  {
+    if ($this->sqlModeHelper->hasOracleMode())
+    {
+      if ($this->findFirstMatchingLine('/^\s*(modifies|reads)\s+sql\s+data\s*$/i')!==null)
+      {
+        $this->syntax = self::SQL_PSM_SYNTAX;
+      }
+      else
+      {
+        $key1 = $this->findFirstMatchingLine('/^\s*(as|is)\s*$/i');
+        $key2 = $this->findFirstMatchingLine('/^\s*begin\s*$/i');
+
+        if ($key1!==null and $key2!==null and $key1 < $key2)
+        {
+          $this->syntax = self::PL_SQL_SYNTAX;
+        }
+        elseif ($key1===null && $key2!==null)
+        {
+          $this->syntax = self::SQL_PSM_SYNTAX;
+        }
+        else
+        {
+          throw new RoutineLoaderException('Unable to derive syntax (SQL/PSM or PL/SQL) from stored routine.');
+        }
+      }
+    }
+    else
+    {
+      $this->syntax = self::SQL_PSM_SYNTAX;
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Extracts DocBlock parts to be used by the wrapper generator.
    */
   private function extractDocBlockPartsWrapper(): array
@@ -534,7 +592,7 @@ class RoutineLoaderHelper
 
       if ($parameterName==='' || $dataType=='' || $delimiter==='' || $enclosure==='' || $escape==='')
       {
-        throw new RoutineLoaderException('Expected: @paramAddendum <field_name> <type_of_list> <delimiter> <enclosure> <escape>');
+        throw new RoutineLoaderException('Expected: @paramAddendum <field_name> <type_of_list> <delimiter> <enclosure> <escape>.');
       }
 
       if (isset($this->extendedParameters[$parameterName]))
@@ -596,12 +654,12 @@ class RoutineLoaderHelper
       case 'singleton1':
         if (count($tags)===0)
         {
-          throw new RoutineLoaderException('Tag @type not found in DocBlock.');
+          throw new RoutineLoaderException('Tag @return not found in DocBlock.');
         }
         $tag = $tags[0];
         if ($tag['arguments'][0]==='')
         {
-          throw new RoutineLoaderException('Invalid return tag. Expected: @return <type>');
+          throw new RoutineLoaderException('Invalid return tag. Expected: @return <type>.');
         }
         $this->returnType = $tag['arguments'][0];
         break;
@@ -698,6 +756,15 @@ class RoutineLoaderHelper
    */
   private function loadRoutineFile(): void
   {
+    if ($this->syntax===self::PL_SQL_SYNTAX)
+    {
+      $this->sqlModeHelper->addIfRequiredOracleMode();
+    }
+    else
+    {
+      $this->sqlModeHelper->removeIfRequiredOracleMode();
+    }
+
     $routineSource = $this->substitutePlaceHolders();
     $this->dropRoutineIfExists();
     $this->dl->setCharacterSet($this->characterSet, $this->collate);
@@ -761,7 +828,7 @@ class RoutineLoaderHelper
     if (empty($this->rdbmsOldRoutineMetadata)) return true;
 
     // If current sql-mode is different the source file must reload.
-    if ($this->rdbmsOldRoutineMetadata['sql_mode']!==$this->sqlModeHelper->getCanonicalSqlMode()) return true;
+    if (!$this->sqlModeHelper->compare($this->rdbmsOldRoutineMetadata['sql_mode'])) return true;
 
     // If current character set is different the source file must reload.
     if ($this->rdbmsOldRoutineMetadata['character_set_client']!==$this->characterSet) return true;

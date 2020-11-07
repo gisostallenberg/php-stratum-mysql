@@ -93,7 +93,7 @@ and   t2.column_name like '%%\\_label'";
    */
   public function allRoutines(): array
   {
-    $sql = '
+    $sql = "
 select ROUTINE_NAME          as  routine_name                            
 ,      ROUTINE_TYPE          as  routine_type           
 ,      SQL_MODE              as  sql_mode       
@@ -101,7 +101,8 @@ select ROUTINE_NAME          as  routine_name
 ,      COLLATION_CONNECTION  as  collation_connection                   
 from  information_schema.ROUTINES
 where ROUTINE_SCHEMA = database()
-order by routine_name';
+and   ROUTINE_TYPE in ('PROCEDURE', 'FUNCTION')
+order by routine_name";
 
     return $this->executeRows($sql);
   }
@@ -390,18 +391,13 @@ and   table_name   = %s', $this->dl->quoteString($tableName));
   /**
    * Selects the SQL mode in the order as preferred by MySQL.
    *
-   * @param string $sqlMode The SQL mode.
-   *
    * @return string
    *
    * @throws MySqlQueryErrorException
    * @throws ResultException
    */
-  public function getCanonicalSqlMode(string $sqlMode): string
+  public function getCanonicalSqlMode(): string
   {
-    $sql = sprintf('set sql_mode = %s', $this->dl->quoteString($sqlMode));
-    $this->executeNone($sql);
-
     $sql = 'select @@sql_mode';
 
     return (string)$this->executeSingleton1($sql);

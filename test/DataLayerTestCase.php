@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql\Test;
 
 use PHPUnit\Framework\TestCase;
+use SetBased\Stratum\MySql\Exception\MySqlConnectFailedException;
+use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
 use SetBased\Stratum\MySql\MySqlDefaultConnector;
 
 /**
@@ -22,6 +24,9 @@ class DataLayerTestCase extends TestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Connects to the MySQL server.
+   *
+   * @throws MySqlConnectFailedException
+   * @throws MySqlDataLayerException
    */
   protected function setUp(): void
   {
@@ -35,6 +40,8 @@ class DataLayerTestCase extends TestCase
    * Returns true if the server is a MariaDB 10.3 or 10.4 instance.
    *
    * @return bool
+   *
+   * @throws MySqlDataLayerException
    */
   protected function isMariaDB103plus(): bool
   {

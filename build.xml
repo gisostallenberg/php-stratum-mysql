@@ -18,6 +18,8 @@
         <delete file="test/etc/routines.json" quiet="true"/>
         <!-- Rename folder for \MagicConstantTest::test5 -->
         <move file="test/psql/rename" tofile="test/psql/ test_escape ' &quot; @ $ ! ." overwrite="true" haltonerror="false"/>
+        <!-- Include or exclude PL/SQL stored routines -->
+        <exec executable="test/include-plsql.sh" passthru="true" checkreturn="true"/>
         <!-- Run unit tests -->
         <exec command="bin/stratum stratum test/etc/stratum.ini" passthru="true" checkreturn="true"/>
         <exec command="bin/phpunit" passthru="true" checkreturn="true"/>
