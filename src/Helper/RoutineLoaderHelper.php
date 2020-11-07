@@ -527,7 +527,7 @@ class RoutineLoaderHelper
         $key1 = $this->findFirstMatchingLine('/^\s*(as|is)\s*$/i');
         $key2 = $this->findFirstMatchingLine('/^\s*begin\s*$/i');
 
-        if ($key1!==null and $key2!==null and $key1 < $key2)
+        if ($key1!==null && $key2!==null && $key1 < $key2)
         {
           $this->syntax = self::PL_SQL_SYNTAX;
         }

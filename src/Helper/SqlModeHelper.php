@@ -40,13 +40,6 @@ class SqlModeHelper
    */
   private $dl;
 
-  /**
-   * True if and only if the MySQL instance has ORACLE SQL mode.
-   *
-   * @var bool|null
-   */
-  private $hasOracleMode;
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Object constructor.
@@ -63,19 +56,23 @@ class SqlModeHelper
     try
     {
       $this->dl->setSqlMode('ORACLE');
-      $this->hasOracleMode = true;
+      $hasOracleMode = true;
     }
     catch (MySqlQueryErrorException $e)
     {
-      $this->hasOracleMode = false;
+      $hasOracleMode = false;
     }
 
-    if ($this->hasOracleMode)
+    if ($hasOracleMode)
     {
       $parts   = explode(',', $sqlMode);
       $parts[] = 'ORACLE';
       $this->dl->setSqlMode(implode(',', $parts));
       $this->canonicalSqlModeWithOracle = $this->dl->getCanonicalSqlMode();
+    }
+    else
+    {
+      $this->canonicalSqlModeWithOracle = null;
     }
 
     $this->dl->setSqlMode($sqlMode);
@@ -119,35 +116,13 @@ class SqlModeHelper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns the canonical SQL mode.
-   *
-   * @return string
-   */
-  public function getCanonicalSqlMode(): string
-  {
-    return $this->canonicalSqlMode;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Returns the canonical SQL mode.
-   *
-   * @return string
-   */
-  public function getCanonicalSqlModeWithOracle(): string
-  {
-    return $this->canonicalSqlModeWithOracle;
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Returns true if and only if the MySQL instance has ORACLE SQL mode.
    *
    * @return bool
    */
   public function hasOracleMode(): bool
   {
-    return $this->hasOracleMode;
+    return ($this->canonicalSqlModeWithOracle!==null);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
