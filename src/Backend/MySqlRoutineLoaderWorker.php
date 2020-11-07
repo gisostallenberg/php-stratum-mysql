@@ -15,6 +15,7 @@ use SetBased\Stratum\MySql\Exception\MySqlConnectFailedException;
 use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
 use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 use SetBased\Stratum\MySql\Helper\RoutineLoaderHelper;
+use SetBased\Stratum\MySql\Helper\SqlModeHelper;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
 /**
@@ -283,18 +284,6 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Gets the SQL mode in the order as preferred by MySQL.
-   *
-   * @throws MySqlQueryErrorException
-   * @throws ResultException
-   */
-  private function getCorrectSqlMode(): void
-  {
-    $this->sqlMode = $this->dl->correctSqlMode($this->sqlMode);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Returns all elements in {@link $sources} with duplicate method names.
    *
    * @return array[]
@@ -364,19 +353,14 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
     $this->replacePairs();
     $this->readStoredRoutineMetadata();
     $this->getOldStoredRoutinesInfo();
-    $this->getCorrectSqlMode();
 
     $this->loadStoredRoutines();
 
-    // Drop obsolete stored routines.
     $this->dropObsoleteRoutines();
-
-    // Remove metadata of stored routines that have been removed.
     $this->removeObsoleteMetadata();
 
     $this->io->writeln('');
 
-    // Write the metadata to file.
     $this->writeStoredRoutineMetadata();
   }
 
@@ -399,11 +383,9 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
     $this->replacePairs();
     $this->readStoredRoutineMetadata();
     $this->getOldStoredRoutinesInfo();
-    $this->getCorrectSqlMode();
 
     $this->loadStoredRoutines();
 
-    // Write the metadata to file.
     $this->writeStoredRoutineMetadata();
   }
 
@@ -412,30 +394,30 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    * Loads all stored routines.
    *
    * @throws InvalidCastException
+   * @throws MySqlQueryErrorException
    * @throws ResultException
    */
   private function loadStoredRoutines(): void
   {
-    // Log an empty line.
     $this->io->writeln('');
 
-    // Sort the sources by routine name.
     usort($this->sources, function ($a, $b) {
       return strcmp($a['routine_name'], $b['routine_name']);
     });
 
-    // Process all sources.
+    $sqlModeHelper = new SqlModeHelper($this->dl, $this->sqlMode);
+
     foreach ($this->sources as $filename)
     {
       $routineName = $filename['routine_name'];
 
       $helper = new RoutineLoaderHelper($this->dl,
                                         $this->io,
+                                        $sqlModeHelper,
                                         $filename['path_name'],
                                         $this->phpStratumMetadata[$routineName] ?? [],
                                         $this->replacePairs,
                                         $this->rdbmsOldMetadata[$routineName] ?? [],
-                                        $this->sqlMode,
                                         $this->defaultCharacterSet,
                                         $this->defaultCollate);
 

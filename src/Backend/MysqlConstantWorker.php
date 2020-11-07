@@ -59,7 +59,6 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
   private $oldColumns = [];
 
   //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * @inheritdoc
    *

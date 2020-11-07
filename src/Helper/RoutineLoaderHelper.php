@@ -189,11 +189,11 @@ class RoutineLoaderHelper
   private $sourceFilename;
 
   /**
-   * The SQL mode under which the stored routine will be loaded and run.
+   * The SQL mode helper object.
    *
-   * @var string
+   * @var SqlModeHelper
    */
-  private $sqlMode;
+  private $sqlModeHelper;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -201,12 +201,11 @@ class RoutineLoaderHelper
    *
    * @param MySqlMetaDataLayer $dl                      The meta data layer.
    * @param StratumStyle       $io                      The output for log messages.
+   * @param SqlModeHelper      $sqlModeHelper
    * @param string             $routineFilename         The filename of the source of the stored routine.
    * @param array              $phpStratumMetadata      The metadata of the stored routine from PhpStratum.
    * @param array              $replacePairs            A map from placeholders to their actual values.
    * @param array              $rdbmsOldRoutineMetadata The old metadata of the stored routine from MySQL.
-   * @param string             $sqlMode                 The SQL mode under which the stored routine will be loaded and
-   *                                                    run.
    * @param string             $characterSet            The default character set under which the stored routine will
    *                                                    be loaded and run.
    * @param string             $collate                 The key or index columns (depending on the designation type) of
@@ -214,21 +213,21 @@ class RoutineLoaderHelper
    */
   public function __construct(MySqlMetaDataLayer $dl,
                               StratumStyle $io,
+                              SqlModeHelper $sqlModeHelper,
                               string $routineFilename,
                               array $phpStratumMetadata,
                               array $replacePairs,
                               array $rdbmsOldRoutineMetadata,
-                              string $sqlMode,
                               string $characterSet,
                               string $collate)
   {
     $this->dl                      = $dl;
     $this->io                      = $io;
+    $this->sqlModeHelper           = $sqlModeHelper;
     $this->sourceFilename          = $routineFilename;
     $this->phpStratumMetadata      = $phpStratumMetadata;
     $this->replacePairs            = $replacePairs;
     $this->rdbmsOldRoutineMetadata = $rdbmsOldRoutineMetadata;
-    $this->sqlMode                 = $sqlMode;
     $this->characterSet            = $characterSet;
     $this->collate                 = $collate;
   }
@@ -398,7 +397,7 @@ class RoutineLoaderHelper
    *
    * @throws MySqlQueryErrorException
    */
-  private function dropRoutine(): void
+  private function dropRoutineIfExists(): void
   {
     if (!empty($this->rdbmsOldRoutineMetadata))
     {
@@ -779,33 +778,10 @@ class RoutineLoaderHelper
    */
   private function loadRoutineFile(): void
   {
-    // Set magic constants specific for this stored routine.
-    $this->setMagicConstants();
-
-    // Replace all place holders with their values.
-    $lines          = explode("\n", $this->routineSourceCode);
-    $routine_source = [];
-    foreach ($lines as $i => $line)
-    {
-      $this->replace['__LINE__'] = $i + 1;
-      $routine_source[$i]        = strtr($line, $this->replace);
-    }
-    $routine_source = implode("\n", $routine_source);
-
-    // Unset magic constants specific for this stored routine.
-    $this->unsetMagicConstants();
-
-    // Drop the stored procedure or function if its exists.
-    $this->dropRoutine();
-
-    // Set the SQL-mode under which the stored routine will run.
-    $this->dl->setSqlMode($this->sqlMode);
-
-    // Set the default character set and collate under which the store routine will run.
+    $routineSource = $this->substitutePlaceHolders();
+    $this->dropRoutineIfExists();
     $this->dl->setCharacterSet($this->characterSet, $this->collate);
-
-    // Finally, execute the SQL code for loading the stored routine.
-    $this->dl->loadRoutine($routine_source);
+    $this->dl->loadRoutine($routineSource);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -849,7 +825,7 @@ class RoutineLoaderHelper
     if (empty($this->phpStratumOldMetadata)) return true;
 
     // If the source file has changed the source file must be loaded.
-    if ($this->phpStratumOldMetadata['timestamp']!=$this->filemtime) return true;
+    if ($this->phpStratumOldMetadata['timestamp']!==$this->filemtime) return true;
 
     // If the value of a placeholder has changed the source file must be loaded.
     foreach ($this->phpStratumOldMetadata['replace'] as $place_holder => $old_value)
@@ -865,13 +841,13 @@ class RoutineLoaderHelper
     if (empty($this->rdbmsOldRoutineMetadata)) return true;
 
     // If current sql-mode is different the source file must reload.
-    if ($this->rdbmsOldRoutineMetadata['sql_mode']!=$this->sqlMode) return true;
+    if ($this->rdbmsOldRoutineMetadata['sql_mode']!==$this->sqlModeHelper->getCanonicalSqlMode()) return true;
 
     // If current character set is different the source file must reload.
-    if ($this->rdbmsOldRoutineMetadata['character_set_client']!=$this->characterSet) return true;
+    if ($this->rdbmsOldRoutineMetadata['character_set_client']!==$this->characterSet) return true;
 
     // If current collation is different the source file must reload.
-    if ($this->rdbmsOldRoutineMetadata['collation_connection']!=$this->collate) return true;
+    if ($this->rdbmsOldRoutineMetadata['collation_connection']!==$this->collate) return true;
 
     return false;
   }
@@ -895,27 +871,33 @@ class RoutineLoaderHelper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Adds magic constants to replace list.
+   * Returns the source of the routine with all placeholders substituted with their values.
+   *
+   * @return string
    */
-  private function setMagicConstants(): void
+  private function substitutePlaceHolders(): string
   {
-    $real_path = realpath($this->sourceFilename);
+    $realpath = realpath($this->sourceFilename);
 
-    $this->replace['__FILE__']    = "'".$this->dl->realEscapeString($real_path)."'";
+    $this->replace['__FILE__']    = "'".$this->dl->realEscapeString($realpath)."'";
     $this->replace['__ROUTINE__'] = "'".$this->routineName."'";
-    $this->replace['__DIR__']     = "'".$this->dl->realEscapeString(dirname($real_path))."'";
-  }
+    $this->replace['__DIR__']     = "'".$this->dl->realEscapeString(dirname($realpath))."'";
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Removes magic constants from current replace list.
-   */
-  private function unsetMagicConstants(): void
-  {
+    $lines          = explode(PHP_EOL, $this->routineSourceCode);
+    $routine_source = [];
+    foreach ($lines as $i => $line)
+    {
+      $this->replace['__LINE__'] = $i + 1;
+      $routine_source[$i]        = strtr($line, $this->replace);
+    }
+    $routine_source = implode(PHP_EOL, $routine_source);
+
     unset($this->replace['__FILE__']);
     unset($this->replace['__ROUTINE__']);
     unset($this->replace['__DIR__']);
     unset($this->replace['__LINE__']);
+
+    return $routine_source;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

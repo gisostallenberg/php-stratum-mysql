@@ -220,27 +220,6 @@ and   table_name   = %s', $this->dl->quoteString($tableName));
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Selects the SQL mode in the order as preferred by MySQL.
-   *
-   * @param string $sqlMode The SQL mode.
-   *
-   * @return string
-   *
-   * @throws MySqlQueryErrorException
-   * @throws ResultException
-   */
-  public function correctSqlMode(string $sqlMode): string
-  {
-    $sql = sprintf('set sql_mode = %s', $this->dl->quoteString($sqlMode));
-    $this->executeNone($sql);
-
-    $sql = 'select @@sql_mode';
-
-    return (string)$this->executeSingleton1($sql);
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Describes a table.
    *
    * @param string $tableName The table name.
@@ -369,6 +348,7 @@ and   table_name   = %s', $this->dl->quoteString($tableName));
 
     return $this->dl->executeRows($sql);
   }
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Executes a query that returns 0 or 1 row.
@@ -387,7 +367,6 @@ and   table_name   = %s', $this->dl->quoteString($tableName));
 
     return $this->dl->executeSingleton0($sql);
   }
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Executes a query that returns 1 and only 1 row with 1 column.
@@ -405,6 +384,27 @@ and   table_name   = %s', $this->dl->quoteString($tableName));
     $this->logQuery($sql);
 
     return $this->dl->executeSingleton1($sql);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects the SQL mode in the order as preferred by MySQL.
+   *
+   * @param string $sqlMode The SQL mode.
+   *
+   * @return string
+   *
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
+   */
+  public function getCanonicalSqlMode(string $sqlMode): string
+  {
+    $sql = sprintf('set sql_mode = %s', $this->dl->quoteString($sqlMode));
+    $this->executeNone($sql);
+
+    $sql = 'select @@sql_mode';
+
+    return (string)$this->executeSingleton1($sql);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
