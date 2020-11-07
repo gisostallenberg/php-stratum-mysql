@@ -3,11 +3,12 @@
  *
  * @param p_count The number of iterations.
  * @param p_blob  The BLOB.
+ *
+ * @type none
  */
 create procedure tst_test_none_with_lob( p_count bigint,
                                          p_blob  blob )
 reads sql data
--- type: none
 begin
  declare l_count bigint default 0;
 

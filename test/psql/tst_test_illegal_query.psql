@@ -1,9 +1,10 @@
 /**
  * Test for illegal query.
+ *
+ * @type rows
  */
 create procedure tst_test_illegal_query()
 reads sql data
--- type: rows
 begin
   select *
   from   DOES_NOT_EXISTS

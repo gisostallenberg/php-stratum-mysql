@@ -561,19 +561,6 @@ class TestMySqlDataLayer extends MySqlDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   *
-   * @return array
-   *
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
-   */
-  public function tstTestNoDocBlock(): array
-  {
-    return $this->executeRow1('call tst_test_no_doc_block()');
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
    * Test for designation type none.
    *
    * @param int|null $pCount The number of iterations.

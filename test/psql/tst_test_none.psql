@@ -2,10 +2,11 @@
  * Test for designation type none.
  *
  * @param p_count The number of iterations.
+ *
+ * @type none
  */
 create procedure tst_test_none( p_count bigint )
 reads sql data
--- type: none
 begin
  declare l_count bigint default 0;
  

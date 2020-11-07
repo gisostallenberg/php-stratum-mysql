@@ -5,11 +5,13 @@
  *                * 0 For a valid test.
  *                * 1 For a valid test.
  *                * 2 For a invalid test.
+ *
+ * @type singleton0
+ *
+ * @return int|null
  */
 create procedure tst_test_singleton0a( p_count int )
 reads sql data
--- type:   singleton0
--- return: int|null
 begin
   select 1
   from   TST_FOO2

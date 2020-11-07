@@ -6,11 +6,12 @@
  *                * 1 For a valid test.
  *                * 2 For a invalid test.
  * @param p_blob  The BLOB.
+ *
+ * @type row1
  */
 create procedure tst_test_row1a_with_lob( p_count int,
                                           p_blob  blob )
 reads sql data
--- type: row1
 begin
   select *
   from   TST_FOO2

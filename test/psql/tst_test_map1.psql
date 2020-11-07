@@ -2,10 +2,11 @@
  * Test for designation type map.
  *
  * @param p_count Number of rows selected.
+ *
+ * @type map
  */
 create procedure tst_test_map1(p_count int)
 reads sql data
--- type: map
 begin
   select tst_c03
   ,      tst_c00

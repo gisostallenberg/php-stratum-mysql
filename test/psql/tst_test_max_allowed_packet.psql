@@ -2,11 +2,13 @@
  * Test for sending data larger than max_allowed_packet.
  *
  * @param p_tmp_blob The BLOB larger than max_allowed_packet.
+ *
+ * @type singleton1
+ *
+ * @return int
  */
 create procedure tst_test_max_allowed_packet( p_tmp_blob longblob )
 reads sql data
--- type:   singleton1
--- return: int
 begin
  drop temporary table if exists TMP_TMP;
 

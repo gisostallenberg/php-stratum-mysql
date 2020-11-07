@@ -1,9 +1,10 @@
 /**
  * Test for designation type table.
+ *
+ * @type table
  */
 create procedure tst_test_table()
 reads sql data
--- type: table
 begin
   select *
   from   TST_TABLE

@@ -7,11 +7,13 @@
  *                * 2 For a invalid test.
  * @param p_value The selected value.
  * @param p_blob  The BLOB.
+ *
+ * @type singleton1
+ *
+ * @return bool
  */
 create procedure tst_test_singleton1b_with_lob(p_count int, p_value int, p_blob blob)
 reads sql data
--- type:   singleton1
--- return: bool
 begin
   select p_value
   from   TST_FOO2

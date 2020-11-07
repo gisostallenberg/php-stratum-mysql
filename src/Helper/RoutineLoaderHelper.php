@@ -70,21 +70,14 @@ class RoutineLoaderHelper
   private $dl;
 
   /**
-   * All DocBlock parts as found in the source of the stored routine.
+   * The DocBlock reflection object.
    *
-   * @var array
+   * @var DocBlockReflection|null
    */
-  private $docBlockPartsSource = [];
+  private $docBlockReflection;
 
   /**
-   * The DocBlock parts to be used by the wrapper generator.
-   *
-   * @var array
-   */
-  private $docBlockPartsWrapper;
-
-  /**
-   * Information about parameters with specific format (string in CSV format etc.) pass to the stored routine.
+   * Information about parameters with specific format (string in CSV format etc.).
    *
    * @var array
    */
@@ -456,117 +449,70 @@ class RoutineLoaderHelper
    */
   private function extractDesignationType(): void
   {
-    $found = true;
-    $key   = array_search('begin', $this->routineSourceCodeLines);
-
-    if ($key!==false)
+    $tags = $this->docBlockReflection->getTags('type');
+    if (count($tags)===0)
     {
-      for ($i = 1; $i<$key; $i++)
-      {
-        $n = preg_match('/^\s*--\s+type:\s*(\w+)\s*(.+)?\s*$/',
-                        $this->routineSourceCodeLines[$key - $i],
-                        $matches);
-        if ($n==1)
+      throw new RoutineLoaderException('Tag @type not found in DocBlock.');
+    }
+    elseif (count($tags)>1)
+    {
+      throw new RoutineLoaderException('Multiple @type tags found in DocBlock.');
+    }
+
+    $tag                   = $tags[0];
+    $this->designationType = $tag['arguments'][0];
+    switch ($this->designationType)
+    {
+      case 'bulk_insert':
+        if ($tag['arguments'][1]==='' || $tag['arguments'][2]==='' || $tag['description'][0]!='')
         {
-          $this->designationType = $matches[1];
-          switch ($this->designationType)
-          {
-            case 'bulk_insert':
-              $m = preg_match('/^([a-zA-Z0-9_]+)\s+([a-zA-Z0-9_,]+)$/',
-                              $matches[2],
-                              $info);
-              if ($m==0)
-              {
-                throw new RoutineLoaderException('Error: Expected: -- type: bulk_insert <table_name> <columns>');
-              }
-              $this->bulkInsertTableName = $info[1];
-              $this->bulkInsertKeys      = explode(',', $info[2]);
-              break;
-
-            case 'rows_with_key':
-            case 'rows_with_index':
-              $this->indexColumns = explode(',', $matches[2]);
-              break;
-
-            default:
-              if (isset($matches[2])) $found = false;
-          }
-          break;
+          throw new RoutineLoaderException('Invalid @type tag. Expected: @type bulk_insert <table_name> <columns>');
         }
-        if ($i==($key - 1)) $found = false;
-      }
-    }
-    else
-    {
-      $found = false;
-    }
+        $this->bulkInsertTableName = $tag['arguments'][1];
+        $this->bulkInsertKeys      = explode(',', $tag['arguments'][2]);
+        break;
 
-    if ($found===false)
-    {
-      throw new RoutineLoaderException('Unable to find the designation type of the stored routine');
-    }
-  }
+      case 'rows_with_key':
+      case 'rows_with_index':
+        if ($tag['arguments'][1]==='' || $tag['arguments'][2]!=='')
+        {
+          throw new RoutineLoaderException('Invalid @type tag. Expected: @type %s <columns>', $this->designationType);
+        }
+        $this->indexColumns = explode(',', $tag['arguments'][1]);
+        break;
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   *  Extracts the DocBlock (in parts) from the source of the stored routine.
-   */
-  private function extractDocBlockPartsSource(): void
-  {
-    // Get the DocBlock for the source.
-    $docBlock = PHP_EOL;
-    foreach ($this->routineSourceCodeLines as $line)
-    {
-      $n = preg_match('/create\\s+(procedure|function)\\s+([a-zA-Z0-9_]+)/i', $line);
-      if ($n) break;
-
-      $docBlock .= $line;
-      $docBlock .= PHP_EOL;
-    }
-
-    DocBlockReflection::setTagParameters('param', 1);
-    $reflection = new DocBlockReflection($docBlock);
-
-    // Get the short description.
-    $this->docBlockPartsSource['sort_description'] = $reflection->getShortDescription();
-
-    // Get the long description.
-    $this->docBlockPartsSource['long_description'] = $reflection->getLongDescription();
-
-    // Get the description for each parameter of the stored routine.
-    foreach ($reflection->getTags() as $key => $tag)
-    {
-      if ($tag['tag']==='param')
-      {
-        $this->docBlockPartsSource['parameters'][$key] = ['name'        => $tag['arguments'][0],
-                                                          'description' => $tag['description']];
-      }
+      default:
+        if ($tag['arguments'][1]!=='')
+        {
+          throw new RoutineLoaderException('Error: Expected: @type %s', $this->designationType);
+        }
     }
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   *  Extracts DocBlock parts to be used by the wrapper generator.
+   * Extracts DocBlock parts to be used by the wrapper generator.
    */
-  private function extractDocBlockPartsWrapper(): void
+  private function extractDocBlockPartsWrapper(): array
   {
-    // Get the DocBlock parts from the source of the stored routine.
-    $this->extractDocBlockPartsSource();
+    $lookup = [];
+    foreach ($this->docBlockReflection->getTags('param') as $tag)
+    {
+      $lookup[$tag['arguments'][0]] = $tag['description'];
+    }
 
-    // Generate the parameters parts of the DocBlock to be used by the wrapper.
     $parameters = [];
-    foreach ($this->parameters as $parameter_info)
+    foreach ($this->parameters as $parameter)
     {
-      $parameters[] = ['parameter_name'       => $parameter_info['parameter_name'],
-                       'php_type'             => DataTypeHelper::columnTypeToPhpTypeHinting($parameter_info).'|null',
-                       'data_type_descriptor' => $parameter_info['data_type_descriptor'],
-                       'description'          => $this->getParameterDocDescription($parameter_info['parameter_name'])];
+      $parameters[] = ['parameter_name'       => $parameter['parameter_name'],
+                       'php_type'             => DataTypeHelper::columnTypeToPhpTypeHinting($parameter).'|null',
+                       'data_type_descriptor' => $parameter['data_type_descriptor'],
+                       'description'          => $lookup[($parameter['parameter_name'])] ?? []];
     }
 
-    // Compose all the DocBlock parts to be used by the wrapper generator.
-    $this->docBlockPartsWrapper = ['sort_description' => $this->docBlockPartsSource['sort_description'],
-                                   'long_description' => $this->docBlockPartsSource['long_description'],
-                                   'parameters'       => $parameters];
+    return ['sort_description' => $this->docBlockReflection->getShortDescription(),
+            'long_description' => $this->docBlockReflection->getLongDescription(),
+            'parameters'       => $parameters];
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -577,56 +523,30 @@ class RoutineLoaderHelper
    */
   private function extractExtendedParametersInfo(): void
   {
-    $key = array_search('begin', $this->routineSourceCodeLines);
-
-    if ($key!==false)
+    $tags = $this->docBlockReflection->getTags('paramAddendum');
+    foreach ($tags as $tag)
     {
-      for ($i = 1; $i<$key; $i++)
+      $parameterName = $tag['arguments'][0];
+      $dataType      = $tag['arguments'][1];
+      $delimiter     = $tag['arguments'][2];
+      $enclosure     = $tag['arguments'][3];
+      $escape        = $tag['arguments'][4];
+
+      if ($parameterName==='' || $dataType=='' || $delimiter==='' || $enclosure==='' || $escape==='')
       {
-        $k = preg_match('/^\s*--\s+param:(?:\s*(\w+)\s+(\w+)(?:(?:\s+([^\s-])\s+([^\s-])\s+([^\s-])\s*$)|(?:\s*$)))?/',
-                        $this->routineSourceCodeLines[$key - $i + 1],
-                        $matches);
-
-        if ($k==1)
-        {
-          $count = sizeof($matches);
-          if ($count==3 || $count==6)
-          {
-            $parameter_name = $matches[1];
-            $data_type      = $matches[2];
-
-            if ($count==6)
-            {
-              $list_delimiter = $matches[3];
-              $list_enclosure = $matches[4];
-              $list_escape    = $matches[5];
-            }
-            else
-            {
-              $list_delimiter = ',';
-              $list_enclosure = '"';
-              $list_escape    = '\\';
-            }
-
-            if (!isset($this->extendedParameters[$parameter_name]))
-            {
-              $this->extendedParameters[$parameter_name] = ['name'      => $parameter_name,
-                                                            'data_type' => $data_type,
-                                                            'delimiter' => $list_delimiter,
-                                                            'enclosure' => $list_enclosure,
-                                                            'escape'    => $list_escape];
-            }
-            else
-            {
-              throw new RoutineLoaderException("Duplicate parameter '%s'", $parameter_name);
-            }
-          }
-          else
-          {
-            throw new RoutineLoaderException('Error: Expected: -- param: <field_name> <type_of_list> [delimiter enclosure escape]');
-          }
-        }
+        throw new RoutineLoaderException('Expected: @paramAddendum <field_name> <type_of_list> <delimiter> <enclosure> <escape>');
       }
+
+      if (isset($this->extendedParameters[$parameterName]))
+      {
+        throw new RoutineLoaderException("Duplicate @paramAddendum tag for parameter '%s'", $parameterName);
+      }
+
+      $this->extendedParameters[$parameterName] = ['name'      => $parameterName,
+                                                   'data_type' => $dataType,
+                                                   'delimiter' => $delimiter,
+                                                   'enclosure' => $enclosure,
+                                                   'escape'    => $escape];
     }
   }
 
@@ -662,35 +582,35 @@ class RoutineLoaderHelper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Extracts the return type of the stored routine.
+   *
+   * @throws RoutineLoaderException
    */
   private function extractReturnType(): void
   {
-    // Return immediately if designation type is not appropriate for this method.
-    if (!in_array($this->designationType, ['function', 'singleton0', 'singleton1'])) return;
+    $tags = $this->docBlockReflection->getTags('return');
 
-    $key = array_search('begin', $this->routineSourceCodeLines);
-
-    if ($key!==false)
+    switch ($this->designationType)
     {
-      for ($i = 1; $i<$key; $i++)
-      {
-        $n = preg_match('/^\s*--\s+return:\s*((\w|\|)+)\s*$/',
-                        $this->routineSourceCodeLines[$key - $i],
-                        $matches);
-        if ($n==1)
+      case 'function':
+      case 'singleton0':
+      case 'singleton1':
+        if (count($tags)===0)
         {
-          $this->returnType = $matches[1];
-
-          break;
+          throw new RoutineLoaderException('Tag @type not found in DocBlock.');
         }
-      }
-    }
+        $tag = $tags[0];
+        if ($tag['arguments'][0]==='')
+        {
+          throw new RoutineLoaderException('Invalid return tag. Expected: @return <type>');
+        }
+        $this->returnType = $tag['arguments'][0];
+        break;
 
-    if ($this->returnType===null)
-    {
-      $this->returnType = 'mixed';
-
-      $this->io->logNote('Unable to find the return type of stored routine');
+      default:
+        if (count($tags)!==0)
+        {
+          throw new RoutineLoaderException('Redundant @type tag found in DocBlock.');
+        }
     }
   }
 
@@ -751,23 +671,23 @@ class RoutineLoaderHelper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Gets description by name of the parameter as found in the DocBlock of the stored routine.
+   * Returns the key of the source line that match a regex pattern.
    *
-   * @param string $name Name of the parameter.
+   * @param string $pattern The regex pattern.
    *
-   * @return array
+   * @return int|null
    */
-  private function getParameterDocDescription(string $name): array
+  private function findFirstMatchingLine(string $pattern): ?int
   {
-    if (isset($this->docBlockPartsSource['parameters']))
+    foreach ($this->routineSourceCodeLines as $key => $line)
     {
-      foreach ($this->docBlockPartsSource['parameters'] as $parameter_doc_info)
+      if (preg_match($pattern, $line)===1)
       {
-        if ($parameter_doc_info['name']===$name) return $parameter_doc_info['description'];
+        return $key;
       }
     }
 
-    return [];
+    return null;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -861,12 +781,31 @@ class RoutineLoaderHelper
   private function readSourceCode(): void
   {
     $this->routineSourceCode      = file_get_contents($this->sourceFilename);
-    $this->routineSourceCodeLines = explode("\n", $this->routineSourceCode);
+    $this->routineSourceCodeLines = explode(PHP_EOL, $this->routineSourceCode);
 
     if ($this->routineSourceCodeLines===false)
     {
       throw new RoutineLoaderException('Source file is empty');
     }
+
+    $start = $this->findFirstMatchingLine('/^\s*\/\*\*\s*$/');
+    $end   = $this->findFirstMatchingLine('/^\s*\*\/\s*$/');;
+    if ($start!==null && $end!==null && $start<$end)
+    {
+      $lines    = array_slice($this->routineSourceCodeLines, $start, $end - $start + 1);
+      $docBlock = implode(PHP_EOL, (array)$lines);
+    }
+    else
+    {
+      $docBlock = '';
+    }
+
+    DocBlockReflection::setTagParameters('param', 1);
+    DocBlockReflection::setTagParameters('type', 3);
+    DocBlockReflection::setTagParameters('return', 1);
+    DocBlockReflection::setTagParameters('paramAddendum', 5);
+
+    $this->docBlockReflection = new DocBlockReflection($docBlock);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -912,7 +851,7 @@ class RoutineLoaderHelper
     $this->phpStratumMetadata['parameters']             = $this->parameters;
     $this->phpStratumMetadata['timestamp']              = $this->filemtime;
     $this->phpStratumMetadata['replace']                = $this->replace;
-    $this->phpStratumMetadata['phpdoc']                 = $this->docBlockPartsWrapper;
+    $this->phpStratumMetadata['phpdoc']                 = $this->extractDocBlockPartsWrapper();
     $this->phpStratumMetadata['spec_params']            = $this->extendedParameters;
     $this->phpStratumMetadata['index_columns']          = $this->indexColumns;
     $this->phpStratumMetadata['bulk_insert_table_name'] = $this->bulkInsertTableName;
@@ -958,31 +897,28 @@ class RoutineLoaderHelper
   private function validateParameterLists(): void
   {
     // Make list with names of parameters used in database.
-    $database_parameters_names = [];
-    foreach ($this->parameters as $parameter_info)
+    $databaseParametersNames = [];
+    foreach ($this->parameters as $parameter)
     {
-      $database_parameters_names[] = $parameter_info['parameter_name'];
+      $databaseParametersNames[] = $parameter['parameter_name'];
     }
 
     // Make list with names of parameters used in dock block of routine.
-    $doc_block_parameters_names = [];
-    if (isset($this->docBlockPartsSource['parameters']))
+    $docBlockParametersNames = [];
+    foreach ($this->docBlockReflection->getTags('param') as $tag)
     {
-      foreach ($this->docBlockPartsSource['parameters'] as $parameter)
-      {
-        $doc_block_parameters_names[] = $parameter['name'];
-      }
+      $docBlockParametersNames[] = $tag['arguments'][0];
     }
 
     // Check and show warning if any parameters is missing in doc block.
-    $tmp = array_diff($database_parameters_names, $doc_block_parameters_names);
+    $tmp = array_diff($databaseParametersNames, $docBlockParametersNames);
     foreach ($tmp as $name)
     {
       $this->io->logNote('Parameter <dbo>%s</dbo> is missing from doc block', $name);
     }
 
     // Check and show warning if find unknown parameters in doc block.
-    $tmp = array_diff($doc_block_parameters_names, $database_parameters_names);
+    $tmp = array_diff($docBlockParametersNames, $databaseParametersNames);
     foreach ($tmp as $name)
     {
       $this->io->logNote('Unknown parameter <dbo>%s</dbo> found in doc block', $name);
