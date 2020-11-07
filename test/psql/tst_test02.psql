@@ -49,7 +49,7 @@ create procedure tst_test02( p_tst_int        @tst_foo1.tst_int%type@,
                              p_tst_char       @tst_foo1.tst_char%type@,
                              p_tst_varchar    @tst_foo1.tst_varchar%type@,
                              p_tst_binary     @tst_foo1.tst_binary%type@,
-                             p_tst_varbinary  @tst_foo1.tst_varbinary%type@,                             
+                             p_tst_varbinary  @tst_foo1.tst_varbinary%type@,
                              p_tst_tinyblob   @tst_foo1.tst_tinyblob%type@,
                              p_tst_blob       @tst_foo1.tst_blob%type@,
                              p_tst_mediumblob @tst_foo1.tst_mediumblob%type@,
@@ -57,30 +57,30 @@ create procedure tst_test02( p_tst_int        @tst_foo1.tst_int%type@,
                              p_tst_tinytext   @tst_foo1.tst_tinytext%type@,
                              p_tst_text       @tst_foo1.tst_text%type@,
                              p_tst_mediumtext @tst_foo1.tst_mediumtext%type@,
-                             p_tst_longtext   @tst_foo1.tst_longtext%type@,                             
+                             p_tst_longtext   @tst_foo1.tst_longtext%type@,
                              p_tst_enum       @tst_foo1.tst_enum%type@,
                              p_tst_set        @tst_foo1.tst_set%type@ )
 reads sql data
 -- type: none
 begin
-  insert into TST_FOO1( tst_int      
-  ,                     tst_smallint 
-  ,                     tst_tinyint  
+  insert into TST_FOO1( tst_int
+  ,                     tst_smallint
+  ,                     tst_tinyint
   ,                     tst_mediumint
-  ,                     tst_bigint   
-  ,                     tst_decimal  
-  ,                     tst_decimal0 
-  ,                     tst_float    
-  ,                     tst_double   
-  ,                     tst_bit      
-  ,                     tst_date     
-  ,                     tst_datetime 
+  ,                     tst_bigint
+  ,                     tst_decimal
+  ,                     tst_decimal0
+  ,                     tst_float
+  ,                     tst_double
+  ,                     tst_bit
+  ,                     tst_date
+  ,                     tst_datetime
   ,                     tst_timestamp
-  ,                     tst_time     
-  ,                     tst_year     
-  ,                     tst_char     
-  ,                     tst_varchar  
-  ,                     tst_binary   
+  ,                     tst_time
+  ,                     tst_year
+  ,                     tst_char
+  ,                     tst_varchar
+  ,                     tst_binary
   ,                     tst_varbinary
   ,                     tst_tinyblob
   ,                     tst_blob
@@ -92,24 +92,24 @@ begin
   ,                     tst_longtext
   ,                     tst_enum
   ,                     tst_set )
-  values( p_tst_int      
-  ,       p_tst_smallint 
-  ,       p_tst_tinyint  
+  values( p_tst_int
+  ,       p_tst_smallint
+  ,       p_tst_tinyint
   ,       p_tst_mediumint
-  ,       p_tst_bigint   
-  ,       p_tst_decimal  
-  ,       p_tst_decimal0 
-  ,       p_tst_float    
-  ,       p_tst_double   
-  ,       p_tst_bit      
-  ,       p_tst_date     
-  ,       p_tst_datetime 
+  ,       p_tst_bigint
+  ,       p_tst_decimal
+  ,       p_tst_decimal0
+  ,       p_tst_float
+  ,       p_tst_double
+  ,       p_tst_bit
+  ,       p_tst_date
+  ,       p_tst_datetime
   ,       p_tst_timestamp
-  ,       p_tst_time     
-  ,       p_tst_year     
-  ,       p_tst_char     
-  ,       p_tst_varchar  
-  ,       p_tst_binary   
+  ,       p_tst_time
+  ,       p_tst_year
+  ,       p_tst_char
+  ,       p_tst_varchar
+  ,       p_tst_binary
   ,       p_tst_varbinary
   ,       p_tst_tinyblob
   ,       p_tst_blob

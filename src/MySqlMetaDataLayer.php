@@ -128,31 +128,31 @@ order by routine_name';
   ,      NUMERIC_PRECISION         as  numeric_precision                                 
   ,      NUMERIC_SCALE             as  numeric_scale                                 
   from   information_schema.COLUMNS
-  where  table_schema = database()
-  and    table_name  rlike '^[a-zA-Z0-9_]*$'
-  and    column_name rlike '^[a-zA-Z0-9_]*$'
-  order by table_name
-  ,        ordinal_position
+  where  TABLE_SCHEMA = database()
+  and    TABLE_NAME  rlike '^[a-zA-Z0-9_]*$'
+  and    COLUMN_NAME rlike '^[a-zA-Z0-9_]*$'
+  order by TABLE_NAME
+  ,        ORDINAL_POSITION
 )
 
 union all
 
 (
-  select concat(table_schema,'.',table_name) table_name
-  ,      column_name
-  ,      column_type
-  ,      data_type
-  ,      character_maximum_length
-  ,      character_set_name
-  ,      collation_name
-  ,      numeric_precision
-  ,      numeric_scale
+  select concat(TABLE_SCHEMA,'.',TABLE_NAME)  as  table_name                                               
+  ,      COLUMN_NAME                          as  column_name                     
+  ,      COLUMN_TYPE                          as  column_type                     
+  ,      DATA_TYPE                            as  data_type                     
+  ,      CHARACTER_MAXIMUM_LENGTH             as  character_maximum_length                     
+  ,      CHARACTER_SET_NAME                   as  character_set_name                     
+  ,      COLLATION_NAME                       as  collation_name                     
+  ,      NUMERIC_PRECISION                    as  numeric_precision                     
+  ,      NUMERIC_SCALE                        as  numeric_scale                     
   from   information_schema.COLUMNS
-  where  table_name  rlike '^[a-zA-Z0-9_]*$'
-  and    column_name rlike '^[a-zA-Z0-9_]*$'
-  order by table_schema
-  ,        table_name
-  ,        ordinal_position
+  where  TABLE_NAME  rlike '^[a-zA-Z0-9_]*$'
+  and    COLUMN_NAME rlike '^[a-zA-Z0-9_]*$'
+  order by TABLE_SCHEMA
+  ,        TABLE_NAME
+  ,        ORDINAL_POSITION
 )
 ";
 
@@ -481,11 +481,11 @@ select t2.PARAMETER_NAME      as  parameter_name
 ,      t2.COLLATION_NAME      as  collation_name                  
 ,      t2.DTD_IDENTIFIER      as  dtd_identifier                  
 from            information_schema.ROUTINES   t1
-left outer join information_schema.PARAMETERS t2  on  t2.specific_schema = t1.routine_schema and
-                                                      t2.specific_name   = t1.routine_name and
-                                                      t2.parameter_mode   is not null
-where t1.routine_schema = database()
-and   t1.routine_name   = '%s'", $routineName);
+left outer join information_schema.PARAMETERS t2  on  t2.SPECIFIC_SCHEMA = t1.ROUTINE_SCHEMA and
+                                                      t2.SPECIFIC_NAME   = t1.ROUTINE_NAME and
+                                                      t2.PARAMETER_MODE   is not null
+where t1.ROUTINE_SCHEMA = database()
+and   t1.ROUTINE_NAME   = '%s'", $routineName);
 
     return $this->executeRows($sql);
   }

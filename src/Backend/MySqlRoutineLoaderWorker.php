@@ -60,7 +60,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   /**
    * An array with source filenames that are not loaded into MySQL.
    *
-   * @var array
+   * @var string[]
    */
   private $errorFilenames = [];
 
@@ -225,15 +225,15 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
     }
 
     // Drop all routines not longer in sources.
-    foreach ($this->rdbmsOldMetadata as $old_routine)
+    foreach ($this->rdbmsOldMetadata as $oldRoutine)
     {
-      if (!isset($lookup[$old_routine['routine_name']]))
+      if (!isset($lookup[$oldRoutine['routine_name']]))
       {
         $this->io->logInfo('Dropping %s <dbo>%s</dbo>',
-                           strtolower($old_routine['routine_type']),
-                           $old_routine['routine_name']);
+                           strtolower($oldRoutine['routine_type']),
+                           $oldRoutine['routine_name']);
 
-        $this->dl->dropRoutine($old_routine['routine_type'], $old_routine['routine_name']);
+        $this->dl->dropRoutine($oldRoutine['routine_type'], $oldRoutine['routine_name']);
       }
     }
   }
