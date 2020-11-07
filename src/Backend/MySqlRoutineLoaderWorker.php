@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SetBased\Stratum\MySql\Backend;
 
 use SetBased\Exception\RuntimeException;
+use SetBased\Helper\InvalidCastException;
 use SetBased\Stratum\Backend\RoutineLoaderWorker;
 use SetBased\Stratum\Common\Exception\RoutineLoaderException;
 use SetBased\Stratum\Common\Helper\SourceFinderHelper;
@@ -128,11 +129,13 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   /**
    * @inheritdoc
    *
+   * @throws InvalidCastException
+   * @throws MySqlConnectFailedException
    * @throws MySqlDataLayerException
    * @throws MySqlQueryErrorException
    * @throws RuntimeException
-   * @throws MySqlConnectFailedException
    * @throws \ReflectionException
+   * @throws \RuntimeException
    */
   public function execute(?array $sources = null): int
   {
@@ -349,6 +352,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   /**
    * Loads all stored routines into MySQL.
    *
+   * @throws InvalidCastException
    * @throws MySqlQueryErrorException
    * @throws RuntimeException
    * @throws \ReflectionException
@@ -382,9 +386,11 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    *
    * @param string[] $sources The list of files to be loaded.
    *
+   * @throws InvalidCastException
    * @throws MySqlQueryErrorException
-   * @throws RuntimeException
+   * @throws \LogicException
    * @throws \ReflectionException
+   * @throws \RuntimeException
    */
   private function loadList(array $sources): void
   {
@@ -405,6 +411,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   /**
    * Loads all stored routines.
    *
+   * @throws InvalidCastException
    * @throws ResultException
    */
   private function loadStoredRoutines(): void
@@ -450,10 +457,16 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
         // Exception is caused by a SQL error. Log the message and the SQL statement with highlighting the error.
         $this->io->error($e->getMessage());
         $this->io->text($e->styledQuery());
+
+        $this->errorFilenames[] = $filename['path_name'];
+        unset($this->phpStratumMetadata[$routineName]);
       }
       catch (MySqlDataLayerException $e)
       {
         $this->io->error($e->getMessage());
+
+        $this->errorFilenames[] = $filename['path_name'];
+        unset($this->phpStratumMetadata[$routineName]);
       }
     }
   }

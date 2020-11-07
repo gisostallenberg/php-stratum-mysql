@@ -5,6 +5,7 @@ namespace SetBased\Stratum\MySql\Helper;
 
 use SetBased\Exception\FallenException;
 use SetBased\Helper\Cast;
+use SetBased\Helper\InvalidCastException;
 use SetBased\Stratum\Backend\StratumStyle;
 use SetBased\Stratum\Common\DocBlock\DocBlockReflection;
 use SetBased\Stratum\Common\Exception\RoutineLoaderException;
@@ -195,7 +196,6 @@ class RoutineLoaderHelper
   private $sqlMode;
 
   //--------------------------------------------------------------------------------------------------------------------
-
   /**
    * Object constructor.
    *
@@ -240,6 +240,8 @@ class RoutineLoaderHelper
    * @param array $description The description of the table.
    *
    * @return array
+   *
+   * @throws InvalidCastException
    */
   private static function extractColumnsFromTableDescription(array $description): array
   {
@@ -359,6 +361,7 @@ class RoutineLoaderHelper
    * @throws RoutineLoaderException
    * @throws MySqlQueryErrorException
    * @throws ResultException
+   * @throws InvalidCastException
    */
   public function loadStoredRoutine(): array
   {
@@ -407,10 +410,10 @@ class RoutineLoaderHelper
   /**
    *  Extracts the column names and column types of the current table for bulk insert.
    *
-   * @throws RoutineLoaderException
+   * @throws InvalidCastException
    * @throws MySqlQueryErrorException
-   *
    * @throws ResultException
+   * @throws RoutineLoaderException
    */
   private function extractBulkInsertTableColumnsInfo(): void
   {
