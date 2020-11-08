@@ -6,7 +6,10 @@ namespace SetBased\Stratum\MySql\Backend;
 use SetBased\Exception\RuntimeException;
 use SetBased\Helper\CodeStore\PhpCodeStore;
 use SetBased\Stratum\Backend\RoutineWrapperGeneratorWorker;
+use SetBased\Stratum\Common\Helper\Util;
 use SetBased\Stratum\Middle\NameMangler\NameMangler;
+use SetBased\Stratum\MySql\Helper\RoutineLoaderHelper;
+use SetBased\Stratum\MySql\Helper\StratumMetadata;
 use SetBased\Stratum\MySql\Wrapper\Wrapper;
 
 /**
@@ -165,15 +168,9 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
    */
   private function readRoutineMetadata(): array
   {
-    $data = file_get_contents($this->metadataFilename);
+    $stratumMetadata = new StratumMetadata($this->metadataFilename, RoutineLoaderHelper::METADATA_REVISION);
 
-    $routines = (array)json_decode($data, true);
-    if (json_last_error()!==JSON_ERROR_NONE)
-    {
-      throw new RuntimeException("Error decoding JSON: '%s'.", json_last_error_msg());
-    }
-
-    return $routines;
+    return $stratumMetadata->getAllMetadata();
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -183,7 +180,7 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
   private function storeWrapperClass(): void
   {
     $code = $this->codeStore->getCode();
-    $this->writeTwoPhases($this->wrapperFilename, $code);
+    Util::writeTwoPhases($this->wrapperFilename, $code, $this->io);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

@@ -6,6 +6,7 @@ namespace SetBased\Stratum\MySql\Backend;
 use SetBased\Exception\RuntimeException;
 use SetBased\Stratum\Backend\ConstantWorker;
 use SetBased\Stratum\Common\Helper\ClassReflectionHelper;
+use SetBased\Stratum\Common\Helper\Util;
 use SetBased\Stratum\MySql\Exception\MySqlConnectFailedException;
 use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
 use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
@@ -508,7 +509,7 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
     }
 
     // Save the columns, width and constants to the filesystem.
-    $this->writeTwoPhases($this->constantsFilename, $content);
+    Util::writeTwoPhases($this->constantsFilename, $content, $this->io);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -541,7 +542,7 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
     $sourceLines = array_merge($tmp1, $constants, $tmp2);
 
     // Save the configuration file.
-    $this->writeTwoPhases($fileName, implode("\n", $sourceLines));
+    Util::writeTwoPhases($fileName, implode("\n", $sourceLines), $this->io);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

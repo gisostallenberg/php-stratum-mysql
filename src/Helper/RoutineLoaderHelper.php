@@ -30,7 +30,11 @@ class RoutineLoaderHelper
    */
   const PL_SQL_SYNTAX = 2;
 
-  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * The revision of the metadata of the stored routines.
+   */
+  const METADATA_REVISION = '2';
+
   /**
    * The metadata of the table columns of the table for bulk insert.
    *
@@ -529,9 +533,9 @@ class RoutineLoaderHelper
                        'description'          => $lookup[($parameter['parameter_name'])] ?? []];
     }
 
-    return ['sort_description' => $this->docBlockReflection->getShortDescription(),
-            'long_description' => $this->docBlockReflection->getLongDescription(),
-            'parameters'       => $parameters];
+    return ['short_description' => $this->docBlockReflection->getShortDescription(),
+            'long_description'  => $this->docBlockReflection->getLongDescription(),
+            'parameters'        => $parameters];
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -856,7 +860,7 @@ class RoutineLoaderHelper
     }
 
     $start = $this->findFirstMatchingLine('/^\s*\/\*\*\s*$/');
-    $end   = $this->findFirstMatchingLine('/^\s*\*\/\s*$/');;
+    $end   = $this->findFirstMatchingLine('/^\s*\*\/\s*$/');
     if ($start!==null && $end!==null && $start<$end)
     {
       $lines    = array_slice($this->routineSourceCodeLines, $start, $end - $start + 1);

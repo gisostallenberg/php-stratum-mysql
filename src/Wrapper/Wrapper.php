@@ -552,9 +552,9 @@ abstract class Wrapper
    */
   private function generatePhpDocBlockSortDescription(): void
   {
-    if (!empty($this->routine['phpdoc']['sort_description']))
+    if (!empty($this->routine['phpdoc']['short_description']))
     {
-      foreach ($this->routine['phpdoc']['sort_description'] as $line)
+      foreach ($this->routine['phpdoc']['short_description'] as $line)
       {
         $this->codeStore->append(' * '.$line, false);
       }
