@@ -101,18 +101,18 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
     {
       foreach ($table as $column)
       {
-        $table_name  = $column['table_name'];
-        $column_name = $column['column_name'];
+        $tableName  = $column['table_name'];
+        $columnName = $column['column_name'];
 
         if ($column['constant_name']=='*')
         {
-          $constant_name                                                = strtoupper($column['column_name']);
-          $this->oldColumns[$table_name][$column_name]['constant_name'] = $constant_name;
+          $constantName                                               = strtoupper($column['column_name']);
+          $this->oldColumns[$tableName][$columnName]['constant_name'] = $constantName;
         }
         else
         {
-          $constant_name                                                = strtoupper($this->oldColumns[$table_name][$column_name]['constant_name']);
-          $this->oldColumns[$table_name][$column_name]['constant_name'] = $constant_name;
+          $constantName                                               = strtoupper($this->oldColumns[$tableName][$columnName]['constant_name']);
+          $this->oldColumns[$tableName][$columnName]['constant_name'] = $constantName;
         }
       }
     }
@@ -287,11 +287,11 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
    */
   private function fillConstants(): void
   {
-    foreach ($this->columns as $table_name => $table)
+    foreach ($this->columns as $tableName => $table)
     {
-      foreach ($table as $column_name => $column)
+      foreach ($table as $columnName => $column)
       {
-        if (isset($this->columns[$table_name][$column_name]['constant_name']))
+        if (isset($this->columns[$tableName][$columnName]['constant_name']))
         {
           $this->constants[$column['constant_name']] = $column['length'];
         }
@@ -354,37 +354,37 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
     {
       $handle = fopen($this->constantsFilename, 'r');
 
-      $line_number = 0;
+      $lineNumber = 0;
       while (($line = fgets($handle)))
       {
-        $line_number++;
+        $lineNumber++;
         if ($line!="\n")
         {
           $n = preg_match('/^\s*(([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*$/', $line, $matches);
           if ($n==0)
           {
             throw new RuntimeException("Illegal format at line %d in file '%s'.",
-                                       $line_number,
+                                       $lineNumber,
                                        $this->constantsFilename);
           }
 
           if (isset($matches[6]))
           {
-            $schema_name   = $matches[2];
-            $table_name    = $matches[3];
-            $column_name   = $matches[4];
-            $length        = $matches[5];
-            $constant_name = $matches[6];
+            $schemaName   = $matches[2];
+            $tableName    = $matches[3];
+            $columnName   = $matches[4];
+            $length       = $matches[5];
+            $constantName = $matches[6];
 
-            if ($schema_name)
+            if ($schemaName)
             {
-              $table_name = $schema_name.'.'.$table_name;
+              $tableName = $schemaName.'.'.$tableName;
             }
 
-            $this->oldColumns[$table_name][$column_name] = ['table_name'    => $table_name,
-                                                            'column_name'   => $column_name,
-                                                            'length'        => $length,
-                                                            'constant_name' => $constant_name];
+            $this->oldColumns[$tableName][$columnName] = ['table_name'    => $tableName,
+                                                          'column_name'   => $columnName,
+                                                          'length'        => $length,
+                                                          'constant_name' => $constantName];
           }
         }
       }
@@ -407,12 +407,12 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
    */
   private function logNumberOfConstants(): void
   {
-    $n_id  = sizeof($this->labels);
-    $n_len = sizeof($this->constants) - $n_id;
+    $countIds    = count($this->labels);
+    $countWidths = count($this->constants) - $countIds;
 
     $this->io->writeln('');
-    $this->io->text(sprintf('Number of constants based on column widths: %d', $n_len));
-    $this->io->text(sprintf('Number of constants based on database IDs : %d', $n_id));
+    $this->io->text(sprintf('Number of constants based on column widths: %d', $countWidths));
+    $this->io->text(sprintf('Number of constants based on database IDs : %d', $countIds));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -433,10 +433,10 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
       $width2 = max(mb_strlen((string)$value), $width2);
     }
 
-    $line_format = sprintf('  const %%-%ds = %%%dd;', $width1, $width2);
+    $format = sprintf('  const %%-%ds = %%%dd;', $width1, $width2);
     foreach ($this->constants as $constant => $value)
     {
-      $constants[] = sprintf($line_format, $constant, $value);
+      $constants[] = sprintf($format, $constant, $value);
     }
 
     return $constants;
@@ -448,13 +448,13 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
    */
   private function mergeColumns(): void
   {
-    foreach ($this->oldColumns as $table_name => $table)
+    foreach ($this->oldColumns as $tableName => $table)
     {
-      foreach ($table as $column_name => $column)
+      foreach ($table as $columnName => $column)
       {
-        if (isset($this->columns[$table_name][$column_name]))
+        if (isset($this->columns[$tableName][$columnName]))
         {
-          $this->columns[$table_name][$column_name]['constant_name'] = $column['constant_name'];
+          $this->columns[$tableName][$columnName]['constant_name'] = $column['constant_name'];
         }
       }
     }
@@ -486,20 +486,20 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
         {
           if (isset($column['constant_name']))
           {
-            $line_format = sprintf("%%s.%%-%ds %%%dd %%s\n", $width1, $width2);
-            $content     .= sprintf($line_format,
-                                    $column['table_name'],
-                                    $column['column_name'],
-                                    $column['length'],
-                                    $column['constant_name']);
+            $format  = sprintf("%%s.%%-%ds %%%dd %%s\n", $width1, $width2);
+            $content .= sprintf($format,
+                                $column['table_name'],
+                                $column['column_name'],
+                                $column['length'],
+                                $column['constant_name']);
           }
           else
           {
-            $line_format = sprintf("%%s.%%-%ds %%%dd\n", $width1, $width2);
-            $content     .= sprintf($line_format,
-                                    $column['table_name'],
-                                    $column['column_name'],
-                                    $column['length']);
+            $format  = sprintf("%%s.%%-%ds %%%dd\n", $width1, $width2);
+            $content .= sprintf($format,
+                                $column['table_name'],
+                                $column['column_name'],
+                                $column['length']);
           }
         }
       }

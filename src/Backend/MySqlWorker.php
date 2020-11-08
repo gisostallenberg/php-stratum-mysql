@@ -103,18 +103,18 @@ class MySqlWorker
    */
   protected function writeTwoPhases(string $filename, string $data): void
   {
-    $write_flag = true;
+    $write = true;
     if (file_exists($filename))
     {
-      $old_data = file_get_contents($filename);
-      if ($data==$old_data) $write_flag = false;
+      $oldData = file_get_contents($filename);
+      if ($data==$oldData) $write = false;
     }
 
-    if ($write_flag)
+    if ($write)
     {
-      $tmp_filename = $filename.'.tmp';
-      file_put_contents($tmp_filename, $data);
-      rename($tmp_filename, $filename);
+      $tmpFilename = $filename.'.tmp';
+      file_put_contents($tmpFilename, $data);
+      rename($tmpFilename, $filename);
 
       $this->io->text(sprintf('Wrote <fso>%s</fso>', OutputFormatter::escape($filename)));
     }

@@ -26,7 +26,6 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * The maximum column size in bytes.
-   *
    */
   const MAX_COLUMN_SIZE = 65532;
 
@@ -177,16 +176,16 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
   private function detectNameConflicts(): void
   {
     // Get same method names from array
-    [$sources_by_path, $sources_by_method] = $this->getDuplicates();
+    [$sourcesByPath, $sourcesByMethod] = $this->getDuplicates();
 
     // Add every not unique method name to myErrorFileNames
-    foreach ($sources_by_path as $source)
+    foreach ($sourcesByPath as $source)
     {
       $this->errorFilenames[] = $source['path_name'];
     }
 
     // Log the sources files with duplicate method names.
-    foreach ($sources_by_method as $method => $sources)
+    foreach ($sourcesByMethod as $method => $sources)
     {
       $tmp = [];
       foreach ($sources as $source)
@@ -199,12 +198,12 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
       $this->io->listing($tmp);
     }
 
-    // Remove duplicates from mySources.
-    foreach ($this->sources as $i => $source)
+    // Remove duplicates from sources.
+    foreach ($this->sources as $key => $source)
     {
-      if (isset($sources_by_path[$source['path_name']]))
+      if (isset($sourcesByPath[$source['path_name']]))
       {
-        unset($this->sources[$i]);
+        unset($this->sources[$key]);
       }
     }
   }
@@ -306,18 +305,18 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
     }
 
     // Second pass find duplicate sources.
-    $duplicates_sources = [];
-    $duplicates_methods = [];
+    $duplicatesSources = [];
+    $duplicatesMethods = [];
     foreach ($this->sources as $source)
     {
       if (sizeof($lookup[$source['method_name']])>1)
       {
-        $duplicates_sources[$source['path_name']]   = $source;
-        $duplicates_methods[$source['method_name']] = $lookup[$source['method_name']];
+        $duplicatesSources[$source['path_name']]   = $source;
+        $duplicatesMethods[$source['method_name']] = $lookup[$source['method_name']];
       }
     }
 
-    return [$duplicates_sources, $duplicates_methods];
+    return [$duplicatesSources, $duplicatesMethods];
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -481,7 +480,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
 
     $size = $this->characterSets[$key]['maxlen'];
 
-    return (int)floor(self::MAX_COLUMN_SIZE  / $size);
+    return (int)floor(self::MAX_COLUMN_SIZE / $size);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -516,7 +515,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
     if (file_exists($this->phpStratumMetadataFilename))
     {
       $this->phpStratumMetadata = (array)json_decode(file_get_contents($this->phpStratumMetadataFilename), true);
-      if (json_last_error()!=JSON_ERROR_NONE)
+      if (json_last_error()!==JSON_ERROR_NONE)
       {
         throw new RuntimeException("Error decoding JSON: '%s'.", json_last_error_msg());
       }
@@ -529,25 +528,16 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    */
   private function removeObsoleteMetadata(): void
   {
-    $clean = [];
-    foreach ($this->sources as $source)
-    {
-      $routineName = $source['routine_name'];
-      if (isset($this->phpStratumMetadata[$routineName]))
-      {
-        $clean[$routineName] = $this->phpStratumMetadata[$routineName];
-      }
-    }
-
-    $this->phpStratumMetadata = $clean;
+    // Of both arrays the keys are routine names.
+    $this->phpStratumMetadata = array_intersect_key($this->phpStratumMetadata, $this->phpStratumMetadata);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Gathers all replace pairs.
    *
-   * @throws \ReflectionException
    * @throws MySqlQueryErrorException
+   * @throws \ReflectionException
    */
   private function replacePairs(): void
   {
@@ -646,7 +636,6 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    */
   private function replacePairsConstants(): void
   {
-    // If myTargetConfigFilename is not set return immediately.
     if (!isset($this->constantClassName)) return;
 
     $reflection = new \ReflectionClass($this->constantClassName);
@@ -672,14 +661,13 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    */
   private function writeStoredRoutineMetadata(): void
   {
-    $json_data = json_encode($this->phpStratumMetadata, JSON_PRETTY_PRINT);
+    $json = json_encode($this->phpStratumMetadata, JSON_PRETTY_PRINT);
     if (json_last_error()!=JSON_ERROR_NONE)
     {
       throw new RuntimeException("Error of encoding to JSON: '%s'.", json_last_error_msg());
     }
 
-    // Save the metadata.
-    $this->writeTwoPhases($this->phpStratumMetadataFilename, $json_data);
+    $this->writeTwoPhases($this->phpStratumMetadataFilename, $json);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

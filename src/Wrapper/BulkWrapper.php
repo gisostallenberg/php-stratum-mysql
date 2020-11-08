@@ -53,8 +53,8 @@ class BulkWrapper extends Wrapper
   {
     $this->throws(MySqlQueryErrorException::class);
 
-    $routine_args = $this->getRoutineArgs();
-    $this->codeStore->append('$this->executeBulk($bulkHandler, \'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
+    $routineArgs = $this->getRoutineArgs();
+    $this->codeStore->append('$this->executeBulk($bulkHandler, \'call '.$this->routine['routine_name'].'('.$routineArgs.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

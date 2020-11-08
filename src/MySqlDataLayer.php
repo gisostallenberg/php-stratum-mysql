@@ -564,7 +564,7 @@ class MySqlDataLayer
    */
   public function executeTable(string $query): int
   {
-    $row_count = 0;
+    $rowCount = 0;
 
     $this->multiQuery($query);
     do
@@ -576,11 +576,11 @@ class MySqlDataLayer
         $columns = [];
 
         // Get metadata to array.
-        foreach ($result->fetch_fields() as $str_num => $column)
+        foreach ($result->fetch_fields() as $key => $column)
         {
-          $columns[$str_num]['header'] = $column->name;
-          $columns[$str_num]['type']   = $column->type;
-          $columns[$str_num]['length'] = max(4, $column->max_length, mb_strlen($column->name));
+          $columns[$key]['header'] = $column->name;
+          $columns[$key]['type']   = $column->type;
+          $columns[$key]['length'] = max(4, $column->max_length, mb_strlen($column->name));
         }
 
         // Show the table header.
@@ -589,7 +589,7 @@ class MySqlDataLayer
         // Show for all rows all columns.
         while (($row = $result->fetch_row()))
         {
-          $row_count++;
+          $rowCount++;
 
           // First row separator.
           echo '|';
@@ -615,7 +615,7 @@ class MySqlDataLayer
       }
     } while ($continue);
 
-    return $row_count;
+    return $rowCount;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -631,10 +631,10 @@ class MySqlDataLayer
   {
     if (!isset($this->maxAllowedPacket))
     {
-      $query              = "show variables like 'max_allowed_packet'";
-      $max_allowed_packet = $this->executeRow1($query);
+      $query            = "show variables like 'max_allowed_packet'";
+      $maxAllowedPacket = $this->executeRow1($query);
 
-      $this->maxAllowedPacket = $max_allowed_packet['Value'];
+      $this->maxAllowedPacket = $maxAllowedPacket['Value'];
 
       // Note: When setting $chunkSize equal to $maxAllowedPacket it is not possible to transmit a LOB
       // with size $maxAllowedPacket bytes (but only $maxAllowedPacket - 8 bytes). But when setting the size of

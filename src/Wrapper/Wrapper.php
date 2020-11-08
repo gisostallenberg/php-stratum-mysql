@@ -171,9 +171,9 @@ abstract class Wrapper
 
     if (!empty($parameters))
     {
-      foreach ($parameters as $parameter_info)
+      foreach ($parameters as $parameter)
       {
-        $hasBlob = $hasBlob || DataTypeHelper::isBlobParameter($parameter_info['data_type']);
+        $hasBlob = $hasBlob || DataTypeHelper::isBlobParameter($parameter['data_type']);
       }
     }
 
@@ -219,15 +219,15 @@ abstract class Wrapper
     $this->throws(MysqlQueryErrorException::class);
     $this->throws(ResultException::class);
 
-    $wrapper_args = $this->getWrapperArgs();
-    $routine_args = $this->getRoutineArgs();
-    $method_name  = $this->nameMangler->getMethodName($this->routine['routine_name']);
+    $wrapperArgs = $this->getWrapperArgs();
+    $routineArgs = $this->getRoutineArgs();
+    $methodName  = $this->nameMangler->getMethodName($this->routine['routine_name']);
 
     $bindings = '';
     $nulls    = '';
-    foreach ($this->routine['parameters'] as $parameter_info)
+    foreach ($this->routine['parameters'] as $parameter)
     {
-      $binding = DataTypeHelper::getBindVariableType($parameter_info);
+      $binding = DataTypeHelper::getBindVariableType($parameter);
       if ($binding=='b')
       {
         $bindings .= 'b';
@@ -238,9 +238,9 @@ abstract class Wrapper
 
     $this->codeStore->appendSeparator();
     $this->generatePhpDocBlock();
-    $this->codeStore->append('public function '.$method_name.'('.$wrapper_args.')');
+    $this->codeStore->append('public function '.$methodName.'('.$wrapperArgs.')');
     $this->codeStore->append('{');
-    $this->codeStore->append('$query = \'call '.$this->routine['routine_name'].'('.$routine_args.')\';');
+    $this->codeStore->append('$query = \'call '.$this->routine['routine_name'].'('.$routineArgs.')\';');
     $this->codeStore->append('$stmt  = @$this->mysqli->prepare($query);');
     $this->codeStore->append('if (!$stmt) throw $this->dataLayerError(\'mysqli::prepare\');');
     $this->codeStore->append('');
@@ -252,11 +252,11 @@ abstract class Wrapper
     $this->codeStore->append('');
 
     $blobArgumentIndex = 0;
-    foreach ($this->routine['parameters'] as $parameter_info)
+    foreach ($this->routine['parameters'] as $parameter)
     {
-      if (DataTypeHelper::getBindVariableType($parameter_info)=='b')
+      if (DataTypeHelper::getBindVariableType($parameter)=='b')
       {
-        $mangledName = $this->nameMangler->getParameterName($parameter_info['parameter_name']);
+        $mangledName = $this->nameMangler->getParameterName($parameter['parameter_name']);
 
         $this->codeStore->append('$this->sendLongData($stmt, '.$blobArgumentIndex.', $'.$mangledName.');');
 
@@ -364,12 +364,12 @@ abstract class Wrapper
   {
     $ret = '';
 
-    foreach ($this->routine['parameters'] as $parameter_info)
+    foreach ($this->routine['parameters'] as $parameter)
     {
-      $mangledName = $this->nameMangler->getParameterName($parameter_info['parameter_name']);
+      $mangledName = $this->nameMangler->getParameterName($parameter['parameter_name']);
 
       if ($ret) $ret .= ',';
-      $ret .= DataTypeHelper::escapePhpExpression($parameter_info, '$'.$mangledName);
+      $ret .= DataTypeHelper::escapePhpExpression($parameter, '$'.$mangledName);
     }
 
     return $ret;
@@ -493,12 +493,12 @@ abstract class Wrapper
     if (!empty($parameters))
     {
       // Compute the max lengths of parameter names and the PHP types of the parameters.
-      $max_name_length = 0;
-      $max_type_length = 0;
+      $maxNameLength = 0;
+      $maxTypeLength = 0;
       foreach ($parameters as $parameter)
       {
-        $max_name_length = max($max_name_length, mb_strlen($parameter['php_name']));
-        $max_type_length = max($max_type_length, mb_strlen($parameter['php_type']));
+        $maxNameLength = max($maxNameLength, mb_strlen($parameter['php_name']));
+        $maxTypeLength = max($maxTypeLength, mb_strlen($parameter['php_type']));
       }
 
       $this->codeStore->append(' *', false);
@@ -507,7 +507,7 @@ abstract class Wrapper
 
        foreach ($parameters as $parameter)
       {
-        $format = sprintf(' * %%-%ds %%-%ds %%-%ds %%s', mb_strlen('@param'), $max_type_length, $max_name_length);
+        $format = sprintf(' * %%-%ds %%-%ds %%-%ds %%s', mb_strlen('@param'), $maxTypeLength, $maxNameLength);
 
         $lines = $parameter['description'];
         if (!empty($lines))

@@ -36,8 +36,8 @@ class LogWrapper extends Wrapper
   {
     $this->throws(MySqlDataLayerException::class);
 
-    $routine_args = $this->getRoutineArgs();
-    $this->codeStore->append('return $this->executeLog(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
+    $routineArgs = $this->getRoutineArgs();
+    $this->codeStore->append('return $this->executeLog(\'call '.$this->routine['routine_name'].'('.$routineArgs.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

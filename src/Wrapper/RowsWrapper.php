@@ -37,8 +37,8 @@ class RowsWrapper extends Wrapper
   {
     $this->throws(MySqlQueryErrorException::class);
 
-    $routine_args = $this->getRoutineArgs();
-    $this->codeStore->append('return $this->executeRows(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
+    $routineArgs = $this->getRoutineArgs();
+    $this->codeStore->append('return $this->executeRows(\'call '.$this->routine['routine_name'].'('.$routineArgs.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

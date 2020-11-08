@@ -43,15 +43,15 @@ class Singleton1Wrapper extends Wrapper
     $this->throws(MySqlDataLayerException::class);
     $this->throws(ResultException::class);
 
-    $routine_args = $this->getRoutineArgs();
+    $routineArgs = $this->getRoutineArgs();
 
     if ($this->routine['return']=='bool')
     {
-      $this->codeStore->append('return !empty($this->executeSingleton1(\'call '.$this->routine['routine_name'].'('.$routine_args.')\'));');
+      $this->codeStore->append('return !empty($this->executeSingleton1(\'call '.$this->routine['routine_name'].'('.$routineArgs.')\'));');
     }
     else
     {
-      $this->codeStore->append('return $this->executeSingleton1(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
+      $this->codeStore->append('return $this->executeSingleton1(\'call '.$this->routine['routine_name'].'('.$routineArgs.')\');');
     }
   }
 

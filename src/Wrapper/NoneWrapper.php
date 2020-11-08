@@ -36,8 +36,8 @@ class NoneWrapper extends Wrapper
   {
     $this->throws(MySqlQueryErrorException::class);
 
-    $routine_args = $this->getRoutineArgs();
-    $this->codeStore->append('return $this->executeNone(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
+    $routineArgs = $this->getRoutineArgs();
+    $this->codeStore->append('return $this->executeNone(\'call '.$this->routine['routine_name'].'('.$routineArgs.')\');');
   }
 
   //--------------------------------------------------------------------------------------------------------------------

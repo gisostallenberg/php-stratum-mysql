@@ -70,8 +70,8 @@ class BulkInsertWrapper extends Wrapper
       throw new LogicException("Number of fields %d and number of columns %d don't match.", $n1, $n2);
     }
 
-    $routine_args = $this->getRoutineArgs();
-    $this->codeStore->append('$this->realQuery(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
+    $routineArgs = $this->getRoutineArgs();
+    $this->codeStore->append('$this->realQuery(\'call '.$this->routine['routine_name'].'('.$routineArgs.')\');');
 
     $columns = '';
     $fields  = '';

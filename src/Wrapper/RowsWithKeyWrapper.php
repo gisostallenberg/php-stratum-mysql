@@ -38,7 +38,7 @@ class RowsWithKeyWrapper extends Wrapper
   {
     $this->throws(MySqlQueryErrorException::class);
 
-    $routine_args = $this->getRoutineArgs();
+    $routineArgs = $this->getRoutineArgs();
 
     $key = '';
     foreach ($this->routine['index_columns'] as $column)
@@ -46,7 +46,7 @@ class RowsWithKeyWrapper extends Wrapper
       $key .= '[$row[\''.$column.'\']]';
     }
 
-    $this->codeStore->append('$result = $this->query(\'call '.$this->routine['routine_name'].'('.$routine_args.')\');');
+    $this->codeStore->append('$result = $this->query(\'call '.$this->routine['routine_name'].'('.$routineArgs.')\');');
     $this->codeStore->append('$ret = [];');
     $this->codeStore->append('while (($row = $result->fetch_array(MYSQLI_ASSOC))) $ret'.$key.' = $row;');
     $this->codeStore->append('$result->free();');

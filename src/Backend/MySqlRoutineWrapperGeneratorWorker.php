@@ -108,19 +108,18 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
     if (!empty($routines))
     {
       // Sort routines by their wrapper method name.
-      $sorted_routines = [];
+      $sortedRoutines = [];
       foreach ($routines as $routine)
       {
-        $method_name                   = $mangler->getMethodName($routine['routine_name']);
-        $sorted_routines[$method_name] = $routine;
+        $methodName                  = $mangler->getMethodName($routine['routine_name']);
+        $sortedRoutines[$methodName] = $routine;
       }
-      ksort($sorted_routines);
+      ksort($sortedRoutines);
 
       // Write methods for each stored routine.
-      foreach ($sorted_routines as $method_name => $routine)
+      foreach ($sortedRoutines as $methodName => $routine)
       {
-        // If routine type is hidden don't create routine wrapper.
-        if ($routine['designation']!='hidden')
+        if ($routine['designation']!=='hidden')
         {
           $this->writeRoutineFunction($routine, $mangler);
         }
@@ -133,17 +132,9 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
 
     $wrappers        = $this->codeStore->getRawCode();
     $this->codeStore = new PhpCodeStore();
-
-    // Write the header of the wrapper class.
     $this->writeClassHeader();
-
-    // Write methods of the wrapper calls.
     $this->codeStore->append($wrappers, false);
-
-    // Write the trailer of the wrapper class.
     $this->writeClassTrailer();
-
-    // Write the wrapper class to the filesystem.
     $this->storeWrapperClass();
   }
 
@@ -177,7 +168,7 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
     $data = file_get_contents($this->metadataFilename);
 
     $routines = (array)json_decode($data, true);
-    if (json_last_error()!=JSON_ERROR_NONE)
+    if (json_last_error()!==JSON_ERROR_NONE)
     {
       throw new RuntimeException("Error decoding JSON: '%s'.", json_last_error_msg());
     }
@@ -204,13 +195,13 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
     $p = strrpos($this->wrapperClassName, '\\');
     if ($p!==false)
     {
-      $namespace  = ltrim(substr($this->wrapperClassName, 0, $p), '\\');
-      $class_name = substr($this->wrapperClassName, $p + 1);
+      $namespace = ltrim(substr($this->wrapperClassName, 0, $p), '\\');
+      $className = substr($this->wrapperClassName, $p + 1);
     }
     else
     {
-      $namespace  = null;
-      $class_name = $this->wrapperClassName;
+      $namespace = null;
+      $className = $this->wrapperClassName;
     }
 
     // Write PHP tag.
@@ -232,11 +223,11 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
 
     // If the child class and parent class have different names import the parent class. Otherwise use the fully
     // qualified parent class name.
-    $parent_class_name = substr($this->parentClassName, strrpos($this->parentClassName, '\\') + 1);
-    if ($class_name!=$parent_class_name)
+    $parentClassName = substr($this->parentClassName, strrpos($this->parentClassName, '\\') + 1);
+    if ($className!==$parentClassName)
     {
       $this->imports[]       = $this->parentClassName;
-      $this->parentClassName = $parent_class_name;
+      $this->parentClassName = $parentClassName;
     }
 
     // Write use statements.
@@ -254,7 +245,7 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
     $this->codeStore->append('/**');
     $this->codeStore->append(' * The data layer.', false);
     $this->codeStore->append(' */', false);
-    $this->codeStore->append(sprintf('class %s extends %s', $class_name, $this->parentClassName));
+    $this->codeStore->append(sprintf('class %s extends %s', $className, $this->parentClassName));
     $this->codeStore->append('{');
   }
 

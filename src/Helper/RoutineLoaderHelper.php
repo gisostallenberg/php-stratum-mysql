@@ -432,10 +432,10 @@ class RoutineLoaderHelper
     if ($this->designationType!='bulk_insert') return;
 
     // Check if table is a temporary table or a non-temporary table.
-    $table_is_non_temporary = $this->dl->checkTableExists($this->bulkInsertTableName);
+    $tableIsNonTemporary = $this->dl->checkTableExists($this->bulkInsertTableName);
 
     // Create temporary table if table is non-temporary table.
-    if (!$table_is_non_temporary)
+    if (!$tableIsNonTemporary)
     {
       $this->dl->callProcedure($this->routineName);
     }
@@ -444,7 +444,7 @@ class RoutineLoaderHelper
     $description = $this->dl->describeTable($this->bulkInsertTableName);
 
     // Drop temporary table if table is non-temporary.
-    if (!$table_is_non_temporary)
+    if (!$tableIsNonTemporary)
     {
       $this->dl->dropTemporaryTable($this->bulkInsertTableName);
     }
@@ -505,45 +505,6 @@ class RoutineLoaderHelper
         {
           throw new RoutineLoaderException('Error: Expected: @type %s', $this->designationType);
         }
-    }
-  }
-
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Detects the syntax of the stored procedure. Either SQL/PSM or PL/SQL.
-   *
-   * @throws RoutineLoaderException
-   */
-  private function extractSyntax(): void
-  {
-    if ($this->sqlModeHelper->hasOracleMode())
-    {
-      if ($this->findFirstMatchingLine('/^\s*(modifies|reads)\s+sql\s+data\s*$/i')!==null)
-      {
-        $this->syntax = self::SQL_PSM_SYNTAX;
-      }
-      else
-      {
-        $key1 = $this->findFirstMatchingLine('/^\s*(as|is)\s*$/i');
-        $key2 = $this->findFirstMatchingLine('/^\s*begin\s*$/i');
-
-        if ($key1!==null && $key2!==null && $key1 < $key2)
-        {
-          $this->syntax = self::PL_SQL_SYNTAX;
-        }
-        elseif ($key1===null && $key2!==null)
-        {
-          $this->syntax = self::SQL_PSM_SYNTAX;
-        }
-        else
-        {
-          throw new RoutineLoaderException('Unable to derive syntax (SQL/PSM or PL/SQL) from stored routine.');
-        }
-      }
-    }
-    else
-    {
-      $this->syntax = self::SQL_PSM_SYNTAX;
     }
   }
 
@@ -681,24 +642,24 @@ class RoutineLoaderHelper
    */
   private function extractRoutineParametersInfo(): void
   {
-    $routine_parameters = $this->dl->routineParameters($this->routineName);
-    foreach ($routine_parameters as $key => $routine_parameter)
+    $routineParameters = $this->dl->routineParameters($this->routineName);
+    foreach ($routineParameters as $key => $routineParameter)
     {
-      if ($routine_parameter['parameter_name'])
+      if ($routineParameter['parameter_name'])
       {
-        $data_type_descriptor = $routine_parameter['dtd_identifier'];
-        if (isset($routine_parameter['character_set_name']))
+        $dataTypeDescriptor = $routineParameter['dtd_identifier'];
+        if (isset($routineParameter['character_set_name']))
         {
-          $data_type_descriptor .= ' character set '.$routine_parameter['character_set_name'];
+          $dataTypeDescriptor .= ' character set '.$routineParameter['character_set_name'];
         }
-        if (isset($routine_parameter['collation_name']))
+        if (isset($routineParameter['collation_name']))
         {
-          $data_type_descriptor .= ' collation '.$routine_parameter['collation_name'];
+          $dataTypeDescriptor .= ' collation '.$routineParameter['collation_name'];
         }
 
-        $routine_parameter['data_type_descriptor'] = $data_type_descriptor;
+        $routineParameter['data_type_descriptor'] = $dataTypeDescriptor;
 
-        $this->parameters[$key] = $routine_parameter;
+        $this->parameters[$key] = $routineParameter;
       }
     }
 
@@ -724,6 +685,45 @@ class RoutineLoaderHelper
     else
     {
       throw new RoutineLoaderException('Unable to find the stored routine name and type');
+    }
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Detects the syntax of the stored procedure. Either SQL/PSM or PL/SQL.
+   *
+   * @throws RoutineLoaderException
+   */
+  private function extractSyntax(): void
+  {
+    if ($this->sqlModeHelper->hasOracleMode())
+    {
+      if ($this->findFirstMatchingLine('/^\s*(modifies|reads)\s+sql\s+data\s*$/i')!==null)
+      {
+        $this->syntax = self::SQL_PSM_SYNTAX;
+      }
+      else
+      {
+        $key1 = $this->findFirstMatchingLine('/^\s*(as|is)\s*$/i');
+        $key2 = $this->findFirstMatchingLine('/^\s*begin\s*$/i');
+
+        if ($key1!==null && $key2!==null && $key1<$key2)
+        {
+          $this->syntax = self::PL_SQL_SYNTAX;
+        }
+        elseif ($key1===null && $key2!==null)
+        {
+          $this->syntax = self::SQL_PSM_SYNTAX;
+        }
+        else
+        {
+          throw new RoutineLoaderException('Unable to derive syntax (SQL/PSM or PL/SQL) from stored routine.');
+        }
+      }
+    }
+    else
+    {
+      $this->syntax = self::SQL_PSM_SYNTAX;
     }
   }
 
@@ -815,10 +815,10 @@ class RoutineLoaderHelper
     if ($this->phpStratumOldMetadata['timestamp']!==$this->filemtime) return true;
 
     // If the value of a placeholder has changed the source file must be loaded.
-    foreach ($this->phpStratumOldMetadata['replace'] as $place_holder => $old_value)
+    foreach ($this->phpStratumOldMetadata['replace'] as $placeHolder => $oldValue)
     {
-      if (!isset($this->replacePairs[strtoupper($place_holder)]) ||
-        $this->replacePairs[strtoupper($place_holder)]!==$old_value)
+      if (!isset($this->replacePairs[strtoupper($placeHolder)]) ||
+        $this->replacePairs[strtoupper($placeHolder)]!==$oldValue)
       {
         return true;
       }
@@ -889,21 +889,21 @@ class RoutineLoaderHelper
     $this->replace['__ROUTINE__'] = "'".$this->routineName."'";
     $this->replace['__DIR__']     = "'".$this->dl->realEscapeString(dirname($realpath))."'";
 
-    $lines          = explode(PHP_EOL, $this->routineSourceCode);
-    $routine_source = [];
+    $lines         = explode(PHP_EOL, $this->routineSourceCode);
+    $routineSource = [];
     foreach ($lines as $i => $line)
     {
       $this->replace['__LINE__'] = $i + 1;
-      $routine_source[$i]        = strtr($line, $this->replace);
+      $routineSource[$i]         = strtr($line, $this->replace);
     }
-    $routine_source = implode(PHP_EOL, $routine_source);
+    $routineSource = implode(PHP_EOL, $routineSource);
 
     unset($this->replace['__FILE__']);
     unset($this->replace['__ROUTINE__']);
     unset($this->replace['__DIR__']);
     unset($this->replace['__LINE__']);
 
-    return $routine_source;
+    return $routineSource;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -936,21 +936,21 @@ class RoutineLoaderHelper
   {
     if (!empty($this->extendedParameters))
     {
-      foreach ($this->extendedParameters as $spec_param_name => $spec_param_info)
+      foreach ($this->extendedParameters as $parameterName => $extendedParameter)
       {
-        $param_not_exist = true;
-        foreach ($this->parameters as $key => $param_info)
+        $exists = false;
+        foreach ($this->parameters as $key => $parameter)
         {
-          if ($param_info['parameter_name']==$spec_param_name)
+          if ($parameter['parameter_name']===$parameterName)
           {
-            $this->parameters[$key] = array_merge($this->parameters[$key], $spec_param_info);
-            $param_not_exist        = false;
+            $this->parameters[$key] = array_merge($this->parameters[$key], $extendedParameter);
+            $exists                 = true;
             break;
           }
         }
-        if ($param_not_exist)
+        if (!$exists)
         {
-          throw new RoutineLoaderException("Specific parameter '%s' does not exist", $spec_param_name);
+          throw new RoutineLoaderException("Specific parameter '%s' does not exist", $parameterName);
         }
       }
     }

@@ -62,7 +62,7 @@ class MySqlQueryErrorException extends MySqlDataLayerException implements QueryE
     {
       // Query is a multi line query.
       // The format of a 1064 message is: %s near '%s' at line %d
-      $error_line = trim(strrchr($this->error, ' '));
+      $errorLineNumber = trim(strrchr($this->error, ' '));
 
       // Prepend each line with line number.
       $lines   = explode(PHP_EOL, $query);
@@ -71,7 +71,7 @@ class MySqlQueryErrorException extends MySqlDataLayerException implements QueryE
       $message = [];
       foreach ($lines as $i => $line)
       {
-        if (($i + 1)==$error_line)
+        if (($i + 1)==$errorLineNumber)
         {
           $message[] = sprintf('<%s>'.$format.'</%s>', $style, $i + 1, OutputFormatter::escape($line), $style);
         }
