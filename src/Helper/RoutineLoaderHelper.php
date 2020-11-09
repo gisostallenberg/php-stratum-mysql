@@ -628,27 +628,20 @@ class RoutineLoaderHelper
   {
     if ($this->sqlModeHelper->hasOracleMode())
     {
-      if ($this->findFirstMatchingLine('/^\s*(modifies|reads)\s+sql\s+data\s*$/i')!==null)
+      $key1 = $this->findFirstMatchingLine('/^\s*(as|is)\s*$/i');
+      $key2 = $this->findFirstMatchingLine('/^\s*begin\s*$/i');
+
+      if ($key1!==null && $key2!==null && $key1<$key2)
+      {
+        $this->syntax = self::PL_SQL_SYNTAX;
+      }
+      elseif ($key1===null && $key2!==null)
       {
         $this->syntax = self::SQL_PSM_SYNTAX;
       }
       else
       {
-        $key1 = $this->findFirstMatchingLine('/^\s*(as|is)\s*$/i');
-        $key2 = $this->findFirstMatchingLine('/^\s*begin\s*$/i');
-
-        if ($key1!==null && $key2!==null && $key1<$key2)
-        {
-          $this->syntax = self::PL_SQL_SYNTAX;
-        }
-        elseif ($key1===null && $key2!==null)
-        {
-          $this->syntax = self::SQL_PSM_SYNTAX;
-        }
-        else
-        {
-          throw new RoutineLoaderException('Unable to derive syntax (SQL/PSM or PL/SQL) from stored routine.');
-        }
+        throw new RoutineLoaderException('Unable to derive syntax (SQL/PSM or PL/SQL) from stored routine.');
       }
     }
     else
@@ -842,13 +835,13 @@ class RoutineLoaderHelper
    */
   private function updateMetadata(): void
   {
-    $this->phpStratumMetadata['routine_name']           = $this->routineName;
-    $this->phpStratumMetadata['designation']            = $this->designationType;
-    $this->phpStratumMetadata['return']                 = $this->returnType;
-    $this->phpStratumMetadata['parameters']             = $this->routineParameters->getParameters();
-    $this->phpStratumMetadata['timestamp']              = $this->filemtime;
-    $this->phpStratumMetadata['replace']                = $this->replace;
-    $this->phpStratumMetadata['phpdoc']                 = $this->extractDocBlockPartsWrapper();
+    $this->phpStratumMetadata['routine_name'] = $this->routineName;
+    $this->phpStratumMetadata['designation']  = $this->designationType;
+    $this->phpStratumMetadata['return']       = $this->returnType;
+    $this->phpStratumMetadata['parameters']   = $this->routineParameters->getParameters();
+    $this->phpStratumMetadata['timestamp']    = $this->filemtime;
+    $this->phpStratumMetadata['replace']      = $this->replace;
+    $this->phpStratumMetadata['phpdoc']       = $this->extractDocBlockPartsWrapper();
 
     if (in_array($this->designationType, ['rows_with_index', 'rows_with_key']))
     {
