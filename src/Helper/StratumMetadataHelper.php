@@ -10,7 +10,7 @@ use SetBased\Stratum\Common\Helper\Util;
 /**
  * Class for storing the metadata of stored routines.
  */
-class StratumMetadata
+class StratumMetadataHelper
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**

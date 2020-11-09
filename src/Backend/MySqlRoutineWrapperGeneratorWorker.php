@@ -9,7 +9,7 @@ use SetBased\Stratum\Backend\RoutineWrapperGeneratorWorker;
 use SetBased\Stratum\Common\Helper\Util;
 use SetBased\Stratum\Middle\NameMangler\NameMangler;
 use SetBased\Stratum\MySql\Helper\RoutineLoaderHelper;
-use SetBased\Stratum\MySql\Helper\StratumMetadata;
+use SetBased\Stratum\MySql\Helper\StratumMetadataHelper;
 use SetBased\Stratum\MySql\Wrapper\Wrapper;
 
 /**
@@ -168,7 +168,7 @@ class MySqlRoutineWrapperGeneratorWorker extends MySqlWorker implements RoutineW
    */
   private function readRoutineMetadata(): array
   {
-    $stratumMetadata = new StratumMetadata($this->metadataFilename, RoutineLoaderHelper::METADATA_REVISION);
+    $stratumMetadata = new StratumMetadataHelper($this->metadataFilename, RoutineLoaderHelper::METADATA_REVISION);
 
     return $stratumMetadata->getAllMetadata();
   }

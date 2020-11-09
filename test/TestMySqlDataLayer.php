@@ -154,6 +154,132 @@ class TestMySqlDataLayer extends MySqlDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * Test parameters with data type from a table column.
+   *
+   * @param string|null           $pParam01 Data type from (other) schema, table, and column.
+   *                                        varchar(64) character set utf8 collation utf8_general_ci
+   * @param int|null              $pParam02 Data type int.
+   *                                        int(11)
+   * @param int|null              $pParam03 Data type smallint.
+   *                                        smallint(6)
+   * @param int|null              $pParam04 Data type tinyint.
+   *                                        tinyint(4)
+   * @param int|null              $pParam05 Data type mediumint.
+   *                                        mediumint(9)
+   * @param int|null              $pParam06 Data type bigint.
+   *                                        bigint(20)
+   * @param int|null              $pParam07 Data type int unsigned.
+   *                                        int(10) unsigned
+   * @param int|null              $pParam08 Data type smallint unsigned.
+   *                                        smallint(5) unsigned
+   * @param int|null              $pParam09 Data type tinyint unsigned.
+   *                                        tinyint(3) unsigned
+   * @param int|null              $pParam10 Data type mediumint unsigned.
+   *                                        mediumint(8) unsigned
+   * @param int|null              $pParam11 Data type bigint unsigned.
+   *                                        bigint(20) unsigned
+   * @param int|float|string|null $pParam12 Data type decimal(10,2).
+   *                                        decimal(10,2)
+   * @param int|float|string|null $pParam13 Data type decimal(65).
+   *                                        decimal(65,0)
+   * @param float|null            $pParam14 Data type float.
+   *                                        float
+   * @param float|null            $pParam15 Data type double.
+   *                                        double
+   * @param string|null           $pParam16 Data type bit(8).
+   *                                        bit(8)
+   * @param string|null           $pParam17 Data type date.
+   *                                        date
+   * @param string|null           $pParam18 Data type datetime.
+   *                                        datetime
+   * @param string|null           $pParam19 Data type timestamp.
+   *                                        timestamp
+   * @param string|null           $pParam20 Data type time.
+   *                                        time
+   * @param int|null              $pParam21 Data type year.
+   *                                        year(4)
+   * @param string|null           $pParam22 Data type char(10).
+   *                                        char(10) character set utf8 collation utf8_general_ci
+   * @param string|null           $pParam23 Data type varchar(10).
+   *                                        varchar(10) character set utf8 collation utf8_general_ci
+   * @param string|null           $pParam24 Data type binary(10).
+   *                                        binary(10)
+   * @param string|null           $pParam25 Data type varbinary(10).
+   *                                        varbinary(10)
+   * @param string|null           $pParam26 Data type tinyblob.
+   *                                        tinyblob
+   * @param string|null           $pParam27 Data type blob.
+   *                                        blob(65535)
+   * @param string|null           $pParam28 Data type mediumblob.
+   *                                        mediumblob
+   * @param string|null           $pParam29 Data type longblob.
+   *                                        longblob
+   * @param string|null           $pParam30 Data type tinytext.
+   *                                        tinytext character set utf8 collation utf8_general_ci
+   * @param string|null           $pParam31 Data type text.
+   *                                        text character set utf8 collation utf8_general_ci
+   * @param string|null           $pParam32 Data type mediumtext.
+   *                                        mediumtext character set utf8 collation utf8_general_ci
+   * @param string|null           $pParam33 Data type longtext.
+   *                                        longtext character set utf8 collation utf8_general_ci
+   * @param string|null           $pParam34 Data type enum('a','b').
+   *                                        enum('a','b') character set utf8 collation utf8_general_ci
+   * @param string|null           $pParam35 Data type set('a','b').
+   *                                        set('a','b') character set utf8 collation utf8_general_ci
+   *
+   * @return int
+   *
+   * @throws MySqlDataLayerException;
+   * @throws MySqlQueryErrorException;
+   * @throws ResultException;
+   */
+  public function tstOracleProcedureWithDataTypeColumns(?string $pParam01, ?int $pParam02, ?int $pParam03, ?int $pParam04, ?int $pParam05, ?int $pParam06, ?int $pParam07, ?int $pParam08, ?int $pParam09, ?int $pParam10, ?int $pParam11, $pParam12, $pParam13, ?float $pParam14, ?float $pParam15, ?string $pParam16, ?string $pParam17, ?string $pParam18, ?string $pParam19, ?string $pParam20, ?int $pParam21, ?string $pParam22, ?string $pParam23, ?string $pParam24, ?string $pParam25, ?string $pParam26, ?string $pParam27, ?string $pParam28, ?string $pParam29, ?string $pParam30, ?string $pParam31, ?string $pParam32, ?string $pParam33, ?string $pParam34, ?string $pParam35)
+  {
+    $query = 'call tst_oracle_procedure_with_data_type_columns('.$this->quoteString($pParam01).','.$this->quoteInt($pParam02).','.$this->quoteInt($pParam03).','.$this->quoteInt($pParam04).','.$this->quoteInt($pParam05).','.$this->quoteInt($pParam06).','.$this->quoteInt($pParam07).','.$this->quoteInt($pParam08).','.$this->quoteInt($pParam09).','.$this->quoteInt($pParam10).','.$this->quoteInt($pParam11).','.$this->quoteDecimal($pParam12).','.$this->quoteDecimal($pParam13).','.$this->quoteFloat($pParam14).','.$this->quoteFloat($pParam15).','.$this->quoteBit($pParam16).','.$this->quoteString($pParam17).','.$this->quoteString($pParam18).','.$this->quoteString($pParam19).','.$this->quoteString($pParam20).','.$this->quoteInt($pParam21).','.$this->quoteString($pParam22).','.$this->quoteString($pParam23).','.$this->quoteBinary($pParam24).','.$this->quoteBinary($pParam25).',?,?,?,?,?,?,?,?,'.$this->quoteString($pParam34).','.$this->quoteString($pParam35).')';
+    $stmt  = @$this->mysqli->prepare($query);
+    if (!$stmt) throw $this->dataLayerError('mysqli::prepare');
+
+    $null = null;
+    $success = @$stmt->bind_param('bbbbbbbb', $null, $null, $null, $null, $null, $null, $null, $null);
+    if (!$success) throw $this->dataLayerError('mysqli_stmt::bind_param');
+
+    $this->getMaxAllowedPacket();
+
+    $this->sendLongData($stmt, 0, $pParam26);
+    $this->sendLongData($stmt, 1, $pParam27);
+    $this->sendLongData($stmt, 2, $pParam28);
+    $this->sendLongData($stmt, 3, $pParam29);
+    $this->sendLongData($stmt, 4, $pParam30);
+    $this->sendLongData($stmt, 5, $pParam31);
+    $this->sendLongData($stmt, 6, $pParam32);
+    $this->sendLongData($stmt, 7, $pParam33);
+
+    if ($this->logQueries)
+    {
+      $time0 = microtime(true);
+
+      $success = @$stmt->execute();
+      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
+
+      $this->queryLog[] = ['query' => $query,
+                           'time'  => microtime(true) - $time0];
+    }
+    else
+    {
+      $success = $stmt->execute();
+      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
+    }
+
+    $ret = $this->mysqli->affected_rows;
+
+    $stmt->close();
+    if ($this->mysqli->more_results()) $this->mysqli->next_result();
+
+    return $ret;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Test for all possible types of parameters excluding LOB's.
    *
    * @param int|null              $pTstInt               Parameter of type int.

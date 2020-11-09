@@ -476,10 +476,10 @@ select t2.PARAMETER_NAME      as  parameter_name
 ,      t2.CHARACTER_SET_NAME  as  character_set_name                      
 ,      t2.COLLATION_NAME      as  collation_name                  
 ,      t2.DTD_IDENTIFIER      as  dtd_identifier                  
-from            information_schema.ROUTINES   t1
-left outer join information_schema.PARAMETERS t2  on  t2.SPECIFIC_SCHEMA = t1.ROUTINE_SCHEMA and
-                                                      t2.SPECIFIC_NAME   = t1.ROUTINE_NAME and
-                                                      t2.PARAMETER_MODE   is not null
+from information_schema.ROUTINES   t1
+join information_schema.PARAMETERS t2  on  t2.SPECIFIC_SCHEMA = t1.ROUTINE_SCHEMA and
+                                           t2.SPECIFIC_NAME   = t1.ROUTINE_NAME and
+                                           t2.PARAMETER_MODE  is not null
 where t1.ROUTINE_SCHEMA = database()
 and   t1.ROUTINE_NAME   = '%s'", $routineName);
 
@@ -515,6 +515,39 @@ and   t1.ROUTINE_NAME   = '%s'", $routineName);
     $sql = sprintf('set sql_mode = %s', $this->dl->quoteString($sqlMode));
 
     $this->executeNone($sql);
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Selects metadata of a column of table.
+   *
+   * @param string|null $schemaName The name of the table schema. If null the current schema.
+   * @param string      $tableName  The name of the table.
+   * @param string      $columnName The name of the column.
+   *
+   * @return array
+   *
+   * @throws MySqlQueryErrorException
+   */
+  public function tableColumn(?string $schemaName, string $tableName, string $columnName): array
+  {
+    $sql = sprintf('
+select COLUMN_NAME         as  column_name
+,      COLUMN_TYPE         as  column_type
+,      DATA_TYPE           as  data_type
+,      NUMERIC_PRECISION   as  numeric_precision
+,      NUMERIC_SCALE       as  numeric_scale
+,      CHARACTER_SET_NAME  as  character_set_name
+,      COLLATION_NAME      as  collation_name
+from   information_schema.COLUMNS
+where  TABLE_SCHEMA = ifnull(%s, database())
+and    TABLE_NAME   = %s
+and    COLUMN_NAME  = %s',
+                   $this->dl->quoteString($schemaName),
+                   $this->dl->quoteString($tableName),
+                   $this->dl->quoteString($columnName));
+
+    return $this->executeRow1($sql);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

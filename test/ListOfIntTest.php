@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Test;
 
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
+
 /**
  * Test cases for a parameter with a list on integers.
  */
@@ -11,13 +13,15 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with a valid list of integers in CSV format.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function test1()
   {
     $ids = "1,3";
     $ret = $this->dataLayer->tstTestListOfInt($ids);
 
-    self::assertEquals(2, count($ret));
+    self::assertCount(2, $ret);
     self::assertArrayHasKey(1, $ret);
     self::assertArrayHasKey(3, $ret);
   }
@@ -25,13 +29,15 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with a valid array of integers.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function test2()
   {
     $ids = [2, 4];
     $ret = $this->dataLayer->tstTestListOfInt($ids);
 
-    self::assertEquals(2, count($ret));
+    self::assertCount(2, $ret);
     self::assertArrayHasKey(2, $ret);
     self::assertArrayHasKey(4, $ret);
   }
@@ -39,6 +45,8 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with a list with an invalid value in CSV format.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function test3()
   {
@@ -50,6 +58,8 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with an array of with an invalid value.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function test4a()
   {
@@ -61,6 +71,8 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with an array of with an invalid value.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function test4b()
   {
@@ -72,36 +84,42 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with an empty list of integers in CSV format.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function test5()
   {
     $ids = null;
     $ret = $this->dataLayer->tstTestListOfInt($ids);
-    self::assertEquals(0, count($ret));
+    self::assertCount(0, $ret);
 
     $ids = false;
     $ret = $this->dataLayer->tstTestListOfInt($ids);
-    self::assertEquals(0, count($ret));
+    self::assertCount(0, $ret);
 
     $ids = '';
     $ret = $this->dataLayer->tstTestListOfInt($ids);
-    self::assertEquals(0, count($ret));
+    self::assertCount(0, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with an empty array/.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function test6()
   {
     $ids = [];
     $ret = $this->dataLayer->tstTestListOfInt($ids);
-    self::assertEquals(0, count($ret));
+    self::assertCount(0, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with a list of integers and an empty value in CSV format.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function test7a()
   {
@@ -113,6 +131,8 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with a list of integers and an empty value in CSV format.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function test7b()
   {
@@ -124,6 +144,8 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with a list of integers and an empty value in CSV format.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function test7c()
   {
@@ -135,6 +157,8 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with an array of integers and an empty value.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function test8a()
   {
@@ -146,6 +170,8 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with an array of integers and an empty value.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function test8b()
   {
@@ -157,6 +183,8 @@ class ListOfIntTest extends DataLayerTestCase
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test with an array of integers and an empty value.
+   *
+   * @throws MySqlQueryErrorException
    */
   public function test8c()
   {

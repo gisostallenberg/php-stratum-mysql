@@ -1,0 +1,80 @@
+/**
+ * Test parameters with data type from a table column.
+ *
+ * @param p_param01 Data type from (other) schema, table, and column.
+ * @param p_param02 Data type int.
+ * @param p_param03 Data type smallint.
+ * @param p_param04 Data type tinyint.
+ * @param p_param05 Data type mediumint.
+ * @param p_param06 Data type bigint.
+ * @param p_param07 Data type int unsigned.
+ * @param p_param08 Data type smallint unsigned.
+ * @param p_param09 Data type tinyint unsigned.
+ * @param p_param10 Data type mediumint unsigned.
+ * @param p_param11 Data type bigint unsigned.
+ * @param p_param12 Data type decimal(10,2).
+ * @param p_param13 Data type decimal(65).
+ * @param p_param14 Data type float.
+ * @param p_param15 Data type double.
+ * @param p_param16 Data type bit(8).
+ * @param p_param17 Data type date.
+ * @param p_param18 Data type datetime.
+ * @param p_param19 Data type timestamp.
+ * @param p_param20 Data type time.
+ * @param p_param21 Data type year.
+ * @param p_param22 Data type char(10).
+ * @param p_param23 Data type varchar(10).
+ * @param p_param24 Data type binary(10).
+ * @param p_param25 Data type varbinary(10).
+ * @param p_param26 Data type tinyblob.
+ * @param p_param27 Data type blob.
+ * @param p_param28 Data type mediumblob.
+ * @param p_param29 Data type longblob.
+ * @param p_param30 Data type tinytext.
+ * @param p_param31 Data type text.
+ * @param p_param32 Data type mediumtext.
+ * @param p_param33 Data type longtext.
+ * @param p_param34 Data type enum('a','b').
+ * @param p_param35 Data type set('a','b').
+ *
+ * @type none
+ */
+create procedure tst_oracle_procedure_with_data_type_columns(p_param01 information_schema.ROUTINES.routine_name%type,
+                                                             p_param02 TST_FOO1.tst_int%type,
+                                                             p_param03 TST_FOO1.tst_smallint%type,
+                                                             p_param04 TST_FOO1.tst_tinyint%type,
+                                                             p_param05 TST_FOO1.tst_mediumint%type,
+                                                             p_param06 TST_FOO1.tst_bigint%type,
+                                                             p_param07 TST_FOO1.tst_int_unsigned%type,
+                                                             p_param08 TST_FOO1.tst_smallint_unsigned%type,
+                                                             p_param09 TST_FOO1.tst_tinyint_unsigned%type,
+                                                             p_param10 TST_FOO1.tst_mediumint_unsigned%type,
+                                                             p_param11 TST_FOO1.tst_bigint_unsigned%type,
+                                                             p_param12 TST_FOO1.tst_decimal%type,
+                                                             p_param13 TST_FOO1.tst_decimal0%type,
+                                                             p_param14 TST_FOO1.tst_float%type,
+                                                             p_param15 TST_FOO1.tst_double%type,
+                                                             p_param16 TST_FOO1.tst_bit%type,
+                                                             p_param17 TST_FOO1.tst_date%type,
+                                                             p_param18 TST_FOO1.tst_datetime%type,
+                                                             p_param19 TST_FOO1.tst_timestamp%type,
+                                                             p_param20 TST_FOO1.tst_time%type,
+                                                             p_param21 TST_FOO1.tst_year%type,
+                                                             p_param22 TST_FOO1.tst_char%type,
+                                                             p_param23 TST_FOO1.tst_varchar%type,
+                                                             p_param24 TST_FOO1.tst_binary%type,
+                                                             p_param25 TST_FOO1.tst_varbinary%type,
+                                                             p_param26 TST_FOO1.tst_tinyblob%type,
+                                                             p_param27 TST_FOO1.tst_blob%type,
+                                                             p_param28 TST_FOO1.tst_mediumblob%type,
+                                                             p_param29 TST_FOO1.tst_longblob%type,
+                                                             p_param30 TST_FOO1.tst_tinytext%type,
+                                                             p_param31 TST_FOO1.tst_text%type,
+                                                             p_param32 TST_FOO1.tst_mediumtext%type,
+                                                             p_param33 TST_FOO1.tst_longtext%type,
+                                                             p_param34 TST_FOO1.tst_enum%type,
+                                                             p_param35 TST_FOO1.tst_set%type)
+as
+begin
+  null;
+end;

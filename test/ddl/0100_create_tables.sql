@@ -34,7 +34,7 @@ create table TST_FOO1( tst_int                int
 ,                      tst_mediumtext         mediumtext
 ,                      tst_longtext           longtext
 ,                      tst_enum               enum('a','b')
-,                      tst_set        set('a','b') )
+,                      tst_set                set('a','b') )
 engine=myisam
 ;
 

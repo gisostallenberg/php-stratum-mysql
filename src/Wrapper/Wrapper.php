@@ -326,11 +326,11 @@ abstract class Wrapper
    * @param array[] $parameters The metadata of the parameters. For each parameter the
    *                            following keys must be defined:
    *                            <ul>
-   *                            <li> php_name             The name of the parameter (including $).
-   *                            <li> description          The description of the parameter.
-   *                            <li> php_type             The type of the parameter.
-   *                            <li> data_type_descriptor The data type of the corresponding parameter of the stored
-   *                            routine. Null if there is no corresponding parameter.
+   *                            <li> php_name       The name of the parameter (including $).
+   *                            <li> description    The description of the parameter.
+   *                            <li> php_type       The type of the parameter.
+   *                            <li> dtd_identifier The data type of the corresponding parameter of the stored routine.
+   *                                                Null if there is no corresponding parameter.
    *                            </ul>
    */
   protected function enhancePhpDocBlockParameters(array &$parameters): void
@@ -482,10 +482,10 @@ abstract class Wrapper
     {
       $mangledName = $this->nameMangler->getParameterName($parameter['parameter_name']);
 
-      $parameters[] = ['php_name'             => '$'.$mangledName,
-                       'description'          => $parameter['description'],
-                       'php_type'             => $parameter['php_type'],
-                       'data_type_descriptor' => $parameter['data_type_descriptor']];
+      $parameters[] = ['php_name'       => '$'.$mangledName,
+                       'description'    => $parameter['description'],
+                       'php_type'       => $parameter['php_type'],
+                       'dtd_identifier' => $parameter['dtd_identifier']];
     }
 
     $this->enhancePhpDocBlockParameters($parameters);
@@ -505,7 +505,7 @@ abstract class Wrapper
 
       // Generate phpDoc for the parameters of the wrapper method.
 
-       foreach ($parameters as $parameter)
+      foreach ($parameters as $parameter)
       {
         $format = sprintf(' * %%-%ds %%-%ds %%-%ds %%s', mb_strlen('@param'), $maxTypeLength, $maxNameLength);
 
@@ -524,9 +524,9 @@ abstract class Wrapper
           $this->codeStore->append(sprintf($format, '@param', $parameter['php_type'], $parameter['php_name'], ''), false);
         }
 
-        if ($parameter['data_type_descriptor']!==null)
+        if ($parameter['dtd_identifier']!==null)
         {
-          $this->codeStore->append(sprintf($format, ' ', ' ', ' ', $parameter['data_type_descriptor']), false);
+          $this->codeStore->append(sprintf($format, ' ', ' ', ' ', $parameter['dtd_identifier']), false);
         }
       }
     }
