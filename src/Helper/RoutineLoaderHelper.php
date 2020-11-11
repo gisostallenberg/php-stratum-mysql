@@ -621,8 +621,6 @@ class RoutineLoaderHelper
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Detects the syntax of the stored procedure. Either SQL/PSM or PL/SQL.
-   *
-   * @throws RoutineLoaderException
    */
   private function extractSyntax(): void
   {
@@ -635,13 +633,9 @@ class RoutineLoaderHelper
       {
         $this->syntax = self::PL_SQL_SYNTAX;
       }
-      elseif ($key1===null && $key2!==null)
-      {
-        $this->syntax = self::SQL_PSM_SYNTAX;
-      }
       else
       {
-        throw new RoutineLoaderException('Unable to derive syntax (SQL/PSM or PL/SQL) from stored routine.');
+        $this->syntax = self::SQL_PSM_SYNTAX;
       }
     }
     else

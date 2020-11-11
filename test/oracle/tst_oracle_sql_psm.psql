@@ -1,0 +1,14 @@
+/**
+ * This a stored routine in SQL/PSM with "as" key word.
+ *
+ * @type none
+ */
+create procedure tst_oracle_sql_psm()
+begin
+  create temporary table TMP_ROUTINE
+  engine = memory
+  as
+  select *
+  from   information_schema.ROUTINES
+  ;
+end

@@ -280,6 +280,19 @@ class TestMySqlDataLayer extends MySqlDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
+   * This a stored routine in SQL/PSM with "as" key word.
+   *
+   * @return int
+   *
+   * @throws MySqlQueryErrorException;
+   */
+  public function tstOracleSqlPsm(): int
+  {
+    return $this->executeNone('call tst_oracle_sql_psm()');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
    * Test for all possible types of parameters excluding LOB's.
    *
    * @param int|null              $pTstInt               Parameter of type int.
