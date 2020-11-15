@@ -385,14 +385,14 @@ abstract class Wrapper
   {
     $ret = '';
 
-    if ($this->routine['designation']=='bulk')
+    if ($this->routine['designation']==='bulk')
     {
       $ret .= 'BulkHandler $bulkHandler';
     }
 
-    foreach ($this->routine['parameters'] as $i => $parameter)
+    foreach ($this->routine['parameters'] as $parameter)
     {
-      if ($ret!='') $ret .= ', ';
+      if ($ret!=='') $ret .= ', ';
 
       $dataType    = DataTypeHelper::columnTypeToPhpTypeHinting($parameter);
       $declaration = DataTypeHelper::phpTypeHintingToPhpTypeDeclaration($dataType.'|null');
@@ -574,7 +574,7 @@ abstract class Wrapper
       $this->throws = array_unique($this->throws, SORT_REGULAR);
       foreach ($this->throws as $class)
       {
-        $this->codeStore->append(sprintf(' * @throws %s;', $class), false);
+        $this->codeStore->append(sprintf(' * @throws %s', $class), false);
       }
     }
   }
