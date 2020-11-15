@@ -19,8 +19,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return string
    *
-   * @throws MySqlDataLayerException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws ResultException
    */
   public function tstMagicConstant01(): string
   {
@@ -33,8 +33,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int
    *
-   * @throws MySqlDataLayerException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws ResultException
    */
   public function tstMagicConstant02(): int
   {
@@ -47,8 +47,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return string
    *
-   * @throws MySqlDataLayerException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws ResultException
    */
   public function tstMagicConstant03(): string
   {
@@ -61,8 +61,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return string
    *
-   * @throws MySqlDataLayerException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws ResultException
    */
   public function tstMagicConstant04(): string
   {
@@ -75,8 +75,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return string
    *
-   * @throws MySqlDataLayerException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws ResultException
    */
   public function tstMagicConstant05(): string
   {
@@ -94,8 +94,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int
    *
-   * @throws MySqlDataLayerException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws ResultException
    */
   public function tstOracleAddFunction(?int $pLeft, ?int $pRight): int
   {
@@ -113,8 +113,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int
    *
-   * @throws MySqlDataLayerException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws ResultException
    */
   public function tstOracleAddProcedure(?int $pLeft, ?int $pRight): int
   {
@@ -130,8 +130,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return string
    *
-   * @throws MySqlDataLayerException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws ResultException
    */
   public function tstOracleEcho(?string $pMessage): string
   {
@@ -144,8 +144,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return string
    *
-   * @throws MySqlDataLayerException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws ResultException
    */
   public function tstOracleHelloWorld(): string
   {
@@ -229,9 +229,9 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int
    *
-   * @throws MySqlDataLayerException;
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstOracleProcedureWithDataTypeColumns(?string $pParam01, ?int $pParam02, ?int $pParam03, ?int $pParam04, ?int $pParam05, ?int $pParam06, ?int $pParam07, ?int $pParam08, ?int $pParam09, ?int $pParam10, ?int $pParam11, $pParam12, $pParam13, ?float $pParam14, ?float $pParam15, ?string $pParam16, ?string $pParam17, ?string $pParam18, ?string $pParam19, ?string $pParam20, ?int $pParam21, ?string $pParam22, ?string $pParam23, ?string $pParam24, ?string $pParam25, ?string $pParam26, ?string $pParam27, ?string $pParam28, ?string $pParam29, ?string $pParam30, ?string $pParam31, ?string $pParam32, ?string $pParam33, ?string $pParam34, ?string $pParam35)
   {
@@ -284,7 +284,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int
    *
-   * @throws MySqlQueryErrorException;
+   * @throws MySqlQueryErrorException
    */
   public function tstOracleSqlPsm(): int
   {
@@ -350,7 +350,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int
    *
-   * @throws MySqlQueryErrorException;
+   * @throws MySqlQueryErrorException
    */
   public function tstTest01(?int $pTstInt, ?int $pTstSmallint, ?int $pTstTinyint, ?int $pTstMediumint, ?int $pTstBigint, ?int $pTstIntUnsigned, ?int $pTstSmallintUnsigned, ?int $pTstTinyintUnsigned, ?int $pTstMediumintUnsigned, ?int $pTstBigintUnsigned, $pTstDecimal, $pTstDecimal0, ?float $pTstFloat, ?float $pTstDouble, ?string $pTstBit, ?string $pTstDate, ?string $pTstDatetime, ?string $pTstTimestamp, ?string $pTstTime, ?int $pTstYear, ?string $pTstChar, ?string $pTstVarchar, ?string $pTstBinary, ?string $pTstVarbinary, ?string $pTstEnum, ?string $pTstSet): int
   {
@@ -422,9 +422,9 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int
    *
-   * @throws MySqlDataLayerException;
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstTest02(?int $pTstInt, ?int $pTstSmallint, ?int $pTstTinyint, ?int $pTstMediumint, ?int $pTstBigint, $pTstDecimal, $pTstDecimal0, ?float $pTstFloat, ?float $pTstDouble, ?string $pTstBit, ?string $pTstDate, ?string $pTstDatetime, ?string $pTstTimestamp, ?string $pTstTime, ?int $pTstYear, ?string $pTstChar, ?string $pTstVarchar, ?string $pTstBinary, ?string $pTstVarbinary, ?string $pTstTinyblob, ?string $pTstBlob, ?string $pTstMediumblob, ?string $pTstLongblob, ?string $pTstTinytext, ?string $pTstText, ?string $pTstMediumtext, ?string $pTstLongtext, ?string $pTstEnum, ?string $pTstSet)
   {
@@ -479,7 +479,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return void
    *
-   * @throws MySqlQueryErrorException;
+   * @throws MySqlQueryErrorException
    */
   public function tstTestBulkInsert01(?array $rows): void
   {
@@ -505,7 +505,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return void
    *
-   * @throws MySqlQueryErrorException;
+   * @throws MySqlQueryErrorException
    */
   public function tstTestBulkInsert02(?array $rows): void
   {
@@ -534,8 +534,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int|null
    *
-   * @throws MySqlDataLayerException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws ResultException
    */
   public function tstTestFunction(?int $pA, ?int $pB): ?int
   {
@@ -551,8 +551,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return bool
    *
-   * @throws MySqlDataLayerException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws ResultException
    */
   public function tstTestFunctionBool1(?int $pRet): bool
   {
@@ -568,8 +568,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return bool
    *
-   * @throws MySqlDataLayerException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws ResultException
    */
   public function tstTestFunctionBool2(?string $pRet): bool
   {
@@ -582,7 +582,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return array[]
    *
-   * @throws MySqlQueryErrorException;
+   * @throws MySqlQueryErrorException
    */
   public function tstTestIllegalQuery(): array
   {
@@ -597,7 +597,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return array[]
    *
-   * @throws MySqlQueryErrorException;
+   * @throws MySqlQueryErrorException
    */
   public function tstTestListOfInt($pIds): array
   {
@@ -616,7 +616,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int
    *
-   * @throws MySqlDataLayerException;
+   * @throws MySqlDataLayerException
    */
   public function tstTestLog(): int
   {
@@ -632,7 +632,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return array
    *
-   * @throws MySqlQueryErrorException;
+   * @throws MySqlQueryErrorException
    */
   public function tstTestMap1(?int $pCount): array
   {
@@ -656,9 +656,9 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return array
    *
-   * @throws MySqlDataLayerException;
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstTestMap1WithLob(?int $pCount, ?string $pBlob)
   {
@@ -710,9 +710,9 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int
    *
-   * @throws MySqlDataLayerException;
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstTestMaxAllowedPacket(?string $pTmpBlob)
   {
@@ -776,7 +776,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int
    *
-   * @throws MySqlQueryErrorException;
+   * @throws MySqlQueryErrorException
    */
   public function tstTestNone(?int $pCount): int
   {
@@ -794,9 +794,9 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int
    *
-   * @throws MySqlDataLayerException;
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstTestNoneWithLob(?int $pCount, ?string $pBlob)
   {
@@ -849,8 +849,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return array|null
    *
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstTestParameterSort(?string $pTstLastName, ?string $pTstFirstName, ?string $pTstInstrument): ?array
   {
@@ -868,7 +868,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int
    *
-   * @throws MySqlQueryErrorException;
+   * @throws MySqlQueryErrorException
    */
   public function tstTestParameterType($pPhpType1, $pPhpType2): int
   {
@@ -887,8 +887,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return array|null
    *
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstTestRow0a(?int $pCount): ?array
   {
@@ -909,9 +909,9 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return array|null
    *
-   * @throws MySqlDataLayerException;
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstTestRow0aWithLob(?int $pCount, ?string $pBlob)
   {
@@ -978,8 +978,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return array
    *
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstTestRow1a(?int $pCount): array
   {
@@ -1000,9 +1000,9 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return array
    *
-   * @throws MySqlDataLayerException;
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstTestRow1aWithLob(?int $pCount, ?string $pBlob)
   {
@@ -1066,7 +1066,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return array[]
    *
-   * @throws MySqlQueryErrorException;
+   * @throws MySqlQueryErrorException
    */
   public function tstTestRows1(?int $pCount): array
   {
@@ -1084,9 +1084,9 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return array[]
    *
-   * @throws MySqlDataLayerException;
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstTestRows1WithLob(?int $pCount, ?string $pBlob)
   {
@@ -1149,7 +1149,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return array[]
    *
-   * @throws MySqlQueryErrorException;
+   * @throws MySqlQueryErrorException
    */
   public function tstTestRowsWithIndex1(?int $pCount): array
   {
@@ -1173,9 +1173,9 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return array[]
    *
-   * @throws MySqlDataLayerException;
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstTestRowsWithIndex1WithLob(?int $pCount, ?string $pBlob)
   {
@@ -1238,7 +1238,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return array[]
    *
-   * @throws MySqlQueryErrorException;
+   * @throws MySqlQueryErrorException
    */
   public function tstTestRowsWithKey1(?int $pCount): array
   {
@@ -1262,9 +1262,9 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return array[]
    *
-   * @throws MySqlDataLayerException;
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstTestRowsWithKey1WithLob(?int $pCount, ?string $pBlob)
   {
@@ -1330,8 +1330,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int|null
    *
-   * @throws MySqlDataLayerException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws ResultException
    */
   public function tstTestSingleton0a(?int $pCount): ?int
   {
@@ -1352,9 +1352,9 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int|null
    *
-   * @throws MySqlDataLayerException;
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstTestSingleton0aWithLob(?int $pCount, ?string $pBlob)
   {
@@ -1423,8 +1423,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return bool
    *
-   * @throws MySqlDataLayerException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws ResultException
    */
   public function tstTestSingleton0b(?int $pCount, ?int $pValue): bool
   {
@@ -1447,9 +1447,9 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return bool
    *
-   * @throws MySqlDataLayerException;
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstTestSingleton0bWithLob(?int $pCount, ?int $pValue, ?string $pBlob)
   {
@@ -1516,8 +1516,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int
    *
-   * @throws MySqlDataLayerException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws ResultException
    */
   public function tstTestSingleton1a(?int $pCount): int
   {
@@ -1538,9 +1538,9 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int
    *
-   * @throws MySqlDataLayerException;
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstTestSingleton1aWithLob(?int $pCount, ?string $pBlob)
   {
@@ -1609,8 +1609,8 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return bool
    *
-   * @throws MySqlDataLayerException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws ResultException
    */
   public function tstTestSingleton1b(?int $pCount, ?int $pValue): bool
   {
@@ -1633,9 +1633,9 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return bool
    *
-   * @throws MySqlDataLayerException;
-   * @throws MySqlQueryErrorException;
-   * @throws ResultException;
+   * @throws MySqlDataLayerException
+   * @throws MySqlQueryErrorException
+   * @throws ResultException
    */
   public function tstTestSingleton1bWithLob(?int $pCount, ?int $pValue, ?string $pBlob)
   {
@@ -1696,7 +1696,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    *
    * @return int
    *
-   * @throws MySqlDataLayerException;
+   * @throws MySqlDataLayerException
    */
   public function tstTestTable(): int
   {

@@ -475,29 +475,32 @@ class RoutineLoaderHelper
     }
 
     $tag                   = $tags[0];
-    $this->designationType = $tag['arguments'][0];
+    $this->designationType = $tag['arguments']['type'];
     switch ($this->designationType)
     {
       case 'bulk_insert':
-        if ($tag['arguments'][1]==='' || $tag['arguments'][2]==='' || $tag['description'][0]!='')
+        $tag['arguments']['table']   = $tag['arguments']['ex1'];
+        $tag['arguments']['columns'] = $tag['arguments']['ex2'];
+        if ($tag['arguments']['table']==='' || $tag['arguments']['columns']==='' || $tag['description'][0]!='')
         {
           throw new RoutineLoaderException('Invalid @type tag. Expected: @type bulk_insert <table_name> <columns>');
         }
-        $this->bulkInsertTableName = $tag['arguments'][1];
-        $this->bulkInsertKeys      = explode(',', $tag['arguments'][2]);
+        $this->bulkInsertTableName = $tag['arguments']['table'];
+        $this->bulkInsertKeys      = explode(',', $tag['arguments']['columns']);
         break;
 
       case 'rows_with_key':
       case 'rows_with_index':
-        if ($tag['arguments'][1]==='' || $tag['arguments'][2]!=='')
+        $tag['arguments']['columns'] = $tag['arguments']['ex1'];
+        if ($tag['arguments']['columns']==='' || $tag['arguments']['ex2']!=='')
         {
           throw new RoutineLoaderException('Invalid @type tag. Expected: @type %s <columns>', $this->designationType);
         }
-        $this->indexColumns = explode(',', $tag['arguments'][1]);
+        $this->indexColumns = explode(',', $tag['arguments']['columns']);
         break;
 
       default:
-        if ($tag['arguments'][1]!=='')
+        if ($tag['arguments']['ex1']!=='' || $tag['arguments']['ex2']!=='')
         {
           throw new RoutineLoaderException('Error: Expected: @type %s', $this->designationType);
         }
@@ -581,11 +584,11 @@ class RoutineLoaderHelper
           throw new RoutineLoaderException('Tag @return not found in DocBlock.');
         }
         $tag = $tags[0];
-        if ($tag['arguments'][0]==='')
+        if ($tag['arguments']['type']==='')
         {
           throw new RoutineLoaderException('Invalid return tag. Expected: @return <type>.');
         }
-        $this->returnType = $tag['arguments'][0];
+        $this->returnType = $tag['arguments']['type'];
         break;
 
       default:
@@ -784,10 +787,10 @@ class RoutineLoaderHelper
       $docBlock = '';
     }
 
-    DocBlockReflection::setTagParameters('param', 1);
-    DocBlockReflection::setTagParameters('type', 3);
-    DocBlockReflection::setTagParameters('return', 1);
-    DocBlockReflection::setTagParameters('paramAddendum', 5);
+    DocBlockReflection::setTagParameters('param', ['name']);
+    DocBlockReflection::setTagParameters('type', ['type', 'ex1', 'ex2']);
+    DocBlockReflection::setTagParameters('return', ['type']);
+    DocBlockReflection::setTagParameters('paramAddendum', ['name', 'type', 'delimiter', 'enclosure', 'escape']);
 
     $this->docBlockReflection = new DocBlockReflection($docBlock);
   }

@@ -20,7 +20,7 @@
     "setbased/helper-code-store-mysql": "^2.1",
     "setbased/helper-code-store-php": "^2.4",
     "setbased/php-stratum-backend": "^5.2",
-    "setbased/php-stratum-common": "^5.4",
+    "setbased/php-stratum-common": "^6.0",
     "setbased/php-stratum-middle": "^5.6"
   },
   "require-dev": {

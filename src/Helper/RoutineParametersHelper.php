@@ -88,7 +88,7 @@ class RoutineParametersHelper
     $lookup = [];
     foreach ($this->docBlockReflection->getTags('param') as $tag)
     {
-      $lookup[$tag['arguments'][0]] = $tag['description'];
+      $lookup[$tag['arguments']['name']] = $tag['description'];
     }
 
     $parameters = [];
@@ -232,11 +232,11 @@ class RoutineParametersHelper
     $tags = $this->docBlockReflection->getTags('paramAddendum');
     foreach ($tags as $tag)
     {
-      $parameterName = $tag['arguments'][0];
-      $dataType      = $tag['arguments'][1];
-      $delimiter     = $tag['arguments'][2];
-      $enclosure     = $tag['arguments'][3];
-      $escape        = $tag['arguments'][4];
+      $parameterName = $tag['arguments']['name'];
+      $dataType      = $tag['arguments']['type'];
+      $delimiter     = $tag['arguments']['delimiter'];
+      $enclosure     = $tag['arguments']['enclosure'];
+      $escape        = $tag['arguments']['escape'];
 
       if ($parameterName==='' || $dataType=='' || $delimiter==='' || $enclosure==='' || $escape==='')
       {
@@ -274,7 +274,7 @@ class RoutineParametersHelper
     $docBlockParametersNames = [];
     foreach ($this->docBlockReflection->getTags('param') as $tag)
     {
-      $docBlockParametersNames[] = $tag['arguments'][0];
+      $docBlockParametersNames[] = $tag['arguments']['name'];
     }
 
     // Check and show warning if any parameters is missing in doc block.
