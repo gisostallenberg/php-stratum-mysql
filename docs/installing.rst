@@ -11,7 +11,7 @@ The preferred way to install PhpStratum is using composer_:
   composer require setbased/php-stratum-mysql
   composer require setbased/php-stratum
 
-The first line installs the MySQL and MariaDB backend and the second line install the frontend (a.k.a the CLI) of PhpStratum.
+The first line installs the MySQL and MariaDB backend and the second line installs the frontend (a.k.a the CLI) of PhpStratum.
 
 Running PhpStratum
 ``````````````````
