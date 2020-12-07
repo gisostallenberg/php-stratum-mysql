@@ -14,7 +14,7 @@ use SetBased\Stratum\Backend\StratumStyle;
 /**
  * The PhpStratum's backend for MySQL and MariaDB using mysqli.
  */
-class MysqlBackend extends Backend
+class MySqlBackend extends Backend
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -22,7 +22,7 @@ class MysqlBackend extends Backend
    */
   public function createConstantWorker(Config $settings, StratumStyle $io): ?ConstantWorker
   {
-    return new MysqlConstantWorker($settings, $io);
+    return new MySqlConstantWorker($settings, $io);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

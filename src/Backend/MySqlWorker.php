@@ -20,23 +20,23 @@ class MySqlWorker
   /**
    * The meta data layer.
    *
-   * @var MySqlMetaDataLayer
+   * @var MySqlMetaDataLayer|null
    */
-  protected $dl;
+  protected ?MySqlMetaDataLayer $dl;
 
   /**
    * The output object.
    *
    * @var StratumStyle
    */
-  protected $io;
+  protected StratumStyle $io;
 
   /**
    * The settings from the PhpStratum configuration file.
    *
    * @var Config
    */
-  protected $settings;
+  protected Config $settings;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**

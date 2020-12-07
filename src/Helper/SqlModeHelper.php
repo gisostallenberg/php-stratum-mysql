@@ -17,28 +17,28 @@ class SqlModeHelper
    *
    * @var string
    */
-  private $canonicalSqlMode;
+  private string $canonicalSqlMode;
 
   /**
    * The canonical SQL mode with ORACLE.
    *
    * @var ?string
    */
-  private $canonicalSqlModeWithOracle = null;
+  private ?string $canonicalSqlModeWithOracle = null;
 
   /**
    * The current SQL mode (also in canonical order).
    *
    * @var string
    */
-  private $currentSqlMode;
+  private string $currentSqlMode;
 
   /**
    * The metadata layer.
    *
    * @var MySqlMetaDataLayer
    */
-  private $dl;
+  private MySqlMetaDataLayer $dl;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -91,7 +91,7 @@ class SqlModeHelper
     if ($this->currentSqlMode!==$this->canonicalSqlModeWithOracle)
     {
       $this->dl->setSqlMode($this->canonicalSqlModeWithOracle);
-      $this->currentSqlMode = $this->canonicalSqlModeWithOracle;
+      $this->currentSqlMode = (string)$this->canonicalSqlModeWithOracle;
     }
   }
 

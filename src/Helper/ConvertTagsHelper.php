@@ -16,21 +16,21 @@ class ConvertTagsHelper
    *
    * @var int|null
    */
-  private $docBlockEndKey;
+  private ?int $docBlockEndKey;
 
   /**
    * The source as array of sources.
    *
    * @var string[]
    */
-  private $source = [];
+  private array $source = [];
 
   /**
    * The old style tags.
    *
    * @var array
    */
-  private $tags;
+  private array $tags;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**

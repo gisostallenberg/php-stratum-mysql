@@ -25,7 +25,7 @@ class MySqlDataLayer
    * @since 1.0.0
    * @api
    */
-  public $charSet = 'utf8';
+  public string $charSet = 'utf8';
 
   /**
    * If set queries must be logged.
@@ -35,14 +35,14 @@ class MySqlDataLayer
    * @since 1.0.0
    * @api
    */
-  public $logQueries = false;
+  public bool $logQueries = false;
 
   /**
    * The options to be set.
    *
    * @var array
    */
-  public $options = [MYSQLI_OPT_INT_AND_FLOAT_NATIVE => true];
+  public array $options = [MYSQLI_OPT_INT_AND_FLOAT_NATIVE => true];
 
   /**
    * The SQL mode of the MySQL instance.
@@ -52,7 +52,7 @@ class MySqlDataLayer
    * @since 1.0.0
    * @api
    */
-  public $sqlMode = 'STRICT_ALL_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_VALUE_ON_ZERO,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE,ONLY_FULL_GROUP_BY';
+  public string $sqlMode = 'STRICT_ALL_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_VALUE_ON_ZERO,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE,ONLY_FULL_GROUP_BY';
 
   /**
    * The transaction isolation level. Possible values are:
@@ -68,42 +68,42 @@ class MySqlDataLayer
    * @since 1.0.0
    * @api
    */
-  public $transactionIsolationLevel = 'READ COMMITTED';
+  public string $transactionIsolationLevel = 'READ COMMITTED';
 
   /**
    * Chunk size when transmitting LOB to the MySQL instance. Must be less than max_allowed_packet.
    *
    * @var int
    */
-  protected $chunkSize;
+  protected int $chunkSize;
 
   /**
    * Value of variable max_allowed_packet
    *
-   * @var int
+   * @var int|null
    */
-  protected $maxAllowedPacket;
+  protected ?int $maxAllowedPacket = null;
 
   /**
    * The connection between PHP and the MySQL or MariaDB instance.
    *
    * @var \mysqli|null
    */
-  protected $mysqli = null;
+  protected ?\mysqli $mysqli = null;
 
   /**
    * The query log.
    *
    * @var array[]
    */
-  protected $queryLog = [];
+  protected array $queryLog = [];
 
   /**
    * The object for connecting to a MySQL or MariaDB instance.
    *
    * @var MySqlConnector
    */
-  private $connector;
+  private MySqlConnector $connector;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -629,12 +629,12 @@ class MySqlDataLayer
    */
   public function getMaxAllowedPacket(): int
   {
-    if (!isset($this->maxAllowedPacket))
+    if ($this->maxAllowedPacket===null)
     {
       $query            = "show variables like 'max_allowed_packet'";
       $maxAllowedPacket = $this->executeRow1($query);
 
-      $this->maxAllowedPacket = $maxAllowedPacket['Value'];
+      $this->maxAllowedPacket = (int)$maxAllowedPacket['Value'];
 
       // Note: When setting $chunkSize equal to $maxAllowedPacket it is not possible to transmit a LOB
       // with size $maxAllowedPacket bytes (but only $maxAllowedPacket - 8 bytes). But when setting the size of

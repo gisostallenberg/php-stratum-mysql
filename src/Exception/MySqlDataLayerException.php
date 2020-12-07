@@ -16,21 +16,21 @@ class MySqlDataLayerException extends \RuntimeException implements DataLayerExce
    *
    * @var int
    */
-  protected $errno;
+  protected int $errno;
 
   /**
    * Description of the last error ($mysqli->error).
    *
    * @var string
    */
-  protected $error;
+  protected string $error;
 
   /**
    * The method.
    *
    * @var string
    */
-  protected $method;
+  protected string $method;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**

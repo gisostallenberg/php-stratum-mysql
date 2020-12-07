@@ -14,42 +14,42 @@ class MySqlDefaultConnector implements MySqlConnector
   /**
    * The connection between PHP and the MySQL instance.
    *
-   * @var \mysqli
+   * @var \mysqli|null
    */
-  protected $mysqli;
+  protected ?\mysqli $mysqli;
 
   /**
    * @var string
    */
-  private $database;
+  private string $database;
 
   /**
    * The hostname.
    *
    * @var string
    */
-  private $host;
+  private string $host;
 
   /**
    * The password.
    *
    * @var string
    */
-  private $password;
+  private string $password;
 
   /**
    * The port number.
    *
    * @var int
    */
-  private $port;
+  private int $port;
 
   /**
    * The MySQL user name.
    *
    * @var string
    */
-  private $user;
+  private string $user;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
@@ -71,6 +71,7 @@ class MySqlDefaultConnector implements MySqlConnector
     $this->password = $password;
     $this->database = $database;
     $this->port     = $port;
+    $this->mysqli   = null;
   }
 
   //--------------------------------------------------------------------------------------------------------------------

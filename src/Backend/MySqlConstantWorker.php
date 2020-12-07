@@ -15,41 +15,41 @@ use SetBased\Stratum\MySql\Helper\DataTypeHelper;
 /**
  * Command for creating PHP constants based on column widths, auto increment columns and labels.
  */
-class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
+class MySqlConstantWorker extends MySqlWorker implements ConstantWorker
 {
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Name of the class that contains all constants.
    *
-   * @var string
+   * @var string|null
    */
-  private $className;
+  private ?string $className;
 
   /**
    * All columns in the MySQL schema.
    *
    * @var array
    */
-  private $columns = [];
+  private array $columns = [];
 
   /**
    * @var array All constants.
    */
-  private $constants = [];
+  private array $constants = [];
 
   /**
    * Filename with column names, their widths, and constant names.
    *
-   * @var string
+   * @var string|null
    */
-  private $constantsFilename;
+  private ?string $constantsFilename;
 
   /**
    * All primary key labels, their widths and constant names.
    *
    * @var array
    */
-  private $labels = [];
+  private array $labels = [];
 
   /**
    * The previous column names, widths, and constant names (i.e. the content of $constantsFilename upon starting
@@ -57,7 +57,7 @@ class MysqlConstantWorker extends MySqlWorker implements ConstantWorker
    *
    * @var array
    */
-  private $oldColumns = [];
+  private array $oldColumns = [];
 
   //--------------------------------------------------------------------------------------------------------------------
   /**

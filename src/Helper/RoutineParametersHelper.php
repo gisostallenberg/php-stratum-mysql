@@ -20,42 +20,42 @@ class RoutineParametersHelper
    *
    * @var MySqlMetaDataLayer
    */
-  private $dl;
+  private MySqlMetaDataLayer $dl;
 
   /**
    * The DocBlock reflection object.
    *
    * @var DocBlockReflection
    */
-  private $docBlockReflection;
+  private DocBlockReflection $docBlockReflection;
 
   /**
    * The Output decorator.
    *
    * @var StratumStyle
    */
-  private $io;
+  private StratumStyle $io;
 
   /**
    * The information about the parameters of the stored routine.
    *
    * @var array[]
    */
-  private $parameters = [];
+  private array $parameters = [];
 
   /**
    * Information about parameters with specific format (string in CSV format etc.).
    *
    * @var array
    */
-  private $parametersAddendum = [];
+  private array $parametersAddendum = [];
 
   /**
    * The name of the stored routine.
    *
    * @var string
    */
-  private $routineName;
+  private string $routineName;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**

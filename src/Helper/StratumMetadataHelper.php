@@ -18,21 +18,21 @@ class StratumMetadataHelper
    *
    * @var string
    */
-  private $filename;
+  private string $filename;
 
   /**
    * The revision number of the format of the metadata.
    *
    * @var string
    */
-  private $revision;
+  private string $revision;
 
   /**
    * The metadata of routines. Key is the routine name.
    *
    * @var array[]
    */
-  private $routines;
+  private array $routines;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**

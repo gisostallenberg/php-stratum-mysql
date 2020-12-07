@@ -17,7 +17,7 @@ class MySqlQueryErrorException extends MySqlDataLayerException implements QueryE
    *
    * @var string
    */
-  protected $query;
+  protected string $query;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**

@@ -17,49 +17,49 @@ abstract class BaseRoutine
    *
    * @var MySqlCompoundSyntaxCodeStore
    */
-  protected $codeStore;
+  protected MySqlCompoundSyntaxCodeStore $codeStore;
 
   /**
    * Metadata about the stored routine parameters.
    *
    * @var array[]
    */
-  protected $parameters;
+  protected array $parameters;
 
   /**
    * The primary key of the table.
    *
    * @var array[]
    */
-  protected $primaryKey;
+  protected array $primaryKey;
 
   /**
    * The name of the generated stored procedure.
    *
    * @var string
    */
-  protected $routineName;
+  protected string $routineName;
 
   /**
    * Metadata about the columns of the table.
    *
    * @var array[]
    */
-  protected $tableColumns;
+  protected array $tableColumns;
 
   /**
    * The name of the table for which a stored routine must be generated.
    *
    * @var string
    */
-  protected $tableName;
+  protected string $tableName;
 
   /**
    * The unique indexes on the table.
    *
    * @var array[]
    */
-  protected $uniqueIndexes;
+  protected array $uniqueIndexes;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**

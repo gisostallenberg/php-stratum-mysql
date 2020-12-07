@@ -15,7 +15,7 @@ The stratum section
 The ``stratum`` section is mandatory and holds one variable only:
 
   ``backend`` (mandatory)
-    The fully qualified name of the class that implements the required backend. The backend must be a child class of ``SetBased\Stratum\Backend\Backend``. The backend of PhpStratum for MySQL and MariaDB is implemented in ``SetBased\Stratum\MySql\Backend\MysqlBackend``.
+    The fully qualified name of the class that implements the required backend. The backend must be a child class of ``SetBased\Stratum\Backend\Backend``. The backend of PhpStratum for MySQL and MariaDB is implemented in ``SetBased\Stratum\MySql\Backend\MySqlBackend``.
 
 The database section
 --------------------

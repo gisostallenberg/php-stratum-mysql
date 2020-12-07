@@ -16,16 +16,16 @@ class MySqlMetaDataLayer
   /**
    * The connection to the MySQL instance.
    *
-   * @var MySqlDataLayer
+   * @var MySqlDataLayer|null
    */
-  private $dl;
+  private ?MySqlDataLayer $dl;
 
   /**
    * The Output decorator.
    *
    * @var StratumStyle
    */
-  private $io;
+  private StratumStyle $io;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**

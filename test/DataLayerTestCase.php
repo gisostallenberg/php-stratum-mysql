@@ -19,7 +19,7 @@ class DataLayerTestCase extends TestCase
    *
    * @var TestMySqlDataLayer
    */
-  protected $dataLayer;
+  protected TestMySqlDataLayer $dataLayer;
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
