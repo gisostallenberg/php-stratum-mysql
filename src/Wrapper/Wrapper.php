@@ -222,6 +222,7 @@ abstract class Wrapper
     $wrapperArgs = $this->getWrapperArgs();
     $routineArgs = $this->getRoutineArgs();
     $methodName  = $this->nameMangler->getMethodName($this->routine['routine_name']);
+    $returnType  = $this->getReturnTypeDeclaration();
 
     $bindings = '';
     $nulls    = '';
@@ -238,7 +239,7 @@ abstract class Wrapper
 
     $this->codeStore->appendSeparator();
     $this->generatePhpDocBlock();
-    $this->codeStore->append('public function '.$methodName.'('.$wrapperArgs.')');
+    $this->codeStore->append('public function '.$methodName.'('.$wrapperArgs.')'.$returnType);
     $this->codeStore->append('{');
     $this->codeStore->append('$query = \'call '.$this->routine['routine_name'].'('.$routineArgs.')\';');
     $this->codeStore->append('$stmt  = @$this->mysqli->prepare($query);');

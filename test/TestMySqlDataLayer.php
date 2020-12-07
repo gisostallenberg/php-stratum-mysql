@@ -233,7 +233,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @throws MySqlQueryErrorException
    * @throws ResultException
    */
-  public function tstOracleProcedureWithDataTypeColumns(?string $pParam01, ?int $pParam02, ?int $pParam03, ?int $pParam04, ?int $pParam05, ?int $pParam06, ?int $pParam07, ?int $pParam08, ?int $pParam09, ?int $pParam10, ?int $pParam11, $pParam12, $pParam13, ?float $pParam14, ?float $pParam15, ?string $pParam16, ?string $pParam17, ?string $pParam18, ?string $pParam19, ?string $pParam20, ?int $pParam21, ?string $pParam22, ?string $pParam23, ?string $pParam24, ?string $pParam25, ?string $pParam26, ?string $pParam27, ?string $pParam28, ?string $pParam29, ?string $pParam30, ?string $pParam31, ?string $pParam32, ?string $pParam33, ?string $pParam34, ?string $pParam35)
+  public function tstOracleProcedureWithDataTypeColumns(?string $pParam01, ?int $pParam02, ?int $pParam03, ?int $pParam04, ?int $pParam05, ?int $pParam06, ?int $pParam07, ?int $pParam08, ?int $pParam09, ?int $pParam10, ?int $pParam11, $pParam12, $pParam13, ?float $pParam14, ?float $pParam15, ?string $pParam16, ?string $pParam17, ?string $pParam18, ?string $pParam19, ?string $pParam20, ?int $pParam21, ?string $pParam22, ?string $pParam23, ?string $pParam24, ?string $pParam25, ?string $pParam26, ?string $pParam27, ?string $pParam28, ?string $pParam29, ?string $pParam30, ?string $pParam31, ?string $pParam32, ?string $pParam33, ?string $pParam34, ?string $pParam35): int
   {
     $query = 'call tst_oracle_procedure_with_data_type_columns('.$this->quoteString($pParam01).','.$this->quoteInt($pParam02).','.$this->quoteInt($pParam03).','.$this->quoteInt($pParam04).','.$this->quoteInt($pParam05).','.$this->quoteInt($pParam06).','.$this->quoteInt($pParam07).','.$this->quoteInt($pParam08).','.$this->quoteInt($pParam09).','.$this->quoteInt($pParam10).','.$this->quoteInt($pParam11).','.$this->quoteDecimal($pParam12).','.$this->quoteDecimal($pParam13).','.$this->quoteFloat($pParam14).','.$this->quoteFloat($pParam15).','.$this->quoteBit($pParam16).','.$this->quoteString($pParam17).','.$this->quoteString($pParam18).','.$this->quoteString($pParam19).','.$this->quoteString($pParam20).','.$this->quoteInt($pParam21).','.$this->quoteString($pParam22).','.$this->quoteString($pParam23).','.$this->quoteBinary($pParam24).','.$this->quoteBinary($pParam25).',?,?,?,?,?,?,?,?,'.$this->quoteString($pParam34).','.$this->quoteString($pParam35).')';
     $stmt  = @$this->mysqli->prepare($query);
@@ -426,7 +426,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @throws MySqlQueryErrorException
    * @throws ResultException
    */
-  public function tstTest02(?int $pTstInt, ?int $pTstSmallint, ?int $pTstTinyint, ?int $pTstMediumint, ?int $pTstBigint, $pTstDecimal, $pTstDecimal0, ?float $pTstFloat, ?float $pTstDouble, ?string $pTstBit, ?string $pTstDate, ?string $pTstDatetime, ?string $pTstTimestamp, ?string $pTstTime, ?int $pTstYear, ?string $pTstChar, ?string $pTstVarchar, ?string $pTstBinary, ?string $pTstVarbinary, ?string $pTstTinyblob, ?string $pTstBlob, ?string $pTstMediumblob, ?string $pTstLongblob, ?string $pTstTinytext, ?string $pTstText, ?string $pTstMediumtext, ?string $pTstLongtext, ?string $pTstEnum, ?string $pTstSet)
+  public function tstTest02(?int $pTstInt, ?int $pTstSmallint, ?int $pTstTinyint, ?int $pTstMediumint, ?int $pTstBigint, $pTstDecimal, $pTstDecimal0, ?float $pTstFloat, ?float $pTstDouble, ?string $pTstBit, ?string $pTstDate, ?string $pTstDatetime, ?string $pTstTimestamp, ?string $pTstTime, ?int $pTstYear, ?string $pTstChar, ?string $pTstVarchar, ?string $pTstBinary, ?string $pTstVarbinary, ?string $pTstTinyblob, ?string $pTstBlob, ?string $pTstMediumblob, ?string $pTstLongblob, ?string $pTstTinytext, ?string $pTstText, ?string $pTstMediumtext, ?string $pTstLongtext, ?string $pTstEnum, ?string $pTstSet): int
   {
     $query = 'call tst_test02('.$this->quoteInt($pTstInt).','.$this->quoteInt($pTstSmallint).','.$this->quoteInt($pTstTinyint).','.$this->quoteInt($pTstMediumint).','.$this->quoteInt($pTstBigint).','.$this->quoteDecimal($pTstDecimal).','.$this->quoteDecimal($pTstDecimal0).','.$this->quoteFloat($pTstFloat).','.$this->quoteFloat($pTstDouble).','.$this->quoteBit($pTstBit).','.$this->quoteString($pTstDate).','.$this->quoteString($pTstDatetime).','.$this->quoteString($pTstTimestamp).','.$this->quoteString($pTstTime).','.$this->quoteInt($pTstYear).','.$this->quoteString($pTstChar).','.$this->quoteString($pTstVarchar).','.$this->quoteBinary($pTstBinary).','.$this->quoteBinary($pTstVarbinary).',?,?,?,?,?,?,?,?,'.$this->quoteString($pTstEnum).','.$this->quoteString($pTstSet).')';
     $stmt  = @$this->mysqli->prepare($query);
@@ -660,7 +660,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @throws MySqlQueryErrorException
    * @throws ResultException
    */
-  public function tstTestMap1WithLob(?int $pCount, ?string $pBlob)
+  public function tstTestMap1WithLob(?int $pCount, ?string $pBlob): array
   {
     $query = 'call tst_test_map1_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = @$this->mysqli->prepare($query);
@@ -714,7 +714,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @throws MySqlQueryErrorException
    * @throws ResultException
    */
-  public function tstTestMaxAllowedPacket(?string $pTmpBlob)
+  public function tstTestMaxAllowedPacket(?string $pTmpBlob): int
   {
     $query = 'call tst_test_max_allowed_packet(?)';
     $stmt  = @$this->mysqli->prepare($query);
@@ -798,7 +798,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @throws MySqlQueryErrorException
    * @throws ResultException
    */
-  public function tstTestNoneWithLob(?int $pCount, ?string $pBlob)
+  public function tstTestNoneWithLob(?int $pCount, ?string $pBlob): int
   {
     $query = 'call tst_test_none_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = @$this->mysqli->prepare($query);
@@ -913,7 +913,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @throws MySqlQueryErrorException
    * @throws ResultException
    */
-  public function tstTestRow0aWithLob(?int $pCount, ?string $pBlob)
+  public function tstTestRow0aWithLob(?int $pCount, ?string $pBlob): ?array
   {
     $query = 'call tst_test_row0a_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = @$this->mysqli->prepare($query);
@@ -1004,7 +1004,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @throws MySqlQueryErrorException
    * @throws ResultException
    */
-  public function tstTestRow1aWithLob(?int $pCount, ?string $pBlob)
+  public function tstTestRow1aWithLob(?int $pCount, ?string $pBlob): array
   {
     $query = 'call tst_test_row1a_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = @$this->mysqli->prepare($query);
@@ -1088,7 +1088,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @throws MySqlQueryErrorException
    * @throws ResultException
    */
-  public function tstTestRows1WithLob(?int $pCount, ?string $pBlob)
+  public function tstTestRows1WithLob(?int $pCount, ?string $pBlob): array
   {
     $query = 'call tst_test_rows1_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = @$this->mysqli->prepare($query);
@@ -1177,7 +1177,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @throws MySqlQueryErrorException
    * @throws ResultException
    */
-  public function tstTestRowsWithIndex1WithLob(?int $pCount, ?string $pBlob)
+  public function tstTestRowsWithIndex1WithLob(?int $pCount, ?string $pBlob): array
   {
     $query = 'call tst_test_rows_with_index1_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = @$this->mysqli->prepare($query);
@@ -1266,7 +1266,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @throws MySqlQueryErrorException
    * @throws ResultException
    */
-  public function tstTestRowsWithKey1WithLob(?int $pCount, ?string $pBlob)
+  public function tstTestRowsWithKey1WithLob(?int $pCount, ?string $pBlob): array
   {
     $query = 'call tst_test_rows_with_key1_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = @$this->mysqli->prepare($query);
@@ -1356,7 +1356,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @throws MySqlQueryErrorException
    * @throws ResultException
    */
-  public function tstTestSingleton0aWithLob(?int $pCount, ?string $pBlob)
+  public function tstTestSingleton0aWithLob(?int $pCount, ?string $pBlob): ?int
   {
     $query = 'call tst_test_singleton0a_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = @$this->mysqli->prepare($query);
@@ -1451,7 +1451,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @throws MySqlQueryErrorException
    * @throws ResultException
    */
-  public function tstTestSingleton0bWithLob(?int $pCount, ?int $pValue, ?string $pBlob)
+  public function tstTestSingleton0bWithLob(?int $pCount, ?int $pValue, ?string $pBlob): bool
   {
     $query = 'call tst_test_singleton0b_with_lob('.$this->quoteInt($pCount).','.$this->quoteInt($pValue).',?)';
     $stmt  = @$this->mysqli->prepare($query);
@@ -1542,7 +1542,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @throws MySqlQueryErrorException
    * @throws ResultException
    */
-  public function tstTestSingleton1aWithLob(?int $pCount, ?string $pBlob)
+  public function tstTestSingleton1aWithLob(?int $pCount, ?string $pBlob): int
   {
     $query = 'call tst_test_singleton1a_with_lob('.$this->quoteInt($pCount).',?)';
     $stmt  = @$this->mysqli->prepare($query);
@@ -1637,7 +1637,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @throws MySqlQueryErrorException
    * @throws ResultException
    */
-  public function tstTestSingleton1bWithLob(?int $pCount, ?int $pValue, ?string $pBlob)
+  public function tstTestSingleton1bWithLob(?int $pCount, ?int $pValue, ?string $pBlob): bool
   {
     $query = 'call tst_test_singleton1b_with_lob('.$this->quoteInt($pCount).','.$this->quoteInt($pValue).',?)';
     $stmt  = @$this->mysqli->prepare($query);
