@@ -196,7 +196,7 @@ class MySqlDataLayer
     foreach ($this->options as $option => $value)
     {
       $success = @$this->mysqli->options($option, $value);
-      if (!$success) throw $this->dataLayerError('mysqli::set_charset');
+      if (!$success) throw $this->dataLayerError('mysqli::options');
     }
 
     // Set the default character set.
