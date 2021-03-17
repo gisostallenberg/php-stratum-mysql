@@ -126,7 +126,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * Selects its argument.
    *
    * @param string|null $pMessage The message to be echoed.
-   *                              varchar(4000) character set utf8 collation utf8_general_ci
+   *                              varchar(4000) character set utf8mb4 collation utf8mb4_general_ci
    *
    * @return string
    *
@@ -199,9 +199,9 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @param int|null              $pParam21 Data type year.
    *                                        year(4)
    * @param string|null           $pParam22 Data type char(10).
-   *                                        char(10) character set utf8 collation utf8_general_ci
+   *                                        char(10) character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pParam23 Data type varchar(10).
-   *                                        varchar(10) character set utf8 collation utf8_general_ci
+   *                                        varchar(10) character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pParam24 Data type binary(10).
    *                                        binary(10)
    * @param string|null           $pParam25 Data type varbinary(10).
@@ -215,17 +215,17 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @param string|null           $pParam29 Data type longblob.
    *                                        longblob
    * @param string|null           $pParam30 Data type tinytext.
-   *                                        tinytext character set utf8 collation utf8_general_ci
+   *                                        tinytext character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pParam31 Data type text.
-   *                                        text character set utf8 collation utf8_general_ci
+   *                                        text character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pParam32 Data type mediumtext.
-   *                                        mediumtext character set utf8 collation utf8_general_ci
+   *                                        mediumtext character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pParam33 Data type longtext.
-   *                                        longtext character set utf8 collation utf8_general_ci
+   *                                        longtext character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pParam34 Data type enum('a','b').
-   *                                        enum('a','b') character set utf8 collation utf8_general_ci
+   *                                        enum('a','b') character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pParam35 Data type set('a','b').
-   *                                        set('a','b') character set utf8 collation utf8_general_ci
+   *                                        set('a','b') character set utf8mb4 collation utf8mb4_general_ci
    *
    * @return int
    *
@@ -336,17 +336,17 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @param int|null              $pTstYear              Parameter of type year.
    *                                                     year(4)
    * @param string|null           $pTstChar              Parameter of type char.
-   *                                                     char(10) character set utf8 collation utf8_general_ci
+   *                                                     char(10) character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pTstVarchar           Parameter of type varchar.
-   *                                                     varchar(10) character set utf8 collation utf8_general_ci
+   *                                                     varchar(10) character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pTstBinary            Parameter of type binary.
    *                                                     binary(10)
    * @param string|null           $pTstVarbinary         Parameter of type varbinary.
    *                                                     varbinary(10)
    * @param string|null           $pTstEnum              Parameter of type enum.
-   *                                                     enum('a','b') character set utf8 collation utf8_general_ci
+   *                                                     enum('a','b') character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pTstSet               Parameter of type set.
-   *                                                     set('a','b') character set utf8 collation utf8_general_ci
+   *                                                     set('a','b') character set utf8mb4 collation utf8mb4_general_ci
    *
    * @return int
    *
@@ -392,9 +392,9 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @param int|null              $pTstYear       Parameter of type year.
    *                                              year(4)
    * @param string|null           $pTstChar       Parameter of type char.
-   *                                              char(10) character set utf8 collation utf8_general_ci
+   *                                              char(10) character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pTstVarchar    Parameter of type varchar.
-   *                                              varchar(10) character set utf8 collation utf8_general_ci
+   *                                              varchar(10) character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pTstBinary     Parameter of type binary.
    *                                              binary(10)
    * @param string|null           $pTstVarbinary  Parameter of type varbinary.
@@ -408,17 +408,17 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * @param string|null           $pTstLongblob   Parameter of type longblob.
    *                                              longblob
    * @param string|null           $pTstTinytext   Parameter of type tinytext.
-   *                                              tinytext character set utf8 collation utf8_general_ci
+   *                                              tinytext character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pTstText       Parameter of type text.
-   *                                              text character set utf8 collation utf8_general_ci
+   *                                              text character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pTstMediumtext Parameter of type mediumtext.
-   *                                              mediumtext character set utf8 collation utf8_general_ci
+   *                                              mediumtext character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pTstLongtext   Parameter of type longtext.
-   *                                              longtext character set utf8 collation utf8_general_ci
+   *                                              longtext character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pTstEnum       Parameter of type enum.
-   *                                              enum('a','b') character set utf8 collation utf8_general_ci
+   *                                              enum('a','b') character set utf8mb4 collation utf8mb4_general_ci
    * @param string|null           $pTstSet        Parameter of type set.
-   *                                              set('a','b') character set utf8 collation utf8_general_ci
+   *                                              set('a','b') character set utf8mb4 collation utf8mb4_general_ci
    *
    * @return int
    *
@@ -564,7 +564,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
    * Test for stored function with return type bool wrapper.
    *
    * @param string|null $pRet The return value.
-   *                          varchar(8) character set utf8 collation utf8_general_ci
+   *                          varchar(8) character set utf8mb4 collation utf8mb4_general_ci
    *
    * @return bool
    *
@@ -593,7 +593,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
   /**
    *
    * @param string|int[]|null $pIds The id's in CSV format.
-   *                                varchar(255) character set utf8 collation utf8_general_ci
+   *                                varchar(255) character set utf8mb4 collation utf8mb4_general_ci
    *
    * @return array[]
    *

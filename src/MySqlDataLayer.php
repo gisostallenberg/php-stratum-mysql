@@ -25,7 +25,7 @@ class MySqlDataLayer
    * @since 1.0.0
    * @api
    */
-  public string $charSet = 'utf8';
+  public string $charSet = 'utf8mb4';
 
   /**
    * If set queries must be logged.
