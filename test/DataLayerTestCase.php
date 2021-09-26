@@ -47,7 +47,7 @@ class DataLayerTestCase extends TestCase
   {
     $row = $this->dataLayer->executeRow1("show variables like 'version'");
 
-    return (preg_match('/^10\.[34].*MariaDB$/', $row['Value'])==1);
+    return (preg_match('/^10\.[3456789].*MariaDB$/', $row['Value'])===1);
   }
   //--------------------------------------------------------------------------------------------------------------------
 }
