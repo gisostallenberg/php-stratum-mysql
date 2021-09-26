@@ -42,30 +42,11 @@ class MySqlDataLayerException extends \RuntimeException implements DataLayerExce
    */
   public function __construct(int $errno, string $error, string $method)
   {
-    parent::__construct(self::message($errno, $error, $method));
-
     $this->errno  = $errno;
     $this->error  = $error;
     $this->method = $method;
-  }
 
-  //--------------------------------------------------------------------------------------------------------------------
-  /**
-   * Composes the exception message.
-   *
-   * @param int    $errno  The error code value of the error ($mysqli->errno).
-   * @param string $error  Description of the error ($mysqli->error).
-   * @param string $method The name of the executed method.
-   *
-   * @return string
-   */
-  private static function message(int $errno, string $error, string $method): string
-  {
-    $message = 'MySQL Error no: '.$errno."\n";
-    $message .= $error."\n";
-    $message .= 'Failed method: '.$method;
-
-    return $message;
+    parent::__construct($this->implodeMessage($this->composerMessage()));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -78,7 +59,6 @@ class MySqlDataLayerException extends \RuntimeException implements DataLayerExce
   {
     return $this->errno;
   }
-
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Returns the description of the error.
@@ -97,6 +77,69 @@ class MySqlDataLayerException extends \RuntimeException implements DataLayerExce
   public function getName(): string
   {
     return 'MySQL Error';
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Composes the message of this exception as array of lines.
+   *
+   * @return array
+   */
+  protected function composerMessage(): array
+  {
+    return array_merge($this->splitIntoTwoColumns('MySQL Errno', (string)$this->errno),
+                       $this->splitIntoTwoColumns('Error', $this->error),
+                       $this->splitIntoTwoColumns('Method', $this->method));
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Splits a string (may contain multiple lines) into columns: The first columns will contain a header, the second
+   * column the lines of the string.
+   *
+   * @param string $header The header.
+   * @param string $string The string possible with multiple lines.
+   *
+   * @return array
+   */
+  protected function splitIntoTwoColumns(string $header, string $string): array
+  {
+    $lines = [];
+
+    $parts = explode(PHP_EOL, trim($string));
+    foreach ($parts as $i => $part)
+    {
+      $lines[] = [($i===0 ? $header : ''), $part];
+    }
+
+    return $lines;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Implodes an array with lines of an error message to a string. Each line of the each message consists out of two
+   * columns.
+   *
+   * @param array $lines The lines of the error message.
+   *
+   * @return string
+   */
+  private function implodeMessage(array $lines): string
+  {
+    $max = 0;
+    foreach ($lines as $line)
+    {
+      $max = max($max, mb_strlen($line[0]));
+    }
+
+    $format = sprintf('%%-%ds: %%s', $max);
+    $tmp    = [''];
+    foreach ($lines as $line)
+    {
+      $tmp[] = sprintf($format, $line[0], $line[1]);
+    }
+
+    return implode(PHP_EOL, $tmp);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

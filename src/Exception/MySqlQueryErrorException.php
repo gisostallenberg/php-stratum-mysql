@@ -30,9 +30,9 @@ class MySqlQueryErrorException extends MySqlDataLayerException implements QueryE
    */
   public function __construct(int $errno, string $error, string $method, string $query)
   {
-    parent::__construct($errno, $error, $method);
-
     $this->query = $query;
+
+    parent::__construct($errno, $error, $method);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ class MySqlQueryErrorException extends MySqlDataLayerException implements QueryE
    */
   public function isQueryError(): bool
   {
-    return ($this->errno==1064);
+    return ($this->errno===1064);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -87,6 +87,20 @@ class MySqlQueryErrorException extends MySqlDataLayerException implements QueryE
     }
 
     return $message;
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Composes the message of this exception as array of lines.
+   *
+   * @return array
+   */
+  protected function composerMessage(): array
+  {
+    return array_merge($this->splitIntoTwoColumns('MySQL Errno', (string)$this->errno),
+                       $this->splitIntoTwoColumns('Error', $this->error),
+                       $this->splitIntoTwoColumns('Query', $this->query),
+                       $this->splitIntoTwoColumns('Method', $this->method));
   }
 
   //--------------------------------------------------------------------------------------------------------------------
