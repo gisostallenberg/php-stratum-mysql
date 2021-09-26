@@ -384,28 +384,28 @@ abstract class Wrapper
    */
   protected function getWrapperArgs(): string
   {
-    $ret = '';
+    $code = '';
 
     if ($this->routine['designation']==='bulk')
     {
-      $ret .= 'BulkHandler $bulkHandler';
+      $code .= 'BulkHandler $bulkHandler';
     }
 
     foreach ($this->routine['parameters'] as $parameter)
     {
-      if ($ret!=='') $ret .= ', ';
+      if ($code!=='') $code .= ', ';
 
       $dataType    = DataTypeHelper::columnTypeToPhpTypeHinting($parameter);
       $declaration = DataTypeHelper::phpTypeHintingToPhpTypeDeclaration($dataType.'|null');
       if ($declaration!=='')
       {
-        $ret .= $declaration.' ';
+        $code .= $declaration.' ';
       }
 
-      $ret .= '$'.$this->nameMangler->getParameterName($parameter['parameter_name']);
+      $code .= '$'.$this->nameMangler->getParameterName($parameter['parameter_name']);
     }
 
-    return $ret;
+    return $code;
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -415,6 +415,7 @@ abstract class Wrapper
    * @return void
    */
   abstract protected function writeResultHandler(): void;
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Generates code for fetching data of a stored routine with one or more LOB parameters.
