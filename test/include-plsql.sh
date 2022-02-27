@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [[ -L test/psql/oracle ]]; then
   rm test/psql/oracle
