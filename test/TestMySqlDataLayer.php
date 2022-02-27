@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace SetBased\Stratum\MySql\Test;
 
+use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 use SetBased\Stratum\MySql\Exception\MySqlDataLayerException;
 use SetBased\Stratum\Middle\Exception\ResultException;
-use SetBased\Stratum\MySql\Exception\MySqlQueryErrorException;
 use SetBased\Stratum\MySql\MySqlDataLayer;
 
 /**
@@ -13,6 +13,35 @@ use SetBased\Stratum\MySql\MySqlDataLayer;
  */
 class TestMySqlDataLayer extends MySqlDataLayer
 {
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Select all IP addresses.
+   *
+   * @return array[]
+   *
+   * @throws MySqlQueryErrorException
+   */
+  public function tstInet6GetAll(): array
+  {
+    return $this->executeRows('call tst_inet6_get_all()');
+  }
+
+  //--------------------------------------------------------------------------------------------------------------------
+  /**
+   * Test for stored routine with a inet6 argument.
+   *
+   * @param string|null $pIpIp The IPv6 address.
+   *                           inet6
+   *
+   * @return int
+   *
+   * @throws MySqlQueryErrorException
+   */
+  public function tstInet6InsertInet6(?string $pIpIp): int
+  {
+    return $this->executeNone('call tst_inet6_insert_inet6('.$this->quoteString($pIpIp).')');
+  }
+
   //--------------------------------------------------------------------------------------------------------------------
   /**
    * Test for magic constant.

@@ -1,0 +1,14 @@
+/**
+ * Test for stored routine with a inet6 argument.
+ *
+ * @param p_ip_ip The IPv6 address.
+ *
+ * @type none
+ */
+create procedure tst_inet6_insert_inet6(p_ip_ip @tst_ipv6.ip_ip%type@)
+modifies sql data
+begin
+  insert into TST_IPV6(ip_ip)
+  values( p_ip_ip )
+  ;
+end

@@ -50,6 +50,7 @@ class DataTypeHelper
       case 'date':
       case 'datetime':
       case 'enum':
+      case 'inet6':
       case 'set':
       case 'tinytext':
       case 'text':
@@ -122,6 +123,11 @@ class DataTypeHelper
         $ret = 16;
         break;
 
+      case 'inet6':
+        // Fully written out IPv4 mapped addresses are not supported.
+        $ret = 39;
+        break;
+
       case 'year':
         $ret = 4;
         break;
@@ -181,6 +187,7 @@ class DataTypeHelper
       case 'date':
       case 'datetime':
       case 'enum':
+      case 'inet6':
       case 'set':
         $ret = "'.\$this->quoteString(".$expression.").'";
         break;
@@ -264,6 +271,7 @@ class DataTypeHelper
       case 'datetime':
       case 'varbinary':
       case 'decimal':
+      case 'inet6':
       case 'list_of_int':
         $ret = 's';
         break;
@@ -288,7 +296,7 @@ class DataTypeHelper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns true if one if a MySQL column type is a BLOB or a CLOB.
+   * Returns whether MySQL column type is a BLOB or a CLOB.
    *
    * @param string $dataType Metadata of the MySQL data type.
    *
@@ -322,6 +330,7 @@ class DataTypeHelper
       case 'timestamp':
       case 'binary':
       case 'enum':
+      case 'inet6':
       case 'bit':
       case 'set':
       case 'char':

@@ -8,6 +8,7 @@
 /docs/_build/
 /test/coverage.xml
 /test/etc/routines.json
+/test/psql/inet6
 /test/psql/oracle
 /test/report/
 /vendor/
