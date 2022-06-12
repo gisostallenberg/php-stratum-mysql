@@ -504,7 +504,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
   /**
    * Test for designation bulk_insert.
    *
-   * @param array[] $rows The rows that must inserted.
+   * @param array[] $rows The rows that must be inserted.
    *
    * @return void
    *
@@ -530,7 +530,7 @@ class TestMySqlDataLayer extends MySqlDataLayer
   /**
    * Test for designation bulk_insert.
    *
-   * @param array[] $rows The rows that must inserted.
+   * @param array[] $rows The rows that must be inserted.
    *
    * @return void
    *
