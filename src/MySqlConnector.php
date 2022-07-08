@@ -36,7 +36,7 @@ interface MySqlConnector
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns true if PHP is (still) connected to a MySQL or MariaDB instance. Otherwise returns false.
+   * Returns whether PHP is (still) connected to a MySQL or MariaDB instance.
    *
    * This method will never throw an exception.
    *

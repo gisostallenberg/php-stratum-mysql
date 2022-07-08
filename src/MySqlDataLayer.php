@@ -28,7 +28,7 @@ class MySqlDataLayer
   public string $charSet = 'utf8mb4';
 
   /**
-   * If set queries must be logged.
+   * Whether queries must be logged.
    *
    * @var bool
    *
@@ -664,7 +664,7 @@ class MySqlDataLayer
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns true if PHP is (still) connected to a MySQL or MariaDB instance. Otherwise returns false.
+   * Returns whether PHP is (still) connected to a MySQL or MariaDB instance.
    *
    * This method will never throw an exception.
    *
@@ -950,14 +950,20 @@ class MySqlDataLayer
       $time0 = microtime(true);
 
       $ret = @$this->mysqli->query($query);
-      if (is_bool($ret)) throw $this->queryError('mysqli::query', $query);
+      if (is_bool($ret))
+      {
+        throw $this->queryError('mysqli::query', $query);
+      }
 
       $this->queryLog[] = ['query' => $query, 'time' => microtime(true) - $time0];
     }
     else
     {
       $ret = @$this->mysqli->query($query);
-      if (is_bool($ret)) throw $this->queryError('mysqli::query', $query);
+      if (is_bool($ret))
+      {
+        throw $this->queryError('mysqli::query', $query);
+      }
     }
 
     return $ret;
