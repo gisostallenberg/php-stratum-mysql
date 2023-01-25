@@ -82,7 +82,7 @@ class SqlModeHelper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Adds ORACLE too the current SQL_MODE if the initial SQL_MODE did not include ORACLE.
+   * Adds ORACLE to the current SQL_MODE if the initial SQL_MODE did not include ORACLE.
    *
    * @throws MySqlQueryErrorException
    */
