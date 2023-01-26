@@ -362,7 +362,7 @@ class MySqlConstantWorker extends MySqlWorker implements ConstantWorker
         if ($line!="\n")
         {
           $n = preg_match('/^\s*(([a-zA-Z0-9_]+)\.)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)\s+(\d+)\s*(\*|[a-zA-Z0-9_]+)?\s*$/', $line, $matches);
-          if ($n==0)
+          if ($n===0)
           {
             throw new RuntimeException("Illegal format at line %d in file '%s'.",
                                        $lineNumber,

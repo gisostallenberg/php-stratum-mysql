@@ -30,7 +30,7 @@ class DataLayerTestCase extends TestCase
    */
   protected function setUp(): void
   {
-    $connector = new MySqlDefaultConnector('localhost', 'test', 'test', 'test');
+    $connector = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
     $this->dataLayer = new TestMySqlDataLayer($connector);
     $this->dataLayer->connect();
   }

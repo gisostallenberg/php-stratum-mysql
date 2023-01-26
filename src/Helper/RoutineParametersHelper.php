@@ -190,7 +190,7 @@ class RoutineParametersHelper
    * @throws RoutineLoaderException
    * @throws MySqlQueryErrorException
    */
-  private function enhanceTypeOfParameters()
+  private function enhanceTypeOfParameters(): void
   {
     foreach ($this->parameters as $key => $parameter)
     {
@@ -284,7 +284,7 @@ class RoutineParametersHelper
       $this->io->logNote('Parameter <dbo>%s</dbo> is missing from doc block', $name);
     }
 
-    // Check and show warning if find unknown parameters in doc block.
+    // Checks and shows a warning if fond unknown parameters in doc block.
     $tmp = array_diff($docBlockParametersNames, $databaseParametersNames);
     foreach ($tmp as $name)
     {

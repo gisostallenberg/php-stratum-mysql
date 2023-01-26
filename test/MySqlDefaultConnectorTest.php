@@ -18,7 +18,7 @@ class MySqlDefaultConnectorTest extends TestCase
    */
   public function testConnectFailed()
   {
-    $connector = new MySqlDefaultConnector('localhost', 'no-such-user', 'test', 'test');
+    $connector = new MySqlDefaultConnector('127.0.0.1', 'no-such-user', 'test', 'test');
 
     $this->expectException(MySqlConnectFailedException::class);
     $connector->connect();
@@ -30,7 +30,7 @@ class MySqlDefaultConnectorTest extends TestCase
    */
   public function testDisconnectConnectFailed()
   {
-    $connector = new MySqlDefaultConnector('localhost', 'no-such-user', 'test', 'test');
+    $connector = new MySqlDefaultConnector('127.0.0.1', 'no-such-user', 'test', 'test');
     try
     {
       $connector->connect();
@@ -50,7 +50,7 @@ class MySqlDefaultConnectorTest extends TestCase
    */
   public function testDisconnectConnected()
   {
-    $connector = new MySqlDefaultConnector('localhost', 'test', 'test', 'test');
+    $connector = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
     $connector->connect();
     $connector->disconnect();
     self::assertTrue(true);
@@ -62,7 +62,7 @@ class MySqlDefaultConnectorTest extends TestCase
    */
   public function testDisconnectNoServer()
   {
-    $connector = new MySqlDefaultConnector('localhost', 'test', 'test', 'test');
+    $connector = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
     $connector->connect();
 
     exec('sudo systemctl stop mysqld || sudo service mysql stop');
@@ -79,7 +79,7 @@ class MySqlDefaultConnectorTest extends TestCase
    */
   public function testDisconnectNotConnected()
   {
-    $connector = new MySqlDefaultConnector('localhost', 'test', 'test', 'test');
+    $connector = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
     $connector->disconnect();
     self::assertTrue(true);
   }
@@ -90,7 +90,7 @@ class MySqlDefaultConnectorTest extends TestCase
    */
   public function testIsAliveDisconnected()
   {
-    $connector = new MySqlDefaultConnector('localhost', 'test', 'test', 'test');
+    $connector = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
     $connector->connect();
     $connector->disconnect();
 
@@ -104,7 +104,7 @@ class MySqlDefaultConnectorTest extends TestCase
    */
   public function testIsAliveIsAlive()
   {
-    $connector = new MySqlDefaultConnector('localhost', 'test', 'test', 'test');
+    $connector = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
 
     $connector->connect();
     $isAlive = $connector->isAlive();
@@ -117,7 +117,7 @@ class MySqlDefaultConnectorTest extends TestCase
    */
   public function testIsAliveNoServer()
   {
-    $connector = new MySqlDefaultConnector('localhost', 'test', 'test', 'test');
+    $connector = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
     $connector->connect();
 
     exec('sudo systemctl stop mysqld || sudo service mysql stop');
@@ -134,7 +134,7 @@ class MySqlDefaultConnectorTest extends TestCase
    */
   public function testIsAliveNotConnected()
   {
-    $connector = new MySqlDefaultConnector('localhost', 'test', 'test', 'test');
+    $connector = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
 
     $isAlive = $connector->isAlive();
     self::assertFalse($isAlive);

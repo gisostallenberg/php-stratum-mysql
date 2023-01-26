@@ -6,14 +6,17 @@
 
     <!-- Update dependencies -->
     <target name="update">
-        <!-- Update PHP packages -->
         <exec executable="composer" checkreturn="true" passthru="true">
             <arg value="--ansi"/>
             <arg value="update"/>
         </exec>
 
-        <!-- Show outdated packages -->
-        <exec executable="composer" checkreturn="true" passthru="true">
+        <phing phingfile="build.xml" target="outdated" haltonfailure="true"/>
+    </target>
+
+    <!-- Show outdated packages -->
+    <target name="outdated">
+        <exec executable="composer" checkreturn="false" passthru="true">
             <arg value="--ansi"/>
             <arg value="outdated"/>
             <arg value="--direct"/>
@@ -22,23 +25,14 @@
 
     <!-- Runs all unit tests -->
     <target name="unit">
-        <!-- Include or exclude certain test based on the capabilities of the DB server -->
-        <exec executable="test/include-plsql.sh" passthru="true" checkreturn="true"/>
-        <!-- Prepare database -->
-        <exec command="cat test/ddl/0010_create_database.sql | mysql -v -u root"      passthru="true" checkreturn="true"/>
-        <exec command="cat test/ddl/0020_create_user.sql     | mysql -v -u root"      passthru="true" checkreturn="true"/>
-        <exec command="cat test/ddl/0100_create_tables.sql   | mysql -v -u root test" passthru="true" checkreturn="true"/>
-        <if>
-        <available file="test/psql/inet6" />
-        <then>
-            <exec command="cat test/ddl/0100_create_tables_inet6.sql | mysql -v -u root test" passthru="true" checkreturn="true"/>
-        </then>
-        </if>
+        <exec executable="bash" passthru="true" checkreturn="true">
+            <arg value="test/unit-test.sh"/>
+        </exec>
         <delete file="test/etc/routines.json" quiet="true"/>
         <!-- Rename folder for \MagicConstantTest::test5 -->
         <move file="test/psql/rename" tofile="test/psql/ test_escape ' &quot; @ $ ! ." overwrite="true" haltonerror="false"/>
         <!-- Run unit tests -->
-        <exec command="bin/phpunit" passthru="true" checkreturn="true"/>
+        <exec executable="bin/phpunit" passthru="true" checkreturn="true"/>
         <!-- Rename folder back for \MagicConstantTest::test5 -->
         <move file="test/psql/ test_escape ' &quot; @ $ ! ." tofile="test/psql/rename" overwrite="true"/>
     </target>

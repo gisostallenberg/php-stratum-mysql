@@ -219,7 +219,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
       $lookup[$source['routine_name']] = $source;
     }
 
-    // Drop all routines not longer in sources.
+    // Drop all routines that are no longer in sources.
     foreach ($this->rdbmsOldMetadata as $oldRoutine)
     {
       if (!isset($lookup[$oldRoutine['routine_name']]))
@@ -464,7 +464,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    *
    * @param string $characterSetName The name of the character set of the column.
    *
-   * @return int
+   * @return int|null
    */
   private function maxCharacters(string $characterSetName): ?int
   {
@@ -482,7 +482,7 @@ class MySqlRoutineLoaderWorker extends MySqlWorker implements RoutineLoaderWorke
    *
    * @param string $routineName The name of the routine.
    *
-   * @return null|string
+   * @return string|null
    */
   private function methodName(string $routineName): ?string
   {

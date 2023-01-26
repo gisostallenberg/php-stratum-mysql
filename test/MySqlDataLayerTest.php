@@ -137,7 +137,7 @@ class MySqlDataLayerTest extends DataLayerTestCase
    */
   public function testReconnect()
   {
-    $connector = new MySqlDefaultConnector('localhost', 'test', 'test', 'test');
+    $connector = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
     $dl        = new TestMySqlDataLayer($connector);
 
     // Reconnect when not connected.
@@ -170,7 +170,7 @@ class MySqlDataLayerTest extends DataLayerTestCase
     $connector1 = new MySqlDefaultConnector('x-localhost', 'x-test', 'x-test', 'x-test');
     $dl         = new TestMySqlDataLayer($connector1);
 
-    $connector2 = new MySqlDefaultConnector('localhost', 'test', 'test', 'test');
+    $connector2 = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
     $dl->setConnector($connector2);
     self::assertTrue(true);
 

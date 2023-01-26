@@ -116,7 +116,7 @@ class SqlModeHelper
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Returns true if and only if the MySQL instance has ORACLE SQL mode.
+   * Returns whether the MySQL instance has ORACLE SQL mode.
    *
    * @return bool
    */

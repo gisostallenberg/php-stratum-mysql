@@ -117,7 +117,7 @@ class MySqlDataLayerException extends \RuntimeException implements DataLayerExce
 
   //--------------------------------------------------------------------------------------------------------------------
   /**
-   * Implodes an array with lines of an error message to a string. Each line of the each message consists out of two
+   * Implodes an array with lines of an error message to a string. Each line of the message consists out of two
    * columns.
    *
    * @param array $lines The lines of the error message.

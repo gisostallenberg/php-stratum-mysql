@@ -1,10 +1,9 @@
 /.idea/
 /.phpunit.result.cache
-/bin/phing
-/bin/php-parse
-/bin/phpunit
-/bin/stratum
+/bin/
 /composer.lock
+/custom.task.properties
+/custom.type.properties
 /docs/_build/
 /test/coverage.xml
 /test/etc/routines.json

@@ -106,6 +106,7 @@ class MySqlDataLayer
   private MySqlConnector $connector;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * MySqlDataLayer constructor.
    *
@@ -580,7 +581,16 @@ class MySqlDataLayer
         {
           $columns[$key]['header'] = $column->name;
           $columns[$key]['type']   = $column->type;
-          $columns[$key]['length'] = max(4, $column->max_length, mb_strlen($column->name));
+          switch ($column->type)
+          {
+            case 12:
+              $length = 19;
+              break;
+
+            default:
+              $length = $column->max_length;
+          }
+          $columns[$key]['length'] = max(4, $length, mb_strlen($column->name));
         }
 
         // Show the table header.
@@ -916,16 +926,24 @@ class MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
-
-      $tmp = $this->mysqli->multi_query($queries);
-      if ($tmp===false) throw $this->queryError('mysqli::multi_query', $queries);
-
-      $this->queryLog[] = ['query' => $queries, 'time' => microtime(true) - $time0];
     }
-    else
+
+    try
     {
-      $tmp = $this->mysqli->multi_query($queries);
-      if ($tmp===false) throw $this->queryError('mysqli::multi_query', $queries);
+      $ret = @$this->mysqli->multi_query($queries);
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $ret = false;
+    }
+    if ($ret===false)
+    {
+      throw $this->queryError('mysqli::multi_query', $queries);
+    }
+
+    if ($this->logQueries)
+    {
+      $this->queryLog[] = ['query' => $queries, 'time' => microtime(true) - $time0];
     }
   }
 
@@ -948,22 +966,24 @@ class MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
-
-      $ret = @$this->mysqli->query($query);
-      if (is_bool($ret))
-      {
-        throw $this->queryError('mysqli::query', $query);
-      }
-
-      $this->queryLog[] = ['query' => $query, 'time' => microtime(true) - $time0];
     }
-    else
+
+    try
     {
       $ret = @$this->mysqli->query($query);
-      if (is_bool($ret))
-      {
-        throw $this->queryError('mysqli::query', $query);
-      }
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $ret = false;
+    }
+    if ($ret===false)
+    {
+      throw $this->queryError('mysqli::query', $query);
+    }
+
+    if ($this->logQueries)
+    {
+      $this->queryLog[] = ['query' => $query, 'time' => microtime(true) - $time0];
     }
 
     return $ret;
@@ -1096,9 +1116,9 @@ class MySqlDataLayer
    * @param array $column The metadata of the column.
    * @param mixed $value  The value of the table cell.
    */
-  private function executeTableShowTableColumn(array $column, $value): void
+  private function executeTableShowTableColumn(array $column, mixed $value): void
   {
-    $spaces = str_repeat(' ', $column['length'] - mb_strlen((string)$value));
+    $spaces = str_repeat(' ', max($column['length'] - mb_strlen((string)$value), 0));
 
     switch ($column['type'])
     {

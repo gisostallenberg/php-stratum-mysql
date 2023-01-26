@@ -14,7 +14,7 @@ class TableTest extends DataLayerTestCase
    */
   public function test1()
   {
-    $template_table = '
+    $expected = '
 +---------+---------+---------+---------+---------------------+------+------+
 | tst_c00 | tst_c01 | tst_c02 | tst_c03 |       tst_c04       |  t   |  s   |
 +---------+---------+---------+---------+---------------------+------+------+
@@ -28,7 +28,7 @@ class TableTest extends DataLayerTestCase
     $table = ob_get_contents();
     ob_end_clean();
 
-    self::assertEquals($template_table, $table);
+    self::assertEquals($expected, $table);
   }
 
   //--------------------------------------------------------------------------------------------------------------------

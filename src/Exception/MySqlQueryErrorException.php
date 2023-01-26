@@ -71,7 +71,7 @@ class MySqlQueryErrorException extends MySqlDataLayerException implements QueryE
       $message = [];
       foreach ($lines as $i => $line)
       {
-        if (($i + 1)==$errorLineNumber)
+        if (($i + 1)===$errorLineNumber)
         {
           $message[] = sprintf('<%s>'.$format.'</%s>', $style, $i + 1, OutputFormatter::escape($line), $style);
         }

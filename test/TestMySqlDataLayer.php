@@ -286,17 +286,25 @@ class TestMySqlDataLayer extends MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
+    }
 
+    try
+    {
       $success = @$stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $success = false;
+    }
+    if (!$success)
+    {
+      throw $this->queryError('mysqli_stmt::execute', $query);
+    }
 
+    if ($this->logQueries)
+    {
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
-    }
-    else
-    {
-      $success = $stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $ret = $this->mysqli->affected_rows;
@@ -479,17 +487,25 @@ class TestMySqlDataLayer extends MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
+    }
 
+    try
+    {
       $success = @$stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $success = false;
+    }
+    if (!$success)
+    {
+      throw $this->queryError('mysqli_stmt::execute', $query);
+    }
 
+    if ($this->logQueries)
+    {
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
-    }
-    else
-    {
-      $success = $stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $ret = $this->mysqli->affected_rows;
@@ -706,17 +722,25 @@ class TestMySqlDataLayer extends MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
+    }
 
+    try
+    {
       $success = @$stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $success = false;
+    }
+    if (!$success)
+    {
+      throw $this->queryError('mysqli_stmt::execute', $query);
+    }
 
+    if ($this->logQueries)
+    {
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
-    }
-    else
-    {
-      $success = $stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $result = $stmt->get_result();
@@ -760,17 +784,25 @@ class TestMySqlDataLayer extends MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
+    }
 
+    try
+    {
       $success = @$stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $success = false;
+    }
+    if (!$success)
+    {
+      throw $this->queryError('mysqli_stmt::execute', $query);
+    }
 
+    if ($this->logQueries)
+    {
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
-    }
-    else
-    {
-      $success = $stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -844,17 +876,25 @@ class TestMySqlDataLayer extends MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
+    }
 
+    try
+    {
       $success = @$stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $success = false;
+    }
+    if (!$success)
+    {
+      throw $this->queryError('mysqli_stmt::execute', $query);
+    }
 
+    if ($this->logQueries)
+    {
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
-    }
-    else
-    {
-      $success = $stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $ret = $this->mysqli->affected_rows;
@@ -959,17 +999,25 @@ class TestMySqlDataLayer extends MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
+    }
 
+    try
+    {
       $success = @$stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $success = false;
+    }
+    if (!$success)
+    {
+      throw $this->queryError('mysqli_stmt::execute', $query);
+    }
 
+    if ($this->logQueries)
+    {
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
-    }
-    else
-    {
-      $success = $stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -1050,17 +1098,25 @@ class TestMySqlDataLayer extends MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
+    }
 
+    try
+    {
       $success = @$stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $success = false;
+    }
+    if (!$success)
+    {
+      throw $this->queryError('mysqli_stmt::execute', $query);
+    }
 
+    if ($this->logQueries)
+    {
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
-    }
-    else
-    {
-      $success = $stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -1134,17 +1190,25 @@ class TestMySqlDataLayer extends MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
+    }
 
+    try
+    {
       $success = @$stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $success = false;
+    }
+    if (!$success)
+    {
+      throw $this->queryError('mysqli_stmt::execute', $query);
+    }
 
+    if ($this->logQueries)
+    {
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
-    }
-    else
-    {
-      $success = $stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -1223,17 +1287,25 @@ class TestMySqlDataLayer extends MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
+    }
 
+    try
+    {
       $success = @$stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $success = false;
+    }
+    if (!$success)
+    {
+      throw $this->queryError('mysqli_stmt::execute', $query);
+    }
 
+    if ($this->logQueries)
+    {
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
-    }
-    else
-    {
-      $success = $stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -1312,17 +1384,25 @@ class TestMySqlDataLayer extends MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
+    }
 
+    try
+    {
       $success = @$stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $success = false;
+    }
+    if (!$success)
+    {
+      throw $this->queryError('mysqli_stmt::execute', $query);
+    }
 
+    if ($this->logQueries)
+    {
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
-    }
-    else
-    {
-      $success = $stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -1402,17 +1482,25 @@ class TestMySqlDataLayer extends MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
+    }
 
+    try
+    {
       $success = @$stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $success = false;
+    }
+    if (!$success)
+    {
+      throw $this->queryError('mysqli_stmt::execute', $query);
+    }
 
+    if ($this->logQueries)
+    {
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
-    }
-    else
-    {
-      $success = $stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -1497,17 +1585,25 @@ class TestMySqlDataLayer extends MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
+    }
 
+    try
+    {
       $success = @$stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $success = false;
+    }
+    if (!$success)
+    {
+      throw $this->queryError('mysqli_stmt::execute', $query);
+    }
 
+    if ($this->logQueries)
+    {
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
-    }
-    else
-    {
-      $success = $stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -1588,17 +1684,25 @@ class TestMySqlDataLayer extends MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
+    }
 
+    try
+    {
       $success = @$stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $success = false;
+    }
+    if (!$success)
+    {
+      throw $this->queryError('mysqli_stmt::execute', $query);
+    }
 
+    if ($this->logQueries)
+    {
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
-    }
-    else
-    {
-      $success = $stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];
@@ -1683,17 +1787,25 @@ class TestMySqlDataLayer extends MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
+    }
 
+    try
+    {
       $success = @$stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $success = false;
+    }
+    if (!$success)
+    {
+      throw $this->queryError('mysqli_stmt::execute', $query);
+    }
 
+    if ($this->logQueries)
+    {
       $this->queryLog[] = ['query' => $query,
                            'time'  => microtime(true) - $time0];
-    }
-    else
-    {
-      $success = $stmt->execute();
-      if (!$success) throw $this->queryError('mysqli_stmt::execute', $query);
     }
 
     $row = [];

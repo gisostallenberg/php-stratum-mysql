@@ -55,7 +55,7 @@ class MySqlWorker
   /**
    * Disconnects from MySQL instance.
    */
-  public function disconnect()
+  public function disconnect(): void
   {
     if ($this->dl!==null)
     {

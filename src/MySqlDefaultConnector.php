@@ -52,6 +52,7 @@ class MySqlDefaultConnector implements MySqlConnector
   private string $user;
 
   //--------------------------------------------------------------------------------------------------------------------
+
   /**
    * Object constructor.
    *
@@ -101,12 +102,21 @@ class MySqlDefaultConnector implements MySqlConnector
   {
     $this->disconnect();
 
-    $this->mysqli = @new \mysqli($this->host, $this->user, $this->password, $this->database, $this->port);
-    if ($this->mysqli->connect_errno)
+    try
     {
-      $exception    = new MySqlConnectFailedException($this->mysqli->connect_errno,
-                                                      $this->mysqli->connect_error,
-                                                      'mysqli::__construct');
+      $this->mysqli = @new \mysqli($this->host, $this->user, $this->password, $this->database, $this->port);
+      $errno        = $this->mysqli->connect_errno;
+      $error        = $this->mysqli->connect_error;
+    }
+    catch (\mysqli_sql_exception $exception)
+    {
+      $errno = $exception->getCode();
+      $error = $exception->getMessage();
+    }
+
+    if ($errno!==0)
+    {
+      $exception    = new MySqlConnectFailedException($errno, $error, 'mysqli::__construct');
       $this->mysqli = null;
 
       throw $exception;
@@ -147,11 +157,19 @@ class MySqlDefaultConnector implements MySqlConnector
       return false;
     }
 
-    $result = @$this->mysqli->query('select 1');
-    if (is_bool($result))
+    try
+    {
+      $result = @$this->mysqli->query('select 1');
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $result = false;
+    }
+    if ($result===false)
     {
       return false;
     }
+
     $result->free();
 
     return true;
