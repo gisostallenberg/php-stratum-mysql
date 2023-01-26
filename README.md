@@ -23,8 +23,9 @@ The backend of PhpStratum for MySQL and MariaDB.
 <td>
 <a href="https://packagist.org/packages/setbased/php-stratum-mysql"><img src="https://poser.pugx.org/setbased/php-stratum-mysql/v/stable" alt="Latest Stable Version"/></a><br/>
 </td>
-<td><a href="https://travis-ci.org/DatabaseStratum/php-stratum-mysql"><img src="https://travis-ci.org/DatabaseStratum/php-stratum-mysql.svg?branch=master" alt="Build Status"/></a><br/>
-<a href="https://scrutinizer-ci.com/g/DatabaseStratum/php-stratum-mysql/?branch=master"><img src="https://scrutinizer-ci.com/g/DatabaseStratum/php-stratum-mysql/badges/coverage.png?b=master" alt="Code Coverage"/></a><br/>
+<td>
+<a href="https://github.com/DatabaseStratum/php-stratum-mysql/actions/workflows/unit.yml"><img src="https://github.com/DatabaseStratum/php-stratum-mysql/actions/workflows/unit.yml/badge.svg" alt="Build Status"/></a><br/>
+<a href="https://codecov.io/gh/DatabaseStratum/php-stratum-mysql"><img src="https://codecov.io/gh/DatabaseStratum/php-stratum-mysql/branch/master/graph/badge.svg" alt="Code Coverage"/></a>
 </td>
 <td>
 <a href="https://scrutinizer-ci.com/g/DatabaseStratum/php-stratum-mysql/?branch=master"><img src="https://scrutinizer-ci.com/g/DatabaseStratum/php-stratum-mysql/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality"/></a>

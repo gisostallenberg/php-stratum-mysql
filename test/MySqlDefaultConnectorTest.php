@@ -16,7 +16,7 @@ class MySqlDefaultConnectorTest extends TestCase
   /**
    * Test connection to a non-existing server.
    */
-  public function testConnectFailed()
+  public function testConnectFailed(): void
   {
     $connector = new MySqlDefaultConnector('127.0.0.1', 'no-such-user', 'test', 'test');
 
@@ -28,7 +28,7 @@ class MySqlDefaultConnectorTest extends TestCase
   /**
    * Test disconnect when connect to a server failed.
    */
-  public function testDisconnectConnectFailed()
+  public function testDisconnectConnectFailed(): void
   {
     $connector = new MySqlDefaultConnector('127.0.0.1', 'no-such-user', 'test', 'test');
     try
@@ -48,7 +48,7 @@ class MySqlDefaultConnectorTest extends TestCase
   /**
    * Test disconnect when connected.
    */
-  public function testDisconnectConnected()
+  public function testDisconnectConnected(): void
   {
     $connector = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
     $connector->connect();
@@ -60,7 +60,7 @@ class MySqlDefaultConnectorTest extends TestCase
   /**
    * Test disconnect when server has gone.
    */
-  public function testDisconnectNoServer()
+  public function testDisconnectNoServer(): void
   {
     $connector = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
     $connector->connect();
@@ -77,7 +77,7 @@ class MySqlDefaultConnectorTest extends TestCase
   /**
    * Test disconnect when never connected to a server.
    */
-  public function testDisconnectNotConnected()
+  public function testDisconnectNotConnected(): void
   {
     $connector = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
     $connector->disconnect();
@@ -88,7 +88,7 @@ class MySqlDefaultConnectorTest extends TestCase
   /**
    * Test isAlive when never disconnected.
    */
-  public function testIsAliveDisconnected()
+  public function testIsAliveDisconnected(): void
   {
     $connector = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
     $connector->connect();
@@ -102,7 +102,7 @@ class MySqlDefaultConnectorTest extends TestCase
   /**
    * Test isAlive with alive connection.
    */
-  public function testIsAliveIsAlive()
+  public function testIsAliveIsAlive(): void
   {
     $connector = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
 
@@ -115,12 +115,17 @@ class MySqlDefaultConnectorTest extends TestCase
   /**
    * Test isAlive when server has gone.
    */
-  public function testIsAliveNoServer()
+  public function testIsAliveNoServer(): void
   {
+    if (array_key_exists('GITHUB_WORKFLOW', $_SERVER))
+    {
+      $this->markTestSkipped('Can not start stop MySQL or MariaDB server at GitHub');
+    }
+
     $connector = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
     $connector->connect();
 
-    exec('sudo systemctl stop mysqld || sudo service mysql stop');
+    exec('sudo systemctl stop mysqld || sudo service mysql stop', $output, $code);
 
     $isAlive = $connector->isAlive();
     self::assertFalse($isAlive);
@@ -132,7 +137,7 @@ class MySqlDefaultConnectorTest extends TestCase
   /**
    * Test isAlive when never connected.
    */
-  public function testIsAliveNotConnected()
+  public function testIsAliveNotConnected(): void
   {
     $connector = new MySqlDefaultConnector('127.0.0.1', 'test', 'test', 'test');
 

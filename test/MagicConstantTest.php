@@ -16,7 +16,7 @@ class MagicConstantTest extends DataLayerTestCase
    *
    * @throws MySqlDataLayerException
    */
-  public function test1()
+  public function test1(): void
   {
     $ret = $this->dataLayer->tstMagicConstant01();
     self::assertEquals('tst_magic_constant01', $ret);
@@ -28,7 +28,7 @@ class MagicConstantTest extends DataLayerTestCase
    *
    * @throws MySqlDataLayerException
    */
-  public function test2()
+  public function test2(): void
   {
     $ret = $this->dataLayer->tstMagicConstant02();
     self::assertEquals(11, $ret);
@@ -40,7 +40,7 @@ class MagicConstantTest extends DataLayerTestCase
    *
    * @throws MySqlDataLayerException
    */
-  public function test3()
+  public function test3(): void
   {
     $filename = realpath(__DIR__.'/../test/psql/tst_magic_constant03.psql');
 
@@ -54,12 +54,12 @@ class MagicConstantTest extends DataLayerTestCase
    *
    * @throws MySqlDataLayerException
    */
-  public function test4()
+  public function test4(): void
   {
-    $dir_name = realpath(__DIR__.'/../test/psql');
+    $dirname = realpath(__DIR__.'/../test/psql');
 
     $ret = $this->dataLayer->tstMagicConstant04();
-    self::assertEquals($dir_name, $ret);
+    self::assertEquals($dirname, $ret);
   }
 
   //--------------------------------------------------------------------------------------------------------------------
@@ -68,14 +68,14 @@ class MagicConstantTest extends DataLayerTestCase
    *
    * @throws MySqlDataLayerException
    */
-  public function test5()
+  public function test5(): void
   {
-    $dir_name = realpath(__DIR__.'/../test/psql/ test_escape \' " @ $ ! .');
+    $dirname = realpath(__DIR__.'/../test/psql/ test_escape \' " @ $ ! .');
 
-    if ($dir_name)
+    if ($dirname)
     {
       $ret = $this->dataLayer->tstMagicConstant05();
-      self::assertEquals($dir_name, $ret);
+      self::assertEquals($dirname, $ret);
     }
   }
 

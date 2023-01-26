@@ -20,7 +20,10 @@ class StratumApplicationTest extends TestCase
 
     $tester = new ApplicationTester($application);
     $tester->run(['command'     => 'stratum',
-                  'config file' => 'test/etc/stratum.ini']);
+                  'config file' => 'test/etc/stratum.ini'],
+                 ['-vv']);
+
+    echo $tester->getDisplay();
 
     self::assertSame(0, $tester->getStatusCode(), $tester->getDisplay());
   }
