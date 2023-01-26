@@ -495,7 +495,7 @@ class MySqlDataLayer
    * @api
    * @since 1.0.0
    */
-  public function executeSingleton0(string $query)
+  public function executeSingleton0(string $query): mixed
   {
     $result = $this->query($query);
     $row    = $result->fetch_array(MYSQLI_NUM);
@@ -532,7 +532,7 @@ class MySqlDataLayer
    * @api
    * @since 1.0.0
    */
-  public function executeSingleton1(string $query)
+  public function executeSingleton1(string $query): mixed
   {
     $result = $this->query($query);
     $row    = $result->fetch_array(MYSQLI_NUM);
@@ -729,7 +729,7 @@ class MySqlDataLayer
    *
    * @return string
    */
-  public function quoteDecimal($value): string
+  public function quoteDecimal(mixed $value): string
   {
     if ($value===null || $value==='') return 'null';
 
@@ -782,7 +782,7 @@ class MySqlDataLayer
    *
    * @throws LogicException
    */
-  public function quoteListOfInt($list, string $delimiter, string $enclosure, string $escape): string
+  public function quoteListOfInt(mixed $list, string $delimiter, string $enclosure, string $escape): string
   {
     if ($list===null || $list===false || $list==='' || $list===[])
     {
@@ -801,10 +801,6 @@ class MySqlDataLayer
 
     foreach ($list as $number)
     {
-      if ($list===null || $list===false || $list==='')
-      {
-        throw new LogicException('Empty values are not allowed.');
-      }
       if (!is_numeric($number))
       {
         throw new LogicException("Value '%s' is not a number.", (is_scalar($number)) ? $number : gettype($number));
@@ -1021,17 +1017,25 @@ class MySqlDataLayer
     if ($this->logQueries)
     {
       $time0 = microtime(true);
-
-      $success = @$this->mysqli->real_query($query);
-      if (!$success) throw $this->queryError('mysqli::real_query', $query);
-
-      $this->queryLog[] = ['query' => $query,
-                           'time'  => microtime(true) - $time0];
     }
-    else
+
+    try
     {
       $success = @$this->mysqli->real_query($query);
-      if (!$success) throw $this->queryError('mysqli::real_query', $query);
+    }
+    catch (\mysqli_sql_exception)
+    {
+      $success = false;
+    }
+    if (!$success)
+    {
+      throw $this->queryError('mysqli::real_query', $query);
+    }
+
+    if ($this->logQueries)
+    {
+      $this->queryLog[] = ['query' => $query,
+                           'time'  => microtime(true) - $time0];
     }
   }
 
