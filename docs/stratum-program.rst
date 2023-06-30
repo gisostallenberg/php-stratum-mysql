@@ -3,7 +3,7 @@
 The PhpStratum Program
 ======================
 
-The PhpAudit program is a `Symphony console application`_  with five additional commands:
+The PhpStratum program is a `Symphony console application`_  with five additional commands:
 
  * ``constants``
  * ``crud``
